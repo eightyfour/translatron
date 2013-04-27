@@ -2,7 +2,7 @@
 var domready = require('domready');
 var shoe = require('shoe');
 var dnode = require('dnode');
-//var fileMgr = require('fileManager.js');
+var dest = require('resourceHandler');
 
 var base = (function(){
 
@@ -12,23 +12,27 @@ var base = (function(){
         tpl : {
             tableBody : 'tableBody'
         }
+    },
+    _conf = {
+        inputPrefix : "_value"
     }
 
     /*
-        TODO send data backto server and save it in the resource bundle
+     *   TODO send data back to server and save it in the resource bundle
      */
 
     // todo add textinput node
     function SaveOnLeave(keyInputNode,textInputNode,key,text){
         var _rootKey = key; // use this key for identifier on the server
         var keyList = [key];
-        var textList = [key];
+        var textList = [text];
         var keyIdx = 0;
         var textIdx = 0;
         keyInputNode.addEventListener('change',function(e){
             console.log("Old: "+keyList[keyIdx]);
             var newValue = this.value;
             if(keyList[keyIdx] !== newValue){
+                // TODO check if key vallid?  use same on server
                 keyList.push(newValue);
                 keyIdx++;
             }
@@ -46,16 +50,31 @@ var base = (function(){
         });
     }
 
-    var fc = {
+    // used on server side
+    var client = {
+        intervall : function(s){
+            console.log(s);
+        },
+        updateKey : function(v){
+            var value = JSON.parse(v);
+            console.log("updateKey: ",value);
+            document.getElementById(value.key+_conf.inputPrefix).value = value.data;;
+        },
+        helloMe : function(s){console.log("helloMe",s);},
+        helloAll : function(s){console.log("helloAll",s);}
+    }
 
+    var fc = {
         printBundle : function(args){
             console.log(args);
             var addData = function(node,data){
                 var keyNode = document.createElement("input");
                 var textNode = document.createElement("input");
 
-                keyNode.textContent =  data.key;
-                textNode.textContent =  data.data;
+                keyNode.setAttribute("id", data.key);
+                keyNode.value =  data.key;
+                textNode.value =  data.data;
+                textNode.setAttribute("id", data.key+_conf.inputPrefix);
                 new SaveOnLeave(keyNode,textNode,data.key,data.data);
                 var td = document.createElement('td');
                     td.appendChild(keyNode);
@@ -71,27 +90,30 @@ var base = (function(){
                 var tr = document.createElement("tr");
                 addData(tr,args[i]);
                 node.appendChild(tr);
-
             }
-        }
+        },
+        getClient : client
     }
-    return fc;
+    return fc
 }());
 
-domready(function () {
-    var stream = shoe('/dnode');
+var stream = shoe('/dnode');
+var d = dnode();
 
-    var d = dnode();
+
+domready(function () {
     d.on('remote', function (remote) {
+        window.socket = remote;
+        console.log(remote);
         remote.transform('beep', function (s) {
             var obj = JSON.parse(s);
-
             base.printBundle(obj.data);
         });
+        remote.setupClient(base.getClient)
     });
     d.pipe(stream).pipe(d);
 });
-},{"domready":2,"shoe":3,"dnode":4}],2:[function(require,module,exports){
+},{"domready":2,"shoe":3,"dnode":4,"resourceHandler":5}],2:[function(require,module,exports){
 /*!
   * domready (c) Dustin Diaz 2012 - License MIT
   */
@@ -146,7 +168,7 @@ domready(function () {
       loaded ? fn() : fns.push(fn)
     })
 })
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var events = require('events');
 var util = require('util');
 
@@ -267,7 +289,14 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":6,"util":7}],8:[function(require,module,exports){
+},{"events":7,"util":8}],4:[function(require,module,exports){
+var dnode = require('./lib/dnode');
+
+module.exports = function (cons, opts) {
+    return new dnode(cons, opts);
+};
+
+},{"./lib/dnode":9}],10:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -321,7 +350,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function(process){if (!process.EventEmitter) process.EventEmitter = function () {};
 
 var EventEmitter = exports.EventEmitter = process.EventEmitter;
@@ -507,7 +536,7 @@ EventEmitter.prototype.listeners = function(type) {
 };
 
 })(require("__browserify_process"))
-},{"__browserify_process":8}],7:[function(require,module,exports){
+},{"__browserify_process":10}],8:[function(require,module,exports){
 var events = require('events');
 
 exports.isArray = isArray;
@@ -860,7 +889,7 @@ exports.format = function(f) {
   return str;
 };
 
-},{"events":6}],3:[function(require,module,exports){
+},{"events":7}],3:[function(require,module,exports){
 var Stream = require('stream');
 var sockjs = require('sockjs-client');
 
@@ -931,7 +960,7 @@ module.exports = function (uri, cb) {
     return stream;
 };
 
-},{"stream":5,"sockjs-client":9}],9:[function(require,module,exports){
+},{"stream":6,"sockjs-client":11}],11:[function(require,module,exports){
 (function(){/* SockJS client, version 0.3.1.7.ga67f.dirty, http://sockjs.org, MIT License
 
 Copyright (c) 2011-2012 VMware, Inc.
@@ -3257,14 +3286,7 @@ if (typeof module === 'object' && module && module.exports) {
 
 
 })()
-},{}],4:[function(require,module,exports){
-var dnode = require('./lib/dnode');
-
-module.exports = function (cons, opts) {
-    return new dnode(cons, opts);
-};
-
-},{"./lib/dnode":10}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function(process){var protocol = require('dnode-protocol');
 var Stream = require('stream');
 var json = typeof JSON === 'object' ? JSON : require('jsonify');
@@ -3420,7 +3442,7 @@ dnode.prototype.destroy = function () {
 };
 
 })(require("__browserify_process"))
-},{"stream":5,"dnode-protocol":11,"jsonify":12,"__browserify_process":8}],11:[function(require,module,exports){
+},{"stream":6,"dnode-protocol":12,"jsonify":13,"__browserify_process":10}],12:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter;
 var scrubber = require('./lib/scrub');
 var objectKeys = require('./lib/keys');
@@ -3547,18 +3569,18 @@ Proto.prototype.apply = function (f, args) {
     catch (err) { this.emit('error', err) }
 };
 
-},{"events":6,"./lib/scrub":13,"./lib/keys":14,"./lib/foreach":15,"./lib/is_enum":16}],12:[function(require,module,exports){
+},{"events":7,"./lib/scrub":14,"./lib/keys":15,"./lib/foreach":16,"./lib/is_enum":17}],13:[function(require,module,exports){
 exports.parse = require('./lib/parse');
 exports.stringify = require('./lib/stringify');
 
-},{"./lib/parse":17,"./lib/stringify":18}],14:[function(require,module,exports){
+},{"./lib/parse":18,"./lib/stringify":19}],15:[function(require,module,exports){
 module.exports = Object.keys || function (obj) {
     var keys = [];
     for (var key in obj) keys.push(key);
     return keys;
 };
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports = function forEach (xs, f) {
     if (xs.forEach) return xs.forEach(f)
     for (var i = 0; i < xs.length; i++) {
@@ -3566,7 +3588,7 @@ module.exports = function forEach (xs, f) {
     }
 }
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 var at, // The index of the current character
     ch, // The current character
     escapee = {
@@ -3841,7 +3863,7 @@ module.exports = function (source, reviver) {
     }({'': result}, '')) : result;
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
     escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
     gap,
@@ -3997,7 +4019,33 @@ module.exports = function (value, replacer, space) {
     return str('', {'': value});
 };
 
-},{}],16:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
+
+function Value(key,data){
+    console.log('CREATE FILE Value');
+    this.key = key;
+    this.data = data;
+}
+function Resources(){
+    var list = [];
+    console.log('CREATE FILE Resources');
+    return {
+        push : function(value){
+            list.push(value);
+        }
+    }
+}
+
+module.exports = {
+    getResources : function(){
+        return new Resources()
+    },
+    getValue : function(key,value){
+       return  new Value(key,value);
+    }
+}
+
+},{}],17:[function(require,module,exports){
 var objectKeys = require('./keys');
 
 module.exports = function (obj, key) {
@@ -4011,7 +4059,7 @@ module.exports = function (obj, key) {
     return false;
 };
 
-},{"./keys":14}],13:[function(require,module,exports){
+},{"./keys":15}],14:[function(require,module,exports){
 var traverse = require('traverse');
 var objectKeys = require('./keys');
 var forEach = require('./foreach');
@@ -4085,7 +4133,7 @@ Scrubber.prototype.unscrub = function (msg, f) {
     return args;
 };
 
-},{"./keys":14,"./foreach":15,"traverse":19}],19:[function(require,module,exports){
+},{"./keys":15,"./foreach":16,"traverse":20}],20:[function(require,module,exports){
 var traverse = module.exports = function (obj) {
     return new Traverse(obj);
 };

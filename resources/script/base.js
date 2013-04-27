@@ -1,7 +1,7 @@
 var domready = require('domready');
 var shoe = require('shoe');
 var dnode = require('dnode');
-//var fileMgr = require('fileManager.js');
+var dest = require('resourceHandler');
 
 var base = (function(){
 
@@ -11,10 +11,13 @@ var base = (function(){
         tpl : {
             tableBody : 'tableBody'
         }
+    },
+    _conf = {
+        inputPrefix : "_value"
     }
 
     /*
-        TODO send data backto server and save it in the resource bundle
+     *   TODO send data back to server and save it in the resource bundle
      */
 
     // todo add textinput node
@@ -46,16 +49,31 @@ var base = (function(){
         });
     }
 
-    var fc = {
+    // used on server side
+    var client = {
+        intervall : function(s){
+            console.log(s);
+        },
+        updateKey : function(v){
+            var value = JSON.parse(v);
+            console.log("updateKey: ",value);
+            document.getElementById(value.key+_conf.inputPrefix).value = value.data;;
+        },
+        helloMe : function(s){console.log("helloMe",s);},
+        helloAll : function(s){console.log("helloAll",s);}
+    }
 
+    var fc = {
         printBundle : function(args){
             console.log(args);
             var addData = function(node,data){
                 var keyNode = document.createElement("input");
                 var textNode = document.createElement("input");
 
-                keyNode.textContent =  data.key;
-                textNode.textContent =  data.data;
+                keyNode.setAttribute("id", data.key);
+                keyNode.value =  data.key;
+                textNode.value =  data.data;
+                textNode.setAttribute("id", data.key+_conf.inputPrefix);
                 new SaveOnLeave(keyNode,textNode,data.key,data.data);
                 var td = document.createElement('td');
                     td.appendChild(keyNode);
@@ -71,23 +89,26 @@ var base = (function(){
                 var tr = document.createElement("tr");
                 addData(tr,args[i]);
                 node.appendChild(tr);
-
             }
-        }
+        },
+        getClient : client
     }
-    return fc;
+    return fc
 }());
 
-domready(function () {
-    var stream = shoe('/dnode');
+var stream = shoe('/dnode');
+var d = dnode();
 
-    var d = dnode();
+
+domready(function () {
     d.on('remote', function (remote) {
+        window.socket = remote;
+        console.log(remote);
         remote.transform('beep', function (s) {
             var obj = JSON.parse(s);
-
             base.printBundle(obj.data);
         });
+        remote.setupClient(base.getClient)
     });
     d.pipe(stream).pipe(d);
 });
