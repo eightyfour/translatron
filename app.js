@@ -2,7 +2,8 @@ var express = require('express'),
     fs = require('fs'),
     shoe = require('shoe'),
     dnode = require('dnode'),
-    fileMgr = require('resourceHandler');
+    fileMgr = require('resourceHandler'),
+    client = require('./lib/client.js')(__dirname);
 var app = express();
 
 
@@ -52,58 +53,19 @@ app.use('/',function(request,response,next){
 });
 
 var server = app.listen(3000);
-/**
- * Each client need a client object
- *  - create array of clients
- *  - register onclose and remove if client connection is lost
- *  - save identifier for each client
- */
-var client; // connection to client use same on server
-
-var connection = {
-    transform : function (s, callback) {
-        var cb = callback;
-        var stringBack;
-        fileMgr(__dirname+'/static/messages.properties',function(obj){
-            stringBack = JSON.stringify(obj);
-//            console.log("STRING BACK: "+stringBack);
-            if(stringBack){
-                cb(stringBack);
-            }
-        });
-    },
-    sendResource : function(data,cb){
-//        console.log('hello: '+data);
-        cb('Server says also hello');
-    },
-    setupClient : function(obj){
-        console.log('setupClient');
-        client = obj;
-    },
-    meHello : function(s){
-        console.log('meHello');
-        client.helloMe(s);
-    },
-    allHello : function(s){
-        console.log('allHello');
-        client.helloAll(s);
-    }
-}
 
 var con;
 var sock = shoe(function (stream) {
-    var d = dnode(connection);
+    var d = dnode(client);
     d.pipe(stream).pipe(d);
     con = stream;
 //    console.log(stream);
-    sendToclient();
+    sendToclient;
     con.on('end',function(){
         console.log('end');
     })
 });
 var inst = sock.install(server, '/dnode');
-console.log("SOCKET:");
-console.log(sock)
 
 var sendToclient = function (){
 

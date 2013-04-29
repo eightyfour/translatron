@@ -3,7 +3,7 @@ var shoe = require('shoe');
 var dnode = require('dnode');
 var dest = require('resourceHandler');
 
-var base = (function(){
+window.base = new function(){
 
     var selectors = {
         root : "resourceBundleTable",
@@ -14,7 +14,7 @@ var base = (function(){
     },
     _conf = {
         inputPrefix : "_value"
-    }
+    };
 
     /*
      *   TODO send data back to server and save it in the resource bundle
@@ -27,6 +27,7 @@ var base = (function(){
         var textList = [text];
         var keyIdx = 0;
         var textIdx = 0;
+
         keyInputNode.addEventListener('change',function(e){
             console.log("Old: "+keyList[keyIdx]);
             var newValue = this.value;
@@ -36,6 +37,7 @@ var base = (function(){
                 keyIdx++;
             }
             console.log(keyList);
+            base.con.sendNewKey(_rootKey,newValue);
         });
 
         textInputNode.addEventListener('change',function(e){
@@ -46,21 +48,33 @@ var base = (function(){
                 textIdx++;
             }
             console.log(textList);
+            base.con.sendResource(_rootKey,newValue,function(s){
+                console.log(s);
+            });
         });
     }
 
     // used on server side
-    var client = {
-        intervall : function(s){
-            console.log(s);
-        },
+    var sendServer = {
         updateKey : function(v){
             var value = JSON.parse(v);
             console.log("updateKey: ",value);
             document.getElementById(value.key+_conf.inputPrefix).value = value.data;;
+        }
+    }
+    // methods needs to be implemented on server side
+    var con = {
+        sendResource : function(key,value){
+            base.server.sendResource(base.id,{key: key,value:value},function(){
+                console.log('send success');
+            })
         },
-        helloMe : function(s){console.log("helloMe",s);},
-        helloAll : function(s){console.log("helloAll",s);}
+        sendNewKey : function(key,value){
+            base.server.sendNewKey(base.id,{key: key,value:value},function(){
+                console.log('send success');
+            })
+        }
+
     }
 
     var fc = {
@@ -91,24 +105,29 @@ var base = (function(){
                 node.appendChild(tr);
             }
         },
-        getClient : client
+        con : con,
+        server : {},
+        id : ''
     }
     return fc
-}());
+};
 
 var stream = shoe('/dnode');
 var d = dnode();
 
 
 domready(function () {
-    d.on('remote', function (remote) {
-        window.socket = remote;
-        console.log(remote);
-        remote.transform('beep', function (s) {
+    d.on('remote', function (server) {
+        base.server = server;
+        base.server.setupClient(base.server,function(id){
+            base.id = id;
+        });
+        console.log(server);
+        base.server.getMessageBundle(function (s) {
             var obj = JSON.parse(s);
             base.printBundle(obj.data);
         });
-        remote.setupClient(base.getClient)
+
     });
     d.pipe(stream).pipe(d);
 });
