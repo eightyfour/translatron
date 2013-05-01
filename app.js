@@ -7,15 +7,6 @@ var express = require('express'),
 var app = express();
 
 
-
-//app.use('/',function(req,res,next){
-//    console.log("/html - call next");
-//        next();
-//});
-
-// GET /javascripts/jquery.js
-// GET /style.css
-// GET /favicon.ico
 app.use(express.static(__dirname + '/resources'));
 
 app.use('/',function(request,response,next){
@@ -59,21 +50,11 @@ var sock = shoe(function (stream) {
     var d = dnode(client);
     d.pipe(stream).pipe(d);
     con = stream;
-//    console.log(stream);
-    sendToclient;
+
     con.on('end',function(){
         console.log('end');
     })
 });
 var inst = sock.install(server, '/dnode');
-
-var sendToclient = function (){
-
-//    setTimeout(function(){
-//        console.log('send inervall');
-//        client.intervall("send intervall: "+i);
-//        sendToclient();
-//    },2000);
-}
 
 console.log("start server 3000");

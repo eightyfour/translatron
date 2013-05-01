@@ -1,0 +1,11 @@
+table .textField{
+    width: 300px;
+    height: 40px;
+}
+
+.sendSuccess{
+    background-color: #7cfc00;
+}
+.updateKey{
+    background-color: #ffff00;
+}
