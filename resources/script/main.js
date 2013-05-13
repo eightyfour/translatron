@@ -249,7 +249,7 @@ domready(function () {
 
     console.log('REQUEST PARAMS: '+domOpts.params);
 });
-},{"domready":2,"dnode":3,"shoe":4,"resourceHandler":5,"domOpts":6}],2:[function(require,module,exports){
+},{"domready":2,"shoe":3,"dnode":4,"resourceHandler":5,"domOpts":6}],2:[function(require,module,exports){
 /*!
   * domready (c) Dustin Diaz 2012 - License MIT
   */
@@ -451,7 +451,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":8,"util":9}],3:[function(require,module,exports){
+},{"events":8,"util":9}],4:[function(require,module,exports){
 var dnode = require('./lib/dnode');
 
 module.exports = function (cons, opts) {
@@ -1051,7 +1051,7 @@ exports.format = function(f) {
   return str;
 };
 
-},{"events":8}],4:[function(require,module,exports){
+},{"events":8}],3:[function(require,module,exports){
 var Stream = require('stream');
 var sockjs = require('sockjs-client');
 
