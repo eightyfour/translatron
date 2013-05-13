@@ -2,17 +2,22 @@ var express = require('express'),
     fs = require('fs'),
     shoe = require('shoe'),
     dnode = require('dnode'),
-    fileMgr = require('resourceHandler'),
     client = require('./lib/client.js')(__dirname);
 var app = express();
 
 
 app.use(express.static(__dirname + '/resources'));
 
-app.use('/',function(request,response,next){
+
+app.get('/:bundle?/:templateLang?/:lang?',function(request,response,next){
+
+    console.log("bundle attribute: "+request.params.bundle);
+    console.log("templateLang attribute: "+request.params.templateLang);
+    console.log("Lang attribute: "+request.params.lang);
 
     var req = request;
-    var fileName = req.originalUrl;
+//    var fileName = req.originalUrl.split(':')[0];
+    var fileName = '/'; //load allways index
     var res = response;
     var htmlExtension = '.html';
     var next = next;
@@ -27,7 +32,7 @@ app.use('/',function(request,response,next){
                     res.end();
                 });
             } else {
-                fs.readFile(__dirname+'/ui'+fileName+htmlExtension, function(err, data){
+                fs.readFile(__dirname+'/html'+fileName+htmlExtension, function(err, data){
                     res.writeHead(200, {'Content-Type':'text/html'});
                     res.write(data);
                     res.end();
