@@ -1,5 +1,5 @@
 table .textField{
-    width: 300px;
+    width: 400px;
     height: 40px;
 }
 
@@ -8,4 +8,13 @@ table .textField{
 }
 .updateKey{
     background-color: #ffff00;
+}
+.keyField{
+    width:400px;
+}
+table tr:nth-child(odd){
+    background-color: #d3d3d3;
+}
+table tr td{
+    padding: 5px;
 }

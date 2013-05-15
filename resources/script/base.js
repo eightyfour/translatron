@@ -38,6 +38,16 @@ window.base = new function(){
         });
     }
 
+    var reg = new RegExp('\\\\u([0-9a-fA-F]{4})',"g");
+    function escapeUnicodes(string){
+        var newstring = string.replace(reg,
+            function (match, submatch) {
+                console.log(match,submatch);
+                return String.fromCharCode(parseInt(submatch, 16));
+            });
+        return newstring;
+    }
+
     // used on server side to call clients
     var client = {
         id : undefined, // set on server side ,
@@ -122,20 +132,24 @@ window.base = new function(){
         _addData : function(node,data,isTranslation){
             var data = data;
             var keyNode = document.createElement("input");
-            var textNode = document.createElement("input");
-            var transTextNode = document.createElement("input");
+            var textNode = document.createElement("textarea");
+            var transTextNode = document.createElement("textarea");
 
             keyNode.setAttribute('id', data.key);
             keyNode.setAttribute('class', 'keyField');
             keyNode.setAttribute('readonly', 'true');
             keyNode.value =  data.key;
 
-            textNode.value =  !isTranslation?data.data:'';
+            textNode.value =  !isTranslation?escapeUnicodes(data.data):'';
             textNode.setAttribute('id', data.key+_conf.inputPrefix);
             textNode.setAttribute('type', 'text');
             textNode.setAttribute('class', 'textField');
 
-            transTextNode.value = isTranslation?data.data:'';
+            if(domOpts.params.to){
+                textNode.setAttribute('disabled', 'true');
+            }
+
+            transTextNode.value = isTranslation?escapeUnicodes(data.data):'';
             transTextNode.setAttribute('id', data.key+_conf.inputTransPrefix);
             transTextNode.setAttribute('type', 'text');
             transTextNode.setAttribute('class', 'textField');
@@ -152,13 +166,15 @@ window.base = new function(){
             tdTrans.appendChild(transTextNode);
 
             node.appendChild(td);
-            node.appendChild(tdTrans);
+            if(domOpts.params.to){
+                node.appendChild(tdTrans);
+            }
         },
         _mergeData : function(data,isTranslation){
             if(isTranslation){
-                document.getElementById(data.key+_conf.inputTransPrefix).value = data.data;
+                document.getElementById(data.key+_conf.inputTransPrefix).value = escapeUnicodes(data.data);
             } else {
-                document.getElementById(data.key+_conf.inputPrefix).value = data.data;
+                document.getElementById(data.key+_conf.inputPrefix).value = escapeUnicodes(data.data);
             }
 
         },
@@ -236,10 +252,12 @@ domready(function () {
                 var obj = JSON.parse(s);
                 base.printBundleTemplate(obj.data);
             });
-            base.server.getMessageBundle(bundleTo,function (s) {
-                var obj = JSON.parse(s);
-                base.printBundleTranslation(obj.data);
-            });
+            if(domOpts.params.to){
+                base.server.getMessageBundle(bundleTo,function (s) {
+                    var obj = JSON.parse(s);
+                    base.printBundleTranslation(obj.data);
+                });
+            }
         } else {
 
         }
