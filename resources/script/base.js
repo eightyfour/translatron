@@ -2,7 +2,9 @@ var domready = require('domready');
 var shoe = require('shoe');
 var dnode = require('dnode');
 var dest = require('resourceHandler');
+var unicode = require('./unicode.js');
 window.domOpts = require('domOpts');
+window.unicode = unicode;
 
 
 window.base = new function(){
@@ -34,18 +36,22 @@ window.base = new function(){
                 textIdx++;
             }
             console.log(textList);
-            base.con.sendResource(_rootKey,bundle,newValue);
+            base.con.sendResource(_rootKey,bundle,unicode.decode(newValue));
         });
     }
 
-    var reg = new RegExp('\\\\u([0-9a-fA-F]{4})',"g");
-    function escapeUnicodes(string){
+        var reg = new RegExp('\\\\u([0-9a-fA-F]{4})',"g");
+    function escapeUnicodes__(string){
         var newstring = string.replace(reg,
             function (match, submatch) {
                 console.log(match,submatch);
                 return String.fromCharCode(parseInt(submatch, 16));
             });
         return newstring;
+    }
+
+    function escapeUnicodes(string){
+        return unicode.encode(string);
     }
 
     // used on server side to call clients

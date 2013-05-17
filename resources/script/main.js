@@ -1,9 +1,113 @@
 ;(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0](function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
+
+var unicode = (function(){
+
+    String.prototype.getEachChar = function(cb){
+        var newString = this;
+        for (var i = 0; i < newString.length; i++) {
+            newString[i] = cb(newString[i]);
+        }
+        return newString.toString();
+    }
+    var reg = new RegExp('\\\\u([0-9a-fA-F]{4})',"g");
+    return {
+        encode : function(string){
+            var newstring = string.replace(reg,
+                function (match, submatch) {
+                    console.log(match,submatch);
+                    return String.fromCharCode(parseInt(submatch, 16));
+                });
+            return newstring;
+        },
+        decode : function(string){
+            return string.getEachChar(function(c){
+                for (var i = 0; i < table.length; i++) {
+                    if(table[i] == c){
+                        console.log('found:'+table[i])
+                        return table[i];
+                    }
+                }
+                return c;
+            });
+        }
+
+    }
+}());
+
+module.exports = unicode;
+
+var table = [
+    '\u00C0',
+    '\u00C1',
+    '\u00C2',
+    '\u00C3',
+    '\u00C4',
+    '\u00C5',
+    '\u00C6',
+    '\u00C7',
+    '\u00C8',
+    '\u00C9',
+    '\u00CA',
+    '\u00CB',
+    '\u00CC',
+    '\u00CD',
+    '\u00CE',
+    '\u00CF',
+    '\u00D0',
+    '\u00D1',
+    '\u00D2',
+    '\u00D3',
+    '\u00D4',
+    '\u00D5',
+    '\u00D6',
+    '\u00D8',
+    '\u00D9',
+    '\u00DA',
+    '\u00DB',
+    '\u00DC',
+    '\u00DD',
+    '\u00DE',
+    '\u00DF',
+    '\u00E0',
+    '\u00E1',
+    '\u00E2',
+    '\u00E3',
+    '\u00E4',
+    '\u00E5',
+    '\u00E6',
+    '\u00E7',
+    '\u00E8',
+    '\u00E9',
+    '\u00EA',
+    '\u00EB',
+    '\u00EC',
+    '\u00ED',
+    '\u00EE',
+    '\u00EF',
+    '\u00F0',
+    '\u00F1',
+    '\u00F2',
+    '\u00F3',
+    '\u00F4',
+    '\u00F5',
+    '\u00F6',
+    '\u00F8',
+    '\u00F9',
+    '\u00FA',
+    '\u00FB',
+    '\u00FC',
+    '\u00FD',
+    '\u00FE',
+    '\u00FF'
+];
+},{}],2:[function(require,module,exports){
 var domready = require('domready');
 var shoe = require('shoe');
 var dnode = require('dnode');
 var dest = require('resourceHandler');
+var unicode = require('./unicode.js');
 window.domOpts = require('domOpts');
+window.unicode = unicode;
 
 
 window.base = new function(){
@@ -35,19 +139,22 @@ window.base = new function(){
                 textIdx++;
             }
             console.log(textList);
-            base.con.sendResource(_rootKey,bundle,newValue);
+            base.con.sendResource(_rootKey,bundle,unicode.decode(newValue));
         });
     }
 
-    // Hallo \u00e4rzte geht \u00fcber h\u00e4\u00dfliche gl\u00fcckskekse
-    var reg = new RegExp('\\\\u([0-9a-fA-F]{4})',"g");
-    function escapeUnicodes(string){
+        var reg = new RegExp('\\\\u([0-9a-fA-F]{4})',"g");
+    function escapeUnicodes__(string){
         var newstring = string.replace(reg,
             function (match, submatch) {
                 console.log(match,submatch);
                 return String.fromCharCode(parseInt(submatch, 16));
             });
         return newstring;
+    }
+
+    function escapeUnicodes(string){
+        return unicode.encode(string);
     }
 
     // used on server side to call clients
@@ -268,7 +375,7 @@ domready(function () {
 
     console.log('REQUEST PARAMS: '+domOpts.params);
 });
-},{"domready":2,"shoe":3,"dnode":4,"resourceHandler":5,"domOpts":6}],2:[function(require,module,exports){
+},{"./unicode.js":1,"domready":3,"shoe":4,"dnode":5,"resourceHandler":6,"domOpts":7}],3:[function(require,module,exports){
 /*!
   * domready (c) Dustin Diaz 2012 - License MIT
   */
@@ -323,7 +430,7 @@ domready(function () {
       loaded ? fn() : fns.push(fn)
     })
 })
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 
 function Value(key,data){
     console.log('CREATE FILE Value');
@@ -349,7 +456,7 @@ module.exports = {
     }
 }
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var events = require('events');
 var util = require('util');
 
@@ -470,14 +577,14 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":8,"util":9}],4:[function(require,module,exports){
+},{"events":9,"util":10}],5:[function(require,module,exports){
 var dnode = require('./lib/dnode');
 
 module.exports = function (cons, opts) {
     return new dnode(cons, opts);
 };
 
-},{"./lib/dnode":10}],11:[function(require,module,exports){
+},{"./lib/dnode":11}],12:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -531,7 +638,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function(process){if (!process.EventEmitter) process.EventEmitter = function () {};
 
 var EventEmitter = exports.EventEmitter = process.EventEmitter;
@@ -717,7 +824,7 @@ EventEmitter.prototype.listeners = function(type) {
 };
 
 })(require("__browserify_process"))
-},{"__browserify_process":11}],9:[function(require,module,exports){
+},{"__browserify_process":12}],10:[function(require,module,exports){
 var events = require('events');
 
 exports.isArray = isArray;
@@ -1070,7 +1177,7 @@ exports.format = function(f) {
   return str;
 };
 
-},{"events":8}],3:[function(require,module,exports){
+},{"events":9}],4:[function(require,module,exports){
 var Stream = require('stream');
 var sockjs = require('sockjs-client');
 
@@ -1141,7 +1248,7 @@ module.exports = function (uri, cb) {
     return stream;
 };
 
-},{"stream":7,"sockjs-client":12}],12:[function(require,module,exports){
+},{"stream":8,"sockjs-client":13}],13:[function(require,module,exports){
 (function(){/* SockJS client, version 0.3.1.7.ga67f.dirty, http://sockjs.org, MIT License
 
 Copyright (c) 2011-2012 VMware, Inc.
@@ -3467,7 +3574,7 @@ if (typeof module === 'object' && module && module.exports) {
 
 
 })()
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function(process){var protocol = require('dnode-protocol');
 var Stream = require('stream');
 var json = typeof JSON === 'object' ? JSON : require('jsonify');
@@ -3623,7 +3730,7 @@ dnode.prototype.destroy = function () {
 };
 
 })(require("__browserify_process"))
-},{"stream":7,"dnode-protocol":13,"jsonify":14,"__browserify_process":11}],13:[function(require,module,exports){
+},{"stream":8,"dnode-protocol":14,"jsonify":15,"__browserify_process":12}],14:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter;
 var scrubber = require('./lib/scrub');
 var objectKeys = require('./lib/keys');
@@ -3750,11 +3857,11 @@ Proto.prototype.apply = function (f, args) {
     catch (err) { this.emit('error', err) }
 };
 
-},{"events":8,"./lib/scrub":15,"./lib/keys":16,"./lib/foreach":17,"./lib/is_enum":18}],14:[function(require,module,exports){
+},{"events":9,"./lib/scrub":16,"./lib/keys":17,"./lib/foreach":18,"./lib/is_enum":19}],15:[function(require,module,exports){
 exports.parse = require('./lib/parse');
 exports.stringify = require('./lib/stringify');
 
-},{"./lib/parse":19,"./lib/stringify":20}],6:[function(require,module,exports){
+},{"./lib/parse":20,"./lib/stringify":21}],7:[function(require,module,exports){
 var domOpts = {};
 domOpts.params = (function(){
     console.log('DOM OPTS ARE READY')
@@ -3792,14 +3899,14 @@ HTMLElement.prototype.domRemoveClass = function(removeableClasses){
     this.setAttribute('class',currentClasses.join(' '));
     return this;
 }
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 module.exports = Object.keys || function (obj) {
     var keys = [];
     for (var key in obj) keys.push(key);
     return keys;
 };
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 module.exports = function forEach (xs, f) {
     if (xs.forEach) return xs.forEach(f)
     for (var i = 0; i < xs.length; i++) {
@@ -3807,7 +3914,7 @@ module.exports = function forEach (xs, f) {
     }
 }
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 var at, // The index of the current character
     ch, // The current character
     escapee = {
@@ -4082,7 +4189,7 @@ module.exports = function (source, reviver) {
     }({'': result}, '')) : result;
 };
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
     escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
     gap,
@@ -4238,7 +4345,7 @@ module.exports = function (value, replacer, space) {
     return str('', {'': value});
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var objectKeys = require('./keys');
 
 module.exports = function (obj, key) {
@@ -4252,7 +4359,7 @@ module.exports = function (obj, key) {
     return false;
 };
 
-},{"./keys":16}],15:[function(require,module,exports){
+},{"./keys":17}],16:[function(require,module,exports){
 var traverse = require('traverse');
 var objectKeys = require('./keys');
 var forEach = require('./foreach');
@@ -4326,7 +4433,7 @@ Scrubber.prototype.unscrub = function (msg, f) {
     return args;
 };
 
-},{"./keys":16,"./foreach":17,"traverse":21}],21:[function(require,module,exports){
+},{"./keys":17,"./foreach":18,"traverse":22}],22:[function(require,module,exports){
 var traverse = module.exports = function (obj) {
     return new Traverse(obj);
 };
@@ -4638,5 +4745,5 @@ forEach(objectKeys(Traverse.prototype), function (key) {
     };
 });
 
-},{}]},{},[1])
+},{}]},{},[2])
 ;
