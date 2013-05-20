@@ -3,8 +3,10 @@ var shoe = require('shoe');
 var dnode = require('dnode');
 var dest = require('resourceHandler');
 var unicode = require('./unicode.js');
+var toast = require('./Toast.js');
 window.domOpts = require('domOpts');
 window.unicode = unicode;
+window.toast = toast;
 
 
 window.base = new function(){
@@ -124,6 +126,7 @@ window.base = new function(){
             base.server.sendResource(client.id,bundle,{key: key,value:value},function(key){
                 console.log('send success');
                 ui.sendSuccess(key,inputPrefix);
+                toast.showMessage('Auto save: "'+key+'" (success)');
                 cb(key,inputPrefix);
             })
         },
@@ -242,8 +245,6 @@ window.base = new function(){
                 var newValue = newKey.value;
                 var self = this;
 
-                console.log(newKey)
-                console.log(newValue)
                 if(validateNewKey(newValue)){
                     base.con.sendResource(newValue,fc.getBundleNameFrom(),'',function(){
                         newKey.value = newKeyValue;
@@ -257,8 +258,6 @@ window.base = new function(){
             });
         },
         printBundleOld : function(args){
-            console.log(args);
-
             var node = document.getElementById(selectors.tpl.tableBody);
 
             for (var i = 0; i < args.length; i++) {
