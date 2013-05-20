@@ -11,6 +11,7 @@ var unicode = (function(){
     var reg = new RegExp('\\\\u([0-9a-fA-F]{4})',"g");
     return {
         encode : function(string){
+            if(!string){return '';}
             var newstring = string.replace(reg,
                 function (match, submatch) {
                     console.log(match,submatch);

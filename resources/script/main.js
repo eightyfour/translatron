@@ -12,6 +12,7 @@ var unicode = (function(){
     var reg = new RegExp('\\\\u([0-9a-fA-F]{4})',"g");
     return {
         encode : function(string){
+            if(!string){return '';}
             var newstring = string.replace(reg,
                 function (match, submatch) {
                     console.log(match,submatch);
@@ -139,22 +140,24 @@ window.base = new function(){
                 textIdx++;
             }
             console.log(textList);
-            base.con.sendResource(_rootKey,bundle,unicode.decode(newValue));
+            base.con.sendResource(_rootKey,bundle,newValue);
         });
     }
 
-        var reg = new RegExp('\\\\u([0-9a-fA-F]{4})',"g");
-    function escapeUnicodes__(string){
-        var newstring = string.replace(reg,
-            function (match, submatch) {
-                console.log(match,submatch);
-                return String.fromCharCode(parseInt(submatch, 16));
-            });
-        return newstring;
+    function textAreaKeyPressListener(e){
+        var key = e.keyCode || e.which;
+        if(key == 13){
+            e.returnValue = false;
+        }
+        return true;
     }
 
-    function escapeUnicodes(string){
-        return unicode.encode(string);
+    function keyKeyPressListener(e){
+        var key = e.keyCode || e.which;
+        if(key == 32){
+            e.returnValue = false;
+        }
+        return true;
     }
 
     // used on server side to call clients
@@ -166,10 +169,14 @@ window.base = new function(){
             if(bundleName == base.getBundleNameTo()){
                 inputPrefix = _conf.inputTransPrefix
             }
-            var message = data;
+            var message = data,keyNode = document.getElementById(message.key+inputPrefix);
             console.log("updateKey: ",message);
-            document.getElementById(message.key+inputPrefix).value = message.value;
-            ui.updateInputFields(message.key,inputPrefix);
+            if(!keyNode){
+                fc.printBundleTemplate([data])
+            } else {
+                keyNode.value = message.value;
+                ui.updateInputFields(message.key,inputPrefix);
+            }
         }
     }
     var ui = {
@@ -178,13 +185,17 @@ window.base = new function(){
             updateKey : 'updateKey'
         },
         sendSuccess : function(key,inputPrefix){
-            ui.removeStateClasses(document.getElementById(key)).domAddClass(ui.css.sendSuccess);
-            ui.removeStateClasses(document.getElementById(key+inputPrefix)).domAddClass(ui.css.sendSuccess);
+            var node1  = document.getElementById(key);
+            var node2  = document.getElementById(key+inputPrefix)
+            if(node1){ui.removeStateClasses(node1).domAddClass(ui.css.sendSuccess);}
+            if(node2){ui.removeStateClasses(node2).domAddClass(ui.css.sendSuccess);}
         },
         updateInputFields : function(key,inputPrefix){
-            ui.removeStateClasses(document.getElementById(key+inputPrefix)).domAddClass(ui.css.updateKey);
+            var node = document.getElementById(key+inputPrefix);
+            if(node){ui.removeStateClasses(node).domAddClass(ui.css.updateKey);}
         },
         removeStateClasses : function(node){
+            if(!node){return;}
             var classes = '';
             for (var cssState in ui.css) {
                 classes+=cssState+' ';
@@ -209,14 +220,15 @@ window.base = new function(){
     }
     // methods needs to be implemented on server side
     var con = {
-        sendResource : function(key,bundle,value){
-            var inputPrefix = _conf.inputPrefix;
+        sendResource : function(key,bundle,value,cb){
+            var inputPrefix = _conf.inputPrefix,cb = cb || function(){};
             if(bundle == base.getBundleNameTo()){
                 inputPrefix = _conf.inputTransPrefix;
             }
             base.server.sendResource(client.id,bundle,{key: key,value:value},function(key){
                 console.log('send success');
                 ui.sendSuccess(key,inputPrefix);
+                cb(key,inputPrefix);
             })
         },
         sendNewKey : function(key,value){
@@ -242,6 +254,9 @@ window.base = new function(){
             var data = data;
             var keyNode = document.createElement("input");
             var textNode = document.createElement("textarea");
+
+            textNode.addEventListener('keypress',textAreaKeyPressListener);
+
             var transTextNode = document.createElement("textarea");
 
             keyNode.setAttribute('id', data.key);
@@ -249,7 +264,7 @@ window.base = new function(){
             keyNode.setAttribute('readonly', 'true');
             keyNode.value =  data.key;
 
-            textNode.value =  !isTranslation?escapeUnicodes(data.data):'';
+            textNode.value =  !isTranslation?unicode.encode(data.data):'';
             textNode.setAttribute('id', data.key+_conf.inputPrefix);
             textNode.setAttribute('type', 'text');
             textNode.setAttribute('class', 'textField');
@@ -258,10 +273,12 @@ window.base = new function(){
                 textNode.setAttribute('disabled', 'true');
             }
 
-            transTextNode.value = isTranslation?escapeUnicodes(data.data):'';
+            transTextNode.value = isTranslation?unicode.encode(data.data):'';
             transTextNode.setAttribute('id', data.key+_conf.inputTransPrefix);
             transTextNode.setAttribute('type', 'text');
             transTextNode.setAttribute('class', 'textField');
+
+            transTextNode.addEventListener('keypress',textAreaKeyPressListener);
 
             new SaveOnLeave(textNode,data.key,fc.getBundleNameFrom(),data.data);
             new SaveOnLeave(transTextNode,data.key,fc.getBundleNameTo(),data.data);
@@ -281,9 +298,9 @@ window.base = new function(){
         },
         _mergeData : function(data,isTranslation){
             if(isTranslation){
-                document.getElementById(data.key+_conf.inputTransPrefix).value = escapeUnicodes(data.data);
+                document.getElementById(data.key+_conf.inputTransPrefix).value = unicode.encode(data.data);
             } else {
-                document.getElementById(data.key+_conf.inputPrefix).value = escapeUnicodes(data.data);
+                document.getElementById(data.key+_conf.inputPrefix).value = unicode.encode(data.data);
             }
 
         },
@@ -316,6 +333,32 @@ window.base = new function(){
                     node.appendChild(tr);
                 }
             }
+        },
+        printCreateNewBundle : function(){
+            var newKeyButton = document.getElementById('addNewKeyButton');
+            var newKeyValue = document.getElementById('newKey').value;
+            function validateNewKey(string){
+                return (string.length > 0 && string.search('\\.|,| ') == -1)?true:false;
+            }
+            document.getElementById('newKey').addEventListener('keypress',keyKeyPressListener);
+            newKeyButton.addEventListener('click',function(){
+                var newKey = document.getElementById('newKey');
+                var newValue = newKey.value;
+                var self = this;
+
+                console.log(newKey)
+                console.log(newValue)
+                if(validateNewKey(newValue)){
+                    base.con.sendResource(newValue,fc.getBundleNameFrom(),'',function(){
+                        newKey.value = newKeyValue;
+                        self.style.color = '#ffffff'
+                        newKey.style.backgroundColor = "#ffffff";
+                    });
+                } else {
+                    self.style.color = '#ff0000'
+                    newKey.style.backgroundColor = "#ff4444";
+                }
+            });
         },
         printBundleOld : function(args){
             console.log(args);
@@ -367,6 +410,7 @@ domready(function () {
                     base.printBundleTranslation(obj.data);
                 });
             }
+            base.printCreateNewBundle();
         } else {
 
         }
