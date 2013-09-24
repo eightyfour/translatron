@@ -449,7 +449,7 @@ window.base = new function(){
             var newKeyButton = document.getElementById('addNewKeyButton');
             var newKeyValue = document.getElementById('newKey').value;
             function validateNewKey(string){
-                return (string.length > 0 && string.search('\\.|,| ') == -1)?true:false;
+                return (string.length > 0 && string.search('\\,| ') == -1)?true:false;
             }
             document.getElementById('newKey').addEventListener('keypress',keyKeyPressListener);
             newKeyButton.addEventListener('click',function(){
