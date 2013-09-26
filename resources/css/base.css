@@ -1,20 +1,29 @@
-table .textField{
+a {
+    text-decoration: underline;
+    color: blue;
+}
+
+#frontend {
+    display: none;
+}
+
+table .textField {
     width: 400px;
     height: 40px;
 }
 
-.sendSuccess{
+.sendSuccess {
     background-color: #7cfc00;
 }
-.updateKey{
+.updateKey {
     background-color: #ffff00;
 }
-.keyField{
+.keyField {
     width:400px;
 }
-table tr:nth-child(odd){
+table tr:nth-child(odd) {
     background-color: #d3d3d3;
 }
-table tr td{
+table tr td {
     padding: 5px;
 }

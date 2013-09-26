@@ -524,7 +524,7 @@ domready(function () {
     });
     d.pipe(stream).pipe(d);
 
-    console.log('REQUEST PARAMS: '+domOpts.params);
+    console.log('REQUEST PARAMS: '+JSON.stringify(domOpts.params));
 });
 },{"./unicode.js":1,"./Toast.js":2,"domready":4,"shoe":5,"dnode":6,"resourceHandler":7,"domOpts":8}],4:[function(require,module,exports){
 /*!
