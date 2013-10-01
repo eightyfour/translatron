@@ -7,7 +7,7 @@ The tool synchronized the texts between the messages bundles and it's possible t
 
 Parameters:
  * bundle -> bundle name for you messages
- * from _. is the language which needs to be translate
+ * from -> is the language which needs to be translate
  * to -> is the language in to translate 
 
 "admin-mode":
