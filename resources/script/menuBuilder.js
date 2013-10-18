@@ -14,8 +14,8 @@ var menuBuilder = (function () {
                       nl : 'Nederland',
                       en : 'US (Default)',
                       en_GB : 'UK',
-                      se : 'Sverige',
-                      es : 'Danmark'
+                      sv : 'Sverige',
+                      es : 'Espanol'
                   },obj, a,
                   path = document.location.origin + document.location.pathname,
                   bundleName = domOpts.params.bundle;
