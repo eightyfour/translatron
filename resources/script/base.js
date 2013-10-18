@@ -4,7 +4,8 @@ var dnode = require('dnode');
 var dest = require('resourceHandler');
 var unicode = require('./unicode.js');
 var toast = require('./Toast.js');
-window.domOpts = require('domOpts');
+var menuBuilder = require('./menuBuilder.js');
+window.domOpts = require('dom-opts');
 window.unicode = unicode;
 window.toast = toast;
 
@@ -20,7 +21,7 @@ window.base = new function(){
     },
     _conf = {
         rowPrefix : "_row",
-        inputPrefix : "_value",
+        inputPrefix : "_valuae",
         inputTransPrefix : "_trans"
     };
 
@@ -313,4 +314,31 @@ domready(function () {
     d.pipe(stream).pipe(d);
 
     console.log('REQUEST PARAMS: '+domOpts.params);
+
+    menuBuilder.init();
+
+    // setup title read from URL
+    (function () {
+        // TODO remove jQuery
+        var $titleTextTranslation = $('#titleTextTranslation');
+        $titleTextTranslation.hide();
+
+        if (domOpts.params.bundle) {
+            $('#title').text('Translation: ' + domOpts.params.bundle);
+        }
+
+        if (domOpts.params.from) {
+            $('#titleText').text('Text (' + domOpts.params.from + ')');
+        }
+
+        if (domOpts.params.to) {
+            $('tfoot tr').append($('<td/>'));
+            $('#titleTextTranslation').text('Text (' + domOpts.params.to + ')');
+            $titleTextTranslation.show();
+        }
+
+        $('#frontend').show();
+    }());
+
+
 });

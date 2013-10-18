@@ -27,3 +27,5 @@ table tr:nth-child(odd) {
 table tr td {
     padding: 5px;
 }
+label[for=menuNavigation] {float: left;}
+#menuNavigation li {float: left;margin-left: 30px;margin-bottom: 10px;}

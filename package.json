@@ -1,10 +1,11 @@
 {
 	"name" : "resourceBundleManager",
-	"version" : "0.1.0",
+	"version" : "0.1.1",
 	"dependencies" : {
 		"express" : "x",
         "dnode" : "x",
         "domready" : "x",
+        "dom-opts" : "x",
         "shoe" : "x"
 	}
 }
