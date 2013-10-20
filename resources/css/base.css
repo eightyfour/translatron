@@ -29,3 +29,34 @@ table tr td {
 }
 label[for=menuNavigation] {float: left;}
 #menuNavigation li {float: left;margin-left: 30px;margin-bottom: 10px;}
+
+#showSourcePopup{
+    background-color: rgba(20,20,20,0.8);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+#showSourcePopup h2{
+    color: #fff;
+    text-shadow: 0 0 30px #ff0;
+}
+#showSourcePopup .content{
+    width: 600px;
+    height: 700px;
+    top: 0;
+    left: 0;
+    margin: 100px auto 0;
+}
+#showSourcePopup .content .textField{
+    width: 100%;
+    height: 100%;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 10px 1px #FF0;
+}
+#showSourcePopup #saveMessageBundle {
+    width: 100px;
+    margin: auto;
+    box-shadow: 0px 0px 10px 1px #FFF;
+}

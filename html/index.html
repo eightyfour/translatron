@@ -15,7 +15,11 @@
             <label for="menuNavigation">Translate this page in to:</label>
             <div id="menuNavigation" menu-builder="addNavigationMenu"><!-- place holder for the menu navigation --></div>
 
-            <div style="clear: both"></div>
+
+            <div style="clear: both;"></div>
+
+            <a id="showBundlePopup" href="javascript:base.con.showMessageBundleSource()">Show bundle popup</a>
+
             <div id="resourceBundleTable">
                 <table>
                     <thead>
@@ -32,7 +36,7 @@
                         <tr>
                             <td>
                                 <input id="newKey" class="keyField" type="text"
-                                       onfocus="if (this.value == 'Enter new Key') {
+                                       onfocus="if (this.value === 'Enter new Key') {
                                                    this.value = '';
                                                }"
                                        value="Enter new Key" autocomplete="off">

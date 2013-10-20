@@ -101,6 +101,59 @@ window.base = new function(){
             }
             node.domRemoveClass(classes);
             return node;
+        },
+        showBundleSource : function (s, bundle) {
+            var sourcePopup = document.getElementById('showSourcePopup');
+
+            if (sourcePopup) {
+                ([].slice.call(sourcePopup.children)).forEach(function(elem){
+                    elem.domRemove();
+                });
+            } else {
+                sourcePopup = domOpts.createElement('div','showSourcePopup');
+            }
+            var wrapper = domOpts.createElement('div', null, 'content');
+            var message = domOpts.createElement('h2', null);
+            message.innerText = 'Bundle: ' + bundle;
+            var button = domOpts.createElement('button', 'saveMessageBundle');
+            var textNode = document.createElement("textarea");
+
+            button.innerText = "Save bundle";
+
+            button.addEventListener('click', function(e){
+                console.log('TARGET', e.target);
+                if (e.target.getAttribute('id') === 'saveMessageBundle') {
+
+                    if(window.confirm('Are you sure? This will overwrite all changes but not synced to other clients!')) {
+                        base.server.setMessageBundleSource(bundle, textNode.value, function () {
+                            sourcePopup.domRemove();
+                            toast.showMessage('Save complete.');
+                            toast.showMessage('You must manually reload the page.');
+                        });
+                    }
+                }
+            });
+
+
+            textNode.value =  unicode.encode(s);
+            textNode.setAttribute('type', 'text');
+            textNode.setAttribute('class', 'textField');
+
+            message.domAppendTo(wrapper);
+            textNode.domAppendTo(wrapper);
+            button.domAppendTo(wrapper);
+            wrapper.domAppendTo(sourcePopup);
+            sourcePopup.domAppendTo(document.getElementsByTagName('body')[0]);
+
+            sourcePopup.addEventListener('click', function(e){
+                console.log('TARGET', e.target);
+                if (e.target.getAttribute('id') === 'showSourcePopup') {
+                    sourcePopup.domRemove();
+                }
+            });
+
+
+            toast.showMessage('Click on the gray area to close the popup!');
         }
     }
     var error = {
@@ -135,19 +188,30 @@ window.base = new function(){
             base.server.sendNewKey(client.id,{key: key,value:value},function(){
                 console.log('send success');
             })
+        },
+        showMessageBundleSource : function () {
+            var bundle = base.getBundleNameTo() || base.getBundleNameFrom();
+            base.server.getMessageBundleSource(bundle, function (s) {
+                ui.showBundleSource(s, bundle);
+            });
         }
-
     }
 
     var fc = {
         getBundleNameFrom : function(){
             var bundle  = domOpts.params.bundle || 'messages';
             var from    = domOpts.params.from;
+            if (!from) {
+                return null;
+            }
             return from?bundle+'_'+from: bundle;
         },
         getBundleNameTo : function(){
             var bundle  = domOpts.params.bundle || 'messages';
             var to      = domOpts.params.to;
+            if (!to) {
+                return null;
+            }
             return bundle+'_'+to;
         },
         _addData : function(node,data,isTranslation){
@@ -294,7 +358,7 @@ domready(function () {
         console.log('Connected!',server);
         var bundleFrom = base.getBundleNameFrom();
         var bundleTo = base.getBundleNameTo();
-        if(bundleFrom && bundleTo){
+        if (bundleFrom && bundleTo) {
 
             base.server.getMessageBundle(bundleFrom,function (s) {
                 var obj = JSON.parse(s);
@@ -308,7 +372,7 @@ domready(function () {
             }
             base.printCreateNewBundle();
         } else {
-
+            console.log('Do nothing?');
         }
     });
     d.pipe(stream).pipe(d);
