@@ -358,13 +358,12 @@ domready(function () {
         console.log('Connected!',server);
         var bundleFrom = base.getBundleNameFrom();
         var bundleTo = base.getBundleNameTo();
-        if (bundleFrom && bundleTo) {
-
+        if (bundleFrom) {
             base.server.getMessageBundle(bundleFrom,function (s) {
                 var obj = JSON.parse(s);
                 base.printBundleTemplate(obj.data);
             });
-            if(domOpts.params.to){
+            if(bundleTo){
                 base.server.getMessageBundle(bundleTo,function (s) {
                     var obj = JSON.parse(s);
                     base.printBundleTranslation(obj.data);
