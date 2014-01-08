@@ -1,17 +1,16 @@
+ul{
+    padding: 0;
+    margin: 0;
+}
+#resourceEditor .clear{clear: both;}
 a {
     text-decoration: underline;
     color: blue;
 }
-
-#frontend {
-    display: none;
-}
-
 table .textField {
     width: 400px;
     height: 40px;
 }
-
 .sendSuccess {
     background-color: #7cfc00;
 }
@@ -27,8 +26,9 @@ table tr:nth-child(odd) {
 table tr td {
     padding: 5px;
 }
-label[for=menuNavigation] {float: left;}
-#menuNavigation li {float: left;margin-left: 30px;margin-bottom: 10px;}
+label[for=menuNavigationTo] ,
+label[for=menuNavigationFrom] {float: left;}
+.menuNavigation li {float: left;margin-left: 30px;margin-bottom: 10px;}
 
 #showSourcePopup{
     background-color: rgba(20,20,20,0.8);
@@ -47,7 +47,7 @@ label[for=menuNavigation] {float: left;}
     height: 700px;
     top: 0;
     left: 0;
-    margin: 100px auto 0;
+    margin: 30px auto 0;
 }
 #showSourcePopup .content .textField{
     width: 100%;
@@ -59,4 +59,6 @@ label[for=menuNavigation] {float: left;}
     width: 100px;
     margin: auto;
     box-shadow: 0px 0px 10px 1px #FFF;
+    height: 25px;
+    line-height: 20px;
 }

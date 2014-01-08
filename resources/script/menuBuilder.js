@@ -1,41 +1,60 @@
+/*global */
+/*jslint browser: true */
 var domready = require('domready');
 window.domOpts = require('dom-opts');
 
 
 var menuBuilder = (function () {
+    "use strict";
 
-      var domOperations = {
-          addNavigationMenu : function (nodeToAppend) {
-              console.log('START GENERATE MENU');
-              var ul = domOpts.createElement('ul', 'navigationMenu'), li,
-                  locals = {
-                      da : 'Danmark',
-                      fr : 'France',
-                      nl : 'Nederland',
-                      en : 'US (Default)',
-                      en_GB : 'UK',
-                      sv : 'Sverige',
-                      es : 'Espanol'
-                  },obj, a,
-                  path = document.location.origin + document.location.pathname,
-                  bundleName = domOpts.params.bundle;
-                  fromTranslation = domOpts.params.from || 'de';
+    var domOperations = {
+        addNavigationMenu: function (nodeToAppend) {
+            console.log('START GENERATE MENU');
+            var ul = window.domOpts.createElement('ul', 'navigationMenu'), li,
+                locals = {
+                    da: 'Danmark',
+                    de: 'Deutschland',
+                    fr: 'France',
+                    nl: 'Nederland',
+                    en: 'United States (Default)',
+                    en_GB: 'United Kingdom',
+                    sv: 'Sverige',
+                    es: 'Espanol'
+                }, obj, a, to, from,
+                path = document.location.origin + document.location.pathname,
+                bundleName = window.domOpts.params.bundle,
+                fromTranslation = window.domOpts.params.from || 'de',
+                toTranslation = window.domOpts.params.to,
+                domValue = nodeToAppend.getAttribute('value') || 'to';
 
-              for (obj in locals) {
-                  if (locals.hasOwnProperty(obj)) {
-                      li = domOpts.createElement('li');
-                      a = domOpts.createElement('a');
-                      a.setAttribute('href', path + '?bundle=' + bundleName + '&from=' + fromTranslation + "&to=" + obj);
-                      a.innerText = locals[obj];
-                      a.domAppendTo(li);
-                      li.domAppendTo(ul);
-                  }
-              }
+            for (obj in locals) {
+                if (locals.hasOwnProperty(obj)) {
 
-              ul.domAppendTo(nodeToAppend);
+                    li = window.domOpts.createElement('li');
+                    a = window.domOpts.createElement('a');
 
-          }
-      };
+                    if (domValue === 'from') {
+                        from = obj;
+                        to = toTranslation;
+                    } else {
+                        to = obj;
+                        from = fromTranslation;
+                    }
+                    if (to) {
+                        a.setAttribute('href', path + '?bundle=' + bundleName + '&from=' + from + "&to=" + to);
+                    } else {
+                        a.setAttribute('href', path + '?bundle=' + bundleName + '&from=' + from);
+                    }
+                    a.innerText = locals[obj];
+                    a.domAppendTo(li);
+                    li.domAppendTo(ul);
+                }
+            }
+
+            ul.domAppendTo(nodeToAppend);
+
+        }
+    };
 
     return {
         init : function () {
@@ -45,9 +64,9 @@ var menuBuilder = (function () {
                 if (domOperations.hasOwnProperty(attribute)) {
                     domOperations[attribute](node);
                 }
-            })
+            });
         }
-    }
+    };
 }());
 
 

@@ -104,6 +104,32 @@ window.base = new function(){
         },
         showBundleSource : function (s, bundle) {
             var sourcePopup = document.getElementById('showSourcePopup');
+            var locals = {
+                da : 'Danmark',
+                de : 'Deutschland',
+                fr : 'France',
+                nl : 'Nederland',
+                en : 'United States (Default)',
+                en_GB : 'United Kingdom',
+                sv : 'Sverige',
+                es : 'Espanol'
+            };
+            var menuDingens = domOpts.createElement('div', null, 'content');
+            var onclickFc = function (locale) {
+                return function () {
+                    base.getBundleName(locale);
+                };
+            };
+            var generateMenu = function () {
+                var node;
+                for (var locale in locals) {
+                    if (locals.hasOwnProperty(locale)) {
+                        node = domOpts.createElement('div', null, 'menuLink');
+                        node.addEventListener('click',onclickFc(locale));
+                        // apend
+                    }
+                }
+            };
 
             if (sourcePopup) {
                 ([].slice.call(sourcePopup.children)).forEach(function(elem){
@@ -155,7 +181,7 @@ window.base = new function(){
 
             toast.showMessage('Click on the gray area to close the popup!');
         }
-    }
+    };
     var error = {
         print : function(msg){
             var node = document.getElementById('errorPrint');
@@ -213,6 +239,10 @@ window.base = new function(){
                 return null;
             }
             return bundle+'_'+to;
+        },
+        getBundleName : function (locale) {
+            var bundle  = domOpts.params.bundle || 'messages';
+            return bundle + '_' + locale;
         },
         _addData : function(node,data,isTranslation){
             var data = data;
@@ -382,25 +412,21 @@ domready(function () {
 
     // setup title read from URL
     (function () {
-        // TODO remove jQuery
-        var $titleTextTranslation = $('#titleTextTranslation');
-        $titleTextTranslation.hide();
+        var titleTextTranslation = document.getElementById('titleTextTranslation');
+        titleTextTranslation.style.display = 'none';
 
         if (domOpts.params.bundle) {
-            $('#title').text('Translation: ' + domOpts.params.bundle);
+            document.getElementById('title').innerText = 'Translation: ' + domOpts.params.bundle;
         }
 
         if (domOpts.params.from) {
-            $('#titleText').text('Text (' + domOpts.params.from + ')');
+            document.getElementById('titleText').innerText = 'Text (' + domOpts.params.from + ')';
         }
 
         if (domOpts.params.to) {
-            $('tfoot tr').append($('<td/>'));
-            $('#titleTextTranslation').text('Text (' + domOpts.params.to + ')');
-            $titleTextTranslation.show();
+            titleTextTranslation.innerText = 'Text (' + domOpts.params.to + ')';
+            titleTextTranslation.style.display = '';
         }
-
-        $('#frontend').show();
     }());
 
 
