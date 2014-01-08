@@ -4,61 +4,59 @@ var express = require('express'),
     fs = require('fs'),
     shoe = require('shoe'),
     dnode = require('dnode'),
-    client = require('./lib/client.js')(__dirname);
+    client = require('./lib/client.js')(__dirname),
+    C = require('./lib/CONST.js'),
+    fileManager = require('./lib/server/fileManager.js'),
+    bash = require('./lib/server/bash.js');
+
 var app = express();
 
+global.projectFolder = __dirname + '/static';
 
-app.use(express.static(__dirname + '/resources'));
+app.use(express.static(__dirname + '/fe'));
 
-app.get('/:bundle?/:templateLang?/:lang?', function (request, response, next) {
-    "use strict";
 
-    var req = request;
-//    var fileName = req.originalUrl.split(':')[0];
-    var fileName = req.path || '/'; //load allways index
-    var res = response;
-    var htmlExtension = '.html';
-    var next = next;
-
-    fs.exists(__dirname + '/html' + (fileName === '/' ? fileName : fileName + htmlExtension), function (exists) {
-
-        if (exists) {
-            if (fileName === '/') {
-                fs.readFile(__dirname + '/html/index.html', function (err, data) {
-                    res.writeHead(200, {'Content-Type': 'text/html'});
-                    res.write(data);
-                    res.end();
-                });
-            } else {
-                fs.readFile(__dirname + '/html' + fileName + htmlExtension, function (err, data) {
-                    res.writeHead(200, {'Content-Type': 'text/html'});
-                    res.write(data);
-                    res.end();
-                });
-            }
-        } else {
-            next();
-//            fs.readFile(__dirname+'/ui/error.html', function (err, data) {
-//                res.writeHead(200, {'Content-Type':'text/html',title:'Thinkuseful'});
-//                res.end("<h1>File not found</h1><a href='/'>Back to home</a>");
-//            });
-        }
-    });
-});
 
 var server = app.listen(3000);
 
-var con;
-var sock = shoe(function (stream) {
+var conDnode;
+var dnodeCon = shoe(function (stream) {
     "use strict";
     var d = dnode(client);
     d.pipe(stream).pipe(d);
-    con = stream;
+    conDnode = stream;
 
-    con.on('end', function () {
+    conDnode.on('end', function () {
         console.log('end');
     });
 });
-var inst = sock.install(server, '/dnode');
+dnodeCon.install(server, '/dnode');
+
+
+var conTrade;
+var trade = shoe(function (stream) {
+    "use strict";
+    var d = dnode({
+        init : function (clientEvents) {
+            console.log('HALLO: ' + clientEvents);
+
+            bash.exec({
+                comand : C.BASH.LS,
+                path : '.'
+            }, function (obj) {
+                clientEvents.sendPathList(obj);
+            });
+        },
+        bash : bash,
+        fileManager : fileManager
+    });
+    d.pipe(stream).pipe(d);
+    conTrade = stream;
+
+    conTrade.on('end', function () {
+        console.log('end');
+    });
+});
+trade.install(server, '/trade');
 
 console.log("start server 3000");

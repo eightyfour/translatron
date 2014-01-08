@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resource bundle manager</title>
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/a.css">
+
+    <script type="text/javascript" src="/js/min/fe.js"></script>
+
+</head>
+<body>
+
+<script>
+    var main = {
+        link : {
+            showTranslationView : function () {
+                // reload the page because the files are not synced
+                location.href = location.href;
+            },
+            showEditorView : function () {
+                var resEditor = document.getElementById('resourceEditor'),
+                    fileEditor = document.getElementById('fileManager');
+                alert('This mode is only developers. Keep in mind that the file changes you made are not synced to the other clients.');
+                resEditor.style.display = 'none';
+                fileEditor.style.display = '';
+            }
+        }
+    }
+</script>
+
+<h1 id="title">&nbsp;</h1>
+
+<div id="resourceEditor">
+
+    <p>
+        <a href="https://confluence.gameduell.de/display/MOBS/Language+properties+tool" target="_blank">How to use this tool?</a>
+    </p>
+
+    <label for="menuNavigationFrom">Translate this page from:</label>
+    <div id="menuNavigationFrom" menu-builder="addNavigationMenu" value="from" class="menuNavigation"><!-- place holder for the menu navigation --></div>
+
+    <div class="clear"></div>
+
+    <label for="menuNavigationTo">Translate this page in to:</label>
+    <div id="menuNavigationTo" menu-builder="addNavigationMenu" value="to" class="menuNavigation"><!-- place holder for the menu navigation --></div>
+
+
+    <div style="clear: both;"></div>
+
+    <a class="switchLink" href="javascript:main.link.showEditorView()">Show in editor mode</a>
+
+    <div id="resourceBundleTable">
+        <table>
+            <thead>
+            <tr>
+                <td id="titleKey">Identifier <em>(must be unique)</em></td>
+                <td id="titleText">&nbsp;</td>
+                <td id="titleTextTranslation">&nbsp;</td>
+            </tr>
+            </thead>
+            <tbody id="tableBody">
+
+            </tbody>
+            <tfoot>
+            <tr>
+                <td>
+                    <input id="newKey" class="keyField" type="text"
+                           onfocus="if (this.value === 'Enter new Key') {
+                                                   this.value = '';
+                                               }"
+                           value="Enter new Key" autocomplete="off">
+
+                </td>
+                <td>
+                    <a id="addNewKeyButton" href="javascript:void(0);">add new key</a>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<div id="fileManager" style="display: none">
+
+    <a class="switchLink" href="javascript:main.link.showTranslationView()">Show bundle translation</a>
+
+    <div id="pathMenu" class="floatL">
+        <div canny="pathNavigation"></div>
+    </div>
+
+    <div class="floatL">
+        <div canny="tabManager"></div>
+
+        <div canny="fileEditor"></div>
+
+        <div canny="imageViewer"></div>
+    </div>
+
+</div>
+
+<div id="debugIncomming"></div>
+</body>
+</html>
