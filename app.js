@@ -7,7 +7,8 @@ var express = require('express'),
     client = require('./lib/client.js')(__dirname),
     C = require('./lib/CONST.js'),
     fileManager = require('./lib/server/fileManager.js'),
-    bash = require('./lib/server/bash.js');
+    bash = require('./lib/server/bash.js'),
+    serverPort = 3000;
 
 var app = express();
 
@@ -17,7 +18,7 @@ app.use(express.static(__dirname + '/fe'));
 
 
 
-var server = app.listen(3000);
+var server = app.listen(serverPort);
 
 var conDnode;
 var dnodeCon = shoe(function (stream) {
@@ -59,4 +60,4 @@ var trade = shoe(function (stream) {
 });
 trade.install(server, '/trade');
 
-console.log("start server 3000");
+console.log("start server " + serverPort);
