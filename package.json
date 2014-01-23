@@ -6,6 +6,7 @@
         "dnode" : "x",
         "domready" : "x",
         "dom-opts" : "x",
+        "canny" : "x",
         "shoe" : "x",
         "brace" : "x"
 	}

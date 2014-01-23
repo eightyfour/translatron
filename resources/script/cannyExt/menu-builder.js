@@ -1,6 +1,6 @@
 /*global */
 /*jslint browser: true */
-var domready = require('domready');
+var canny = require('canny');
 window.domOpts = require('dom-opts');
 
 
@@ -8,7 +8,7 @@ var menuBuilder = (function () {
     "use strict";
 
     var domOperations = {
-        addNavigationMenu: function (nodeToAppend) {
+        addNavigationMenu: function (nodeToAppend, domValue) {
             console.log('START GENERATE MENU');
             var ul = window.domOpts.createElement('ul', 'navigationMenu'), li,
                 locals = {
@@ -24,8 +24,7 @@ var menuBuilder = (function () {
                 path = document.location.origin + document.location.pathname,
                 bundleName = window.domOpts.params.bundle,
                 fromTranslation = window.domOpts.params.from || 'de',
-                toTranslation = window.domOpts.params.to,
-                domValue = nodeToAppend.getAttribute('value') || 'to';
+                toTranslation = window.domOpts.params.to;
 
             for (obj in locals) {
                 if (locals.hasOwnProperty(obj)) {
@@ -57,17 +56,11 @@ var menuBuilder = (function () {
     };
 
     return {
-        init : function () {
-            var menuBuilderList = [].slice.call(document.querySelectorAll('[menu-builder]'));
-            menuBuilderList.forEach(function (node) {
-                var attribute = node.getAttribute('menu-builder');
-                if (domOperations.hasOwnProperty(attribute)) {
-                    domOperations[attribute](node);
-                }
-            });
+        add : function (node, attr) {
+            domOperations.addNavigationMenu(node, attr);
         }
     };
 }());
 
 
-module.exports = menuBuilder;
+canny.add('menuBuilder', menuBuilder);

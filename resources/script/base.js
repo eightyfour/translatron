@@ -3,7 +3,13 @@ var shoe = require('shoe');
 var dnode = require('dnode');
 var unicode = require('./unicode.js');
 var toast = require('./Toast.js');
-var menuBuilder = require('./menuBuilder.js');
+var canny = require('canny');
+
+require('./cannyExt/nav-controller.js');
+require('./cannyExt/menu-builder.js');
+canny.add('flowControl', require('canny/mod/flowControl'));
+
+window.canny = canny;
 window.domOpts = require('dom-opts');
 window.unicode = unicode;
 window.toast = toast;
@@ -317,8 +323,6 @@ domready(function () {
     d.pipe(stream).pipe(d);
 
     console.log('REQUEST PARAMS: ' + domOpts.params);
-
-    menuBuilder.init();
 
     // setup title read from URL
     (function () {

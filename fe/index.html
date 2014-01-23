@@ -10,31 +10,11 @@
 </head>
 <body>
 
-<script>
-    var main = {
-        link : {
-            showTranslationView : function () {
-                // reload the page because the files are not synced
-                location.href = location.href;
-            },
-            showEditorView : function () {
-                var resEditor = document.getElementById('resourceEditor'),
-                    fileEditor = document.getElementById('fileManager');
-                alert('This mode is only developers. Keep in mind that the file changes you made are not synced to the other clients.');
-                resEditor.style.display = 'none';
-                fileEditor.style.display = '';
-            }
-        }
-    }
-</script>
-
-
-
 <div id="resourceEditor">
 
     <h1 id="title">&nbsp;</h1>
 
-    <div id="resourceBundleTable">
+    <div id="resourceBundleTable" canny-mod="flowControl" canny-var="{'view':'resourceBundle'}">
         <table>
             <thead>
             <tr>
@@ -65,9 +45,9 @@
     </div>
 </div>
 
-<div id="fileManager" style="display: none">
+<div id="fileManager" canny-mod="flowControl" canny-var="{'view':'fileManager'}" style="display: none">
 
-    <a class="switchLink" href="javascript:main.link.showTranslationView()">Show bundle translation</a>
+    <a class="switchLink" canny-mod="navController" canny-var="showResourceBundleEditor">Show bundle translation</a>
 
     <div id="pathMenu" class="floatL">
         <div canny="pathNavigation"></div>
@@ -89,20 +69,21 @@
 
     <p>
         <a href="https://confluence.gameduell.de/display/MOBS/Language+properties+tool" target="_blank">How to use this tool?</a>
+        <a canny-mod="navController" canny-var="createNewProject">Create new project</a>
     </p>
 
     <label for="menuNavigationFrom">Translate this page from:</label>
-    <div id="menuNavigationFrom" menu-builder="addNavigationMenu" value="from" class="menuNavigation"><!-- place holder for the menu navigation --></div>
+    <div id="menuNavigationFrom" canny-mod="menuBuilder" canny-var="from" class="menuNavigation"><!-- place holder for the menu navigation --></div>
 
     <div class="clear"></div>
 
     <label for="menuNavigationTo">Translate this page in to:</label>
-    <div id="menuNavigationTo" menu-builder="addNavigationMenu" value="to" class="menuNavigation"><!-- place holder for the menu navigation --></div>
+    <div id="menuNavigationTo"canny-mod="menuBuilder" canny-var="to" class="menuNavigation"><!-- place holder for the menu navigation --></div>
 
 
     <div style="clear: both;"></div>
 
-    <a class="switchLink" href="javascript:main.link.showEditorView()">Show in editor mode</a>
+    <a class="switchLink" canny-mod="navController" canny-var="showFileEditor">Show in editor mode</a>
 
 </div>
 
