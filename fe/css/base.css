@@ -8,7 +8,8 @@ html{
     position: fixed;
     bottom: 0;
     left: 0;
-    height: 27px;
+    max-height: 27px;
+    padding-bottom: 10px;
     position: fixed;
     z-index: 20;
     width: 100%;
@@ -21,7 +22,7 @@ html{
 }
 #fixedNavigation.open,
 #fixedNavigation:hover {
-    height: 136px;
+    max-height: 200px;
     transition: all 1s;
 }
 #fixedNavigation p{
@@ -49,7 +50,7 @@ a {
     color: blue;
 }
 #resourceEditor #resourceBundleTable{
-    margin-bottom: 40px;
+    margin-bottom: 70px;
 }
 #resourceEditor  table .textField {
     width: 400px;
