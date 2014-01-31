@@ -313,8 +313,9 @@ domready(function () {
                         base.printBundleTranslation(obj.data);
                         base.printCreateNewBundle();
                     });
+                } else {
+                    base.printCreateNewBundle();
                 }
-
             });
         } else {
             console.log('Do nothing?');
