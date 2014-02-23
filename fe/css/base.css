@@ -40,7 +40,7 @@ html{
     padding: 0;
     margin: 0;
 }
-#fixedNavigation  label[for=menuNavigationTo] ,
+#fixedNavigation  label[for=menuNavigationTo],
 #fixedNavigation  label[for=menuNavigationFrom] {float: left;}
 #fixedNavigation  .menuNavigation li {float: left;margin-left: 30px;margin-bottom: 10px;}
 #fixedNavigation .switchLink{margin-bottom: 20px;}
@@ -49,7 +49,7 @@ a {
     text-decoration: underline;
     color: blue;
 }
-#resourceEditor #resourceBundleTable{
+#resourceEditor #resourceBundleTable {
     margin-bottom: 70px;
 }
 #resourceEditor  table .textField {

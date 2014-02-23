@@ -1,12 +1,12 @@
 {
 	"name" : "resourceBundleManager",
-	"version" : "0.1.1",
+	"version" : "0.2.0",
 	"dependencies" : {
 		"express" : "x",
         "dnode" : "x",
         "domready" : "x",
-        "dom-opts" : "x",
-        "canny" : "x",
+        "dom-opts" : "git://github.com/eightyfour/dom-opts.git",
+        "canny" : "git://github.com/eightyfour/canny.git",
         "shoe" : "x",
         "brace" : "x"
 	}
