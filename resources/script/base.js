@@ -27,6 +27,7 @@ window.base = (function () {
             }
         },
         conf = {
+            projectPrefix : "_prj",
             rowPrefix : "_row",
             inputPrefix : "_valuae",
             inputTransPrefix : "_trans"
@@ -147,6 +148,27 @@ window.base = (function () {
             }
         },
         fc = {
+            getViewKeyObject : function (obj) {
+                var newKey,
+                    contextName = null,
+                    delemitter = '_';
+                if (/\./.test(obj.key)) {
+                    delemitter = '.';
+                }
+
+                newKey = obj.key.split(delemitter);
+
+                if (newKey.length > 1) {
+                    // use slice if we need the complete key in the view
+                    contextName = newKey.splice(0, 1);
+                }
+                return {
+                    id : obj.key,
+                    contextName : contextName,
+                    keyName : newKey.join(delemitter),
+                    data : obj.data
+                };
+            },
             isBundleEqual : function (bundle1, bundle2) {
                 if (bundle1.bundle === bundle2.bundle && bundle1.locale === bundle2.locale) {
                     return true;
@@ -174,22 +196,23 @@ window.base = (function () {
                 var bundle  = domOpts.params.bundle || 'messages';
                 return bundle + '_' + locale;
             },
-            _addData : function (node, data, isTranslation) {
-                var keyNode = document.createElement("input"),
+            _addData : function (node, keyObj, isTranslation) {
+                var keyInputNode = document.createElement("input"),
                     textNode = document.createElement("textarea"),
                     transTextNode = document.createElement("textarea"),
-                    td,
-                    tdTrans;
+                    dataNode,
+                    keyNode,
+                    transNode;
 
                 textNode.addEventListener('keypress', textAreaKeyPressListener);
 
-                keyNode.setAttribute('id', data.key);
-                keyNode.setAttribute('class', 'keyField');
-                keyNode.setAttribute('readonly', 'true');
-                keyNode.value =  data.key;
+                keyInputNode.setAttribute('id', keyObj.id);
+                keyInputNode.setAttribute('class', 'keyField');
+                keyInputNode.setAttribute('readonly', 'true');
+                keyInputNode.value =  keyObj.keyName;
 
-                textNode.value =  !isTranslation ? unicode.encode(data.data) : '';
-                textNode.setAttribute('id', data.key + conf.inputPrefix);
+                textNode.value =  !isTranslation ? unicode.encode(keyObj.data) : '';
+                textNode.setAttribute('id', keyObj.id + conf.inputPrefix);
                 textNode.setAttribute('type', 'text');
                 textNode.setAttribute('class', 'textField');
 
@@ -197,28 +220,31 @@ window.base = (function () {
                     textNode.setAttribute('disabled', 'true');
                 }
 
-                transTextNode.value = isTranslation ? unicode.encode(data.data) : '';
-                transTextNode.setAttribute('id', data.key + conf.inputTransPrefix);
+                transTextNode.value = isTranslation ? unicode.encode(keyObj.data) : '';
+                transTextNode.setAttribute('id', keyObj.id + conf.inputTransPrefix);
                 transTextNode.setAttribute('type', 'text');
                 transTextNode.setAttribute('class', 'textField');
 
                 transTextNode.addEventListener('keypress', textAreaKeyPressListener);
 
-                new SaveOnLeave(textNode, data.key, fc.getBundleNameFrom(),data.data);
-                new SaveOnLeave(transTextNode, data.key, fc.getBundleNameTo(), data.data);
+                new SaveOnLeave(textNode, keyObj.id, fc.getBundleNameFrom(), keyObj.data);
+                new SaveOnLeave(transTextNode, keyObj.id, fc.getBundleNameTo(), keyObj.data);
 
-                td = document.createElement('td');
-                td.appendChild(keyNode);
-                node.appendChild(td);
-                td = document.createElement('td');
-                td.appendChild(textNode);
+                keyNode = document.createElement('div');
+                keyNode.setAttribute('class', 'data key');
+                keyNode.appendChild(keyInputNode);
+                node.appendChild(keyNode);
+                dataNode = document.createElement('div');
+                dataNode.setAttribute('class', 'data tpl');
+                dataNode.appendChild(textNode);
 
-                tdTrans = document.createElement('td');
-                tdTrans.appendChild(transTextNode);
+                transNode = document.createElement('div');
+                transNode.setAttribute('class', 'data trans');
+                transNode.appendChild(transTextNode);
 
-                node.appendChild(td);
+                node.appendChild(dataNode);
                 if (domOpts.params.to) {
-                    node.appendChild(tdTrans);
+                    node.appendChild(transNode);
                 }
             },
             mergeData : function (data, isTranslation) {
@@ -232,43 +258,73 @@ window.base = (function () {
             printBundleTemplate : function (args) {
                 var node = document.getElementById(selectors.tpl.tableBody),
                     l = args.length,
-                    i, tr, row;
+                    i, tr, row, keyObj, projectNode,
+                        /**
+                         * Setup header and handle the category
+                         * @param node
+                         * @param keyObj
+                         * @returns {HTMLElement}
+                         */
+                    prepareCategoryNode = function (node, keyObj) {
+                        var categoryNode = document.getElementById(keyObj.contextName ? keyObj.contextName + conf.projectPrefix : conf.projectPrefix),
+                            header;
+
+                        if (!categoryNode) {
+                            categoryNode = document.createElement("div");
+                            categoryNode.setAttribute('id', keyObj.contextName ? keyObj.contextName + conf.projectPrefix : conf.projectPrefix);
+                            if (keyObj.contextName) {
+                                header = document.createElement("h2");
+                                header.innerText = keyObj.contextName;
+                                categoryNode.appendChild(header);
+                            }
+                            node.appendChild(categoryNode);
+                        }
+                        return categoryNode;
+                    };
+
 
                 for (i = 0; i < l; i++) {
-                    row = document.getElementById(args[i].key + conf.rowPrefix);
+                    keyObj =  fc.getViewKeyObject(args[i]);
+                    projectNode = prepareCategoryNode(node, keyObj);
+                    row = document.getElementById(keyObj.id + conf.rowPrefix);
                     if (row) {
                         fc.mergeData(args[i], false);
                     } else {
-                        tr = document.createElement("tr");
-                        tr.setAttribute('id', args[i].key + conf.rowPrefix);
-                        fc._addData(tr, args[i], false);
-                        node.appendChild(tr);
+                        tr = document.createElement("div");
+                        tr.setAttribute('class', 'row');
+                        tr.setAttribute('id', keyObj.id + conf.rowPrefix);
+                        fc._addData(tr, keyObj, false);
+                        projectNode.appendChild(tr);
                     }
                 }
             },
             printBundleTranslation : function (args) {
                 var node = document.getElementById(selectors.tpl.tableBody),
                     l = args.length,
-                    i, row, tr;
+                    i,
+                    row,
+                    rowNode;
 
                 for (i = 0; i < l; i++) {
-                    var row = document.getElementById(args[i].key + conf.rowPrefix);
+                    row = document.getElementById(args[i].key + conf.rowPrefix);
+                    // test if row already exists
                     if (row) {
                         fc.mergeData(args[i], true);
                     } else {
-                        tr = document.createElement("tr");
-                        tr.setAttribute('id', args[i] + conf.rowPrefix);
-                        fc._addData(tr, args[i], true);
-                        node.appendChild(tr);
+                        rowNode = document.createElement("div");
+                        rowNode.setAttribute('id', args[i] + conf.rowPrefix);
+                        rowNode.setAttribute('class', 'row');
+                        fc._addData(rowNode, fc.getViewKeyObject(args[i]), true);
+                        node.appendChild(rowNode);
                     }
                 }
             },
-            printCreateNewBundle : function () {
+            printCreateNewBundle : function (parentNode, keyObj) {
                 var newKeyButton = document.getElementById('addNewKeyButton'),
                     newKeyValue = document.getElementById('newKey').value;
 
                 function validateNewKey(string) {
-                    return (string.length > 0 && string.search('\\.|,| ') === -1) ? true: false;
+                    return (string.length > 0 && string.search('\\.|,| ') === -1) ? true : false;
                 }
 
                 document.getElementById('newKey').addEventListener('keypress', keyKeyPressListener);
@@ -304,7 +360,11 @@ var d = dnode();
 
 domready(function () {
     "use strict";
-
+    var sortByKey = function (a, b) {
+        if (a.key < b.key) {return -1; }
+        if (a.key > b.key) {return 1; }
+        return 0;
+    }
     // set bundle name for only notify clients with same bundle
     base.client.broadCast.fromBundle = base.getBundleNameFrom();
     base.client.broadCast.toBundle  = base.getBundleNameTo();
@@ -319,9 +379,11 @@ domready(function () {
             bundleTo = base.getBundleNameTo();
         if (bundleFrom) {
             base.server.getMessageBundle(bundleFrom, function (s) {
-                var obj = JSON.parse(s);
+                var obj = JSON.parse(s),
+                    sorted;
                 if (obj) {
-                    base.printBundleTemplate(obj.data);
+                    sorted = obj.data.sort(sortByKey);
+                    base.printBundleTemplate(sorted);
 
                     if (bundleTo) {
                         base.server.getMessageBundle(bundleTo, function (s) {
