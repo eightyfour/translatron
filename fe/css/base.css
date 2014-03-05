@@ -1,6 +1,10 @@
 html{
     background: #dce4ea;
 }
+body{
+    font-family: sans-serif;
+    font-size: 80%;
+}
 #resourceEditor {
     /*padding-bottom: 30px;*/
 }
@@ -52,7 +56,9 @@ a {
 #resourceEditor #resourceBundleTable {
     margin-bottom: 70px;
 }
-#resourceEditor  table .textField {
+#resourceEditor #titleText,
+#resourceEditor #titleTextTranslation,
+#resourceEditor .textField {
     width: 400px;
     height: 40px;
 }
@@ -62,53 +68,32 @@ a {
 #resourceEditor  .updateKey {
     background-color: #ffff00;
 }
+#resourceEditor #titleKey,
 #resourceEditor .keyField {
-    width:400px;
+    width: 300px;
 }
-#resourceEditor table {
-    border-spacing: 0;
+#resourceEditor .header,
+#resourceEditor #tableBody > div{
+    display: inline-block;
+    display: table;
 }
-#resourceEditor  table tr {
-    background-color: #f1f1f1;
+#resourceEditor #tableBody > div:nth-child(even) {
+    background-color: rgba(49, 134, 0, 0.6);
 }
-#resourceEditor  table tr:nth-child(odd) {
-    background-color: #d3d3d3;
+#resourceEditor #tableBody h2{
+    border-bottom: 1px solid #303030;
 }
-#resourceEditor table tr td {
+#resourceEditor .header .row,
+#resourceEditor  .row{
+    display: table-row;
+}
+#resourceEditor .header .row > div,
+#resourceEditor  .row > div{
+    display: table-cell;
     padding: 5px;
+    vertical-align: middle;
 }
-
-/*#showSourcePopup{*/
-    /*background-color: rgba(20,20,20,0.8);*/
-    /*position: absolute;*/
-    /*width: 100%;*/
-    /*height: 100%;*/
-    /*top: 0;*/
-    /*left: 0;*/
-/*}*/
-/*#showSourcePopup h2{*/
-    /*color: #fff;*/
-    /*text-shadow: 0 0 30px #ff0;*/
-/*}*/
-/*#showSourcePopup .content{*/
-    /*width: 600px;*/
-    /*height: 700px;*/
-    /*top: 0;*/
-    /*left: 0;*/
-    /*margin: 30px auto 0;*/
-/*}*/
-/*#showSourcePopup .content .textField{*/
-    /*width: 100%;*/
-    /*height: 100%;*/
-    /*margin-bottom: 20px;*/
-    /*box-shadow: 0px 0px 10px 1px #FF0;*/
-/*}*/
-/*#showSourcePopup #saveMessageBundle {*/
-    /*width: 100px;*/
-    /*margin: auto;*/
-    /*box-shadow: 0px 0px 10px 1px #FFF;*/
-    /*height: 25px;*/
-    /*line-height: 20px;*/
-/*}*/
-
+#resourceEditor .row:nth-child(odd) {
+    background-color: rgba(211, 211, 211, 0.5);
+}
 #fileManager .switchLink{display: block;}

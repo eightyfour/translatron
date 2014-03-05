@@ -197,18 +197,19 @@ window.base = (function () {
                 return bundle + '_' + locale;
             },
             _addData : function (node, keyObj, isTranslation) {
-                var keyNode = document.createElement("input"),
+                var keyInputNode = document.createElement("input"),
                     textNode = document.createElement("textarea"),
                     transTextNode = document.createElement("textarea"),
-                    td,
-                    tdTrans;
+                    dataNode,
+                    keyNode,
+                    transNode;
 
                 textNode.addEventListener('keypress', textAreaKeyPressListener);
 
-                keyNode.setAttribute('id', keyObj.id);
-                keyNode.setAttribute('class', 'keyField');
-                keyNode.setAttribute('readonly', 'true');
-                keyNode.value =  keyObj.keyName;
+                keyInputNode.setAttribute('id', keyObj.id);
+                keyInputNode.setAttribute('class', 'keyField');
+                keyInputNode.setAttribute('readonly', 'true');
+                keyInputNode.value =  keyObj.keyName;
 
                 textNode.value =  !isTranslation ? unicode.encode(keyObj.data) : '';
                 textNode.setAttribute('id', keyObj.id + conf.inputPrefix);
@@ -229,18 +230,21 @@ window.base = (function () {
                 new SaveOnLeave(textNode, keyObj.id, fc.getBundleNameFrom(), keyObj.data);
                 new SaveOnLeave(transTextNode, keyObj.id, fc.getBundleNameTo(), keyObj.data);
 
-                td = document.createElement('td');
-                td.appendChild(keyNode);
-                node.appendChild(td);
-                td = document.createElement('td');
-                td.appendChild(textNode);
+                keyNode = document.createElement('div');
+                keyNode.setAttribute('class', 'data key');
+                keyNode.appendChild(keyInputNode);
+                node.appendChild(keyNode);
+                dataNode = document.createElement('div');
+                dataNode.setAttribute('class', 'data tpl');
+                dataNode.appendChild(textNode);
 
-                tdTrans = document.createElement('td');
-                tdTrans.appendChild(transTextNode);
+                transNode = document.createElement('div');
+                transNode.setAttribute('class', 'data trans');
+                transNode.appendChild(transTextNode);
 
-                node.appendChild(td);
+                node.appendChild(dataNode);
                 if (domOpts.params.to) {
-                    node.appendChild(tdTrans);
+                    node.appendChild(transNode);
                 }
             },
             mergeData : function (data, isTranslation) {
@@ -286,7 +290,8 @@ window.base = (function () {
                     if (row) {
                         fc.mergeData(args[i], false);
                     } else {
-                        tr = document.createElement("tr");
+                        tr = document.createElement("div");
+                        tr.setAttribute('class', 'row');
                         tr.setAttribute('id', keyObj.id + conf.rowPrefix);
                         fc._addData(tr, keyObj, false);
                         projectNode.appendChild(tr);
@@ -296,17 +301,21 @@ window.base = (function () {
             printBundleTranslation : function (args) {
                 var node = document.getElementById(selectors.tpl.tableBody),
                     l = args.length,
-                    i, row, tr;
+                    i,
+                    row,
+                    rowNode;
 
                 for (i = 0; i < l; i++) {
-                    var row = document.getElementById(args[i].key + conf.rowPrefix);
+                    row = document.getElementById(args[i].key + conf.rowPrefix);
+                    // test if row already exists
                     if (row) {
                         fc.mergeData(args[i], true);
                     } else {
-                        tr = document.createElement("tr");
-                        tr.setAttribute('id', args[i] + conf.rowPrefix);
-                        fc._addData(tr, fc.getViewKeyObject(args[i]), true);
-                        node.appendChild(tr);
+                        rowNode = document.createElement("div");
+                        rowNode.setAttribute('id', args[i] + conf.rowPrefix);
+                        rowNode.setAttribute('class', 'row');
+                        fc._addData(rowNode, fc.getViewKeyObject(args[i]), true);
+                        node.appendChild(rowNode);
                     }
                 }
             },
