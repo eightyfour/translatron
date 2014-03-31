@@ -29,7 +29,7 @@ window.base = (function () {
         conf = {
             projectPrefix : "_prj",
             rowPrefix : "_row",
-            inputPrefix : "_valuae",
+            inputPrefix : "_value",
             inputTransPrefix : "_trans"
         };
 
@@ -309,7 +309,7 @@ window.base = (function () {
                     row = document.getElementById(args[i].key + conf.rowPrefix);
                     // test if row already exists
                     if (row) {
-                        fc.mergeData(args[i], true);
+                        fc.mergeData(args[i], fc.getBundleNameTo().locale !== null);
                     } else {
                         rowNode = document.createElement("div");
                         rowNode.setAttribute('id', args[i] + conf.rowPrefix);
