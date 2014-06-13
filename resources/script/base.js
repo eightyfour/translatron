@@ -66,6 +66,10 @@ window.base = (function () {
         return true;
     }
 
+    function validateNewKey(string) {
+        return (string.length > 0 && string.search('\\.|,| ') === -1) ? true : false;
+    }
+
     // used on server side to call clients
     var client = {
             id : undefined, // set on server side ,
@@ -259,23 +263,62 @@ window.base = (function () {
                 var node = document.getElementById(selectors.tpl.tableBody),
                     l = args.length,
                     i, tr, row, keyObj, projectNode,
-                        /**
-                         * Setup header and handle the category
-                         * @param node
-                         * @param keyObj
-                         * @returns {HTMLElement}
-                         */
+                    getAddNewKeyInputNode = function (category) {
+                        var input = document.createElement('input'),
+                            label = document.createElement('label'),
+                            button = document.createElement('a'),
+                            inputInitText = 'Add new key to this category';
+                        input.setAttribute('category', category);
+                        input.setAttribute('type', 'text');
+                        input.setAttribute('placeholder', inputInitText);
+                        input.addEventListener('keypress', keyKeyPressListener);
+                        label.innerText = category + "_";
+                        button.innerText = "add key";
+                        button.addEventListener('click', function () {
+                            // TODO dot or underscore ?
+                            var value = category + '_' + input.value;
+                            if (validateNewKey(value)) {
+                                window.base.con.sendResource(value, fc.getBundleNameFrom(), '', function () {
+                                    button.style.color = '#ffffff';
+                                    input.style.backgroundColor = "#ffffff";
+                                });
+                            } else {
+                                button.style.color = '#ff0000';
+                                input.style.backgroundColor = "#ff4444";
+                            }
+                        });
+                        return {
+                            label : label,
+                            input : input,
+                            button: button
+                        };
+                    },
+                    /**
+                     * Setup header and handle the category
+                     * @param node
+                     * @param keyObj
+                     * @returns {HTMLElement}
+                     */
                     prepareCategoryNode = function (node, keyObj) {
                         var categoryNode = document.getElementById(keyObj.contextName ? keyObj.contextName + conf.projectPrefix : conf.projectPrefix),
-                            header;
+                            header,
+                            rowNode,
+                            newKeyInputNode;
 
                         if (!categoryNode) {
                             categoryNode = document.createElement("div");
+                            rowNode = document.createElement("div");
+                            rowNode.setAttribute('class', 'addNewKeyrow');
                             categoryNode.setAttribute('id', keyObj.contextName ? keyObj.contextName + conf.projectPrefix : conf.projectPrefix);
                             if (keyObj.contextName) {
+                                newKeyInputNode = getAddNewKeyInputNode(keyObj.contextName);
                                 header = document.createElement("h2");
                                 header.innerText = keyObj.contextName;
+                                rowNode.appendChild(newKeyInputNode.label);
+                                rowNode.appendChild(newKeyInputNode.input);
+                                rowNode.appendChild(newKeyInputNode.button);
                                 categoryNode.appendChild(header);
+                                categoryNode.appendChild(rowNode);
                             }
                             node.appendChild(categoryNode);
                         }
@@ -323,9 +366,6 @@ window.base = (function () {
                 var newKeyButton = document.getElementById('addNewKeyButton'),
                     newKeyValue = document.getElementById('newKey').value;
 
-                function validateNewKey(string) {
-                    return (string.length > 0 && string.search('\\.|,| ') === -1) ? true : false;
-                }
 
                 document.getElementById('newKey').addEventListener('keypress', keyKeyPressListener);
                 newKeyButton.addEventListener('click', function () {
