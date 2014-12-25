@@ -2,11 +2,10 @@
     "author": {
         "name": "han"
     },
-    "name": "resourceHandler",
+    "name": "keyValueFileManager",
     "description": "Read and parse resource files ",
     "version": "0.0.1",
     "main": "fileManager.js",
-    "browserify": "dest/file.js",
     "engines": {
         "node": ">= v0.4.0"
     }

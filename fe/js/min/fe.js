@@ -135,6 +135,8 @@ var shoe = require('shoe'),
     trade = require('./trade.js');
 
 window.domOpts = window.domOpts || require('dom-opts');
+// TODO REMOVE THIS IS JUST FOR TESTING
+window.trade = trade;
 
 
 canny.add('navController',  require('./uiModules/nav-controller.js'));
@@ -147,11 +149,16 @@ canny.add('imageViewer',    require('./uiModules/imageViewer.js'));
 // register on trade ready
 trade.ready(function () {
     "use strict";
+
+    console.log('TRADE READY');
+
     Object.keys(canny).forEach(function (key) {
         if (canny[key].hasOwnProperty("tradeReady")) {
             canny[key].tradeReady();
         }
     });
+
+    trade.getJSON('test/project.json');
 });
 
 canny.add('flowControl', require('canny/mod/flowControl'));
@@ -981,12 +988,23 @@ var trade = (function () {
                 id : id,
                 data: data
             }, cb);
+        },
+        getJSON : function (id, cb) {
+            console.log('getJSON: ask for project file');
+            server.jsonFileManager.getJSON(id, function (fileObj) {
+                console.log('getJSON:', fileObj);
+                cb && cb();
+            });
+        },
+        saveJSON : function (id, data, cb) {
+            server.jsonFileManager.saveJSON(id, data, cb);
         }
     };
 }());
 
 canny.ready(function () {
     "use strict";
+    console.log('TRADE CANNY INIT');
     d.on('remote', function (server) {
         trade.init(server);
     });

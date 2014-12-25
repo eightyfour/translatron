@@ -8,7 +8,8 @@ var express = require('express'),
     C = require('./lib/CONST.js'),
     fileManager = require('./lib/server/fileManager.js'),
     bash = require('./lib/server/bash.js'),
-    serverPort = process.env.npm_package_config_port || 3000;
+    serverPort = process.env.npm_package_config_port || 3000,
+    jsonFileManager = require('./lib/server/jsonFileManager');
 
 var app = express();
 
@@ -47,7 +48,8 @@ var trade = shoe(function (stream) {
             });
         },
         bash : bash,
-        fileManager : fileManager
+        fileManager : fileManager,
+        jsonFileManager : jsonFileManager
     });
     d.pipe(stream).pipe(d);
     conTrade = stream;
