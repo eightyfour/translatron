@@ -29,6 +29,27 @@ Requirements:
 TODO:
  * add download message bundles (currently you have to downloaded directly from the server)
  * add key editor in admin-mode
- * the view at all ;-)
+ * the view design at all ;-)
+ * show all languages at same time (overview about all)
+ * save messages as key value (redis - or json files)
+ * write a naming convention
 
- 
+## naming convention
+
+First of all you create a new project for the message bundles. Could be a project name or if you don't know the project name just take the translation task number.
+
+The default language is english US.
+
+### keys
+
+a key has the following convention:
+```
+[contextName]_[textInside]  (if you can't brake it down in smaller use cases)
+[contextName]_[specifcName]_[textInside]
+```
+
+ *contextName:* is the name that describes a context inside the project. E.g. homepage is the project and aboutGameduell could be the context to summarize the keys
+ *specifcName:* e.g. for the homepage project about aboutGameduell_textBox1 and aboutGameduell_textBox1
+
+If you need to brake
+  *specifcName:* e.g. for the homepage project about aboutGameduell_textBox1 and aboutGameduell_textBox1

@@ -8,7 +8,7 @@ var express = require('express'),
     C = require('./lib/CONST.js'),
     fileManager = require('./lib/server/fileManager.js'),
     bash = require('./lib/server/bash.js'),
-    serverPort = 3000;
+    serverPort = process.env.npm_package_config_port || 3000;
 
 var app = express();
 
@@ -39,8 +39,6 @@ var trade = shoe(function (stream) {
     "use strict";
     var d = dnode({
         init : function (clientEvents) {
-            console.log('HALLO: ' + clientEvents);
-
             bash.exec({
                 comand : C.BASH.LS,
                 path : '.'
@@ -60,4 +58,4 @@ var trade = shoe(function (stream) {
 });
 trade.install(server, '/trade');
 
-console.log("start server " + serverPort);
+console.log("start server ", serverPort);

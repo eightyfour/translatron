@@ -3,16 +3,19 @@
 	"version" : "0.2.1",
 	"dependencies" : {
 		"express" : "x",
-                "dnode" : "x",
-                "domready" : "x",
-                "dom-opts" : "git://github.com/eightyfour/dom-opts.git",
-                "canny" : "git://github.com/eightyfour/canny.git",
-                "shoe" : "x",
-                "brace" : "x",
-                "browserify" : "x"
+        "dnode" : "x",
+        "domready" : "x",
+        "dom-opts" : "git://github.com/eightyfour/dom-opts.git",
+        "canny" : "git://github.com/eightyfour/canny.git",
+        "shoe" : "x",
+        "brace" : "x",
+        "browserify" : "x"
 	},
-        "scripts" : {
-                "prestart" : "browserify resources/script/base.js lib/client/canny.js -o fe/js/min/fe.js",
-                "start" : "node app.js"
-        }
+    "config": {
+        "port" : "3000"
+    },
+    "scripts" : {
+            "prestart" : "browserify lib/client/base.js -o fe/js/min/fe.js",
+            "start" : "node app.js"
+    }
 }
