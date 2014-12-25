@@ -21,24 +21,33 @@ app.use(express.static(__dirname + '/fe'));
 
 var server = app.listen(serverPort);
 
-var conDnode;
-var dnodeCon = shoe(function (stream) {
-    "use strict";
-    var d = dnode(client);
-    d.pipe(stream).pipe(d);
-    conDnode = stream;
-
-    conDnode.on('end', function () {
-        console.log('end');
-    });
-});
-dnodeCon.install(server, '/dnode');
+//var conDnode;
+//var dnodeCon = shoe(function (stream) {
+//    "use strict";
+//    var d = dnode(client);
+//    d.pipe(stream).pipe(d);
+//    conDnode = stream;
+//
+//    conDnode.on('end', function () {
+//        console.log('end');
+//    });
+//});
+//dnodeCon.install(server, '/dnode');
 
 
 var conTrade;
 var trade = shoe(function (stream) {
     "use strict";
     var d = dnode({
+        getMessageBundle : function () {
+            client.getMessageBundle.apply(null, [].slice.call(arguments));
+        },
+        sendResource : function () {
+            client.sendResource.apply(null, [].slice.call(arguments));
+        },
+        setupClient : function () {
+            client.setupClient.apply(null, [].slice.call(arguments));
+        },
         init : function (clientEvents) {
             bash.exec({
                 comand : C.BASH.LS,
