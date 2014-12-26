@@ -1,0 +1,38 @@
+
+#pathMenu {
+  width: 302px;
+  min-height: 200px;
+
+  #pathNavigation {
+    position: relative;
+    width: 300px;
+  }
+  #pathNavigation a {
+    min-width: 100px;
+    display: inline-block;
+    cursor: pointer;
+  }
+  #pathNavigation li{display: none;}
+  #pathNavigation.openDir > li,
+  #pathNavigation .openDir > li{display: list-item;}
+  #pathNavigation li.openDir > a{text-decoration: underline}
+
+  #pathNavigation .loading {}
+  #pathNavigation .showLoading:before{
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    background-color: darkcyan;
+    content: ' ';
+    left: 3px;
+    display: block;
+    margin-top: -15px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 500ms linear;
+  }
+  #pathNavigation .loading.showLoading:before{
+    opacity: 1;
+  }
+  #pathNavigation li > li {margin-left: 20px;}
+}
