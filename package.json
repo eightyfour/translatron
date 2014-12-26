@@ -1,6 +1,12 @@
 {
-	"name" : "resourceBundleManager",
-	"version" : "0.2.1",
+	"name" : "resourceMessagesLiveEditor",
+    "auth": "eightyfour",
+    "email": "eightyfour@thinkuseful.de",
+	"version" : "0.2.2",
+    "readmeFilename": "README.md",
+    "engines": {
+        "node": ">= v0.10.0"
+    },
 	"dependencies" : {
 		"express" : "x",
         "dnode" : "x",
@@ -14,8 +20,9 @@
     "config": {
         "port" : "3000"
     },
+    "license": "MIT",
     "scripts" : {
-            "prestart" : "browserify lib/client/base.js -o fe/js/min/fe.js",
-            "start" : "node app.js"
+        "prestart" : "browserify lib/client/base.js -o fe/js/min/fe.js && lessc fe/less/main.less fe/css/base.agg.css",
+        "start" : "node app.js"
     }
 }
