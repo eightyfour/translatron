@@ -1,0 +1,85 @@
+.projectMainNavigation {
+  z-index: 20;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 20em;
+  margin-left: -20em;
+  background-color: #303030;
+//  box-shadow: 2px 0px 3px 3px rgba(255, 255, 255, 0.7);
+  color: white;
+  transition: margin 300ms;
+
+  &.c-open{
+    margin-left:0;
+    transition: margin 300ms;
+    .menuToggleButton{
+      transition: opacity 600ms;
+      opacity: 1;
+    }
+  }
+  &:hover{
+    .menuToggleButton{
+      transition: opacity 600ms;
+      opacity: 1;
+    }
+  }
+  .menuToggleButton{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-right: -@header-height;
+    background-color: #303030;
+    transition: opacity 1s 600ms;
+    opacity: 0.5;
+    padding-right: 0.2em;
+    cursor: pointer;
+  }
+
+  .page-scroll {
+    position: absolute;
+    width: 100%;
+    box-sizing: border-box;
+    top: @header-height;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    &--content {
+      overflow-y: auto;
+      height: 100%;
+      background-color: #404040;
+      padding: 1em;
+      box-sizing: border-box;
+    }
+  }
+
+  &--header{
+    width: 100%;
+    height: @header-height;
+  }
+
+  p{
+    margin-top: 5px;
+  }
+
+  label{font-weight: bold;}
+
+  a {
+    color: #FFF;
+    line-height: 18px;
+    margin-right: 30px;
+  }
+  ul{
+    padding: 0;
+    margin: 0;
+  }
+
+  .menuNavigation li {
+    margin: 0.5em 0 .5em 1em;
+  }
+  .switchLink{margin-bottom: 20px;}
+  .clear{clear: both;}
+}
+

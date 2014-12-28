@@ -1,0 +1,6 @@
+{
+    "projects" : ["test"],
+    "description" : "This is a test project and it is used to test the translation tool.",
+    "defaultLanguage" : "en",
+    "languages" : ["en","de","fr","es","nl","da","sv"]
+}

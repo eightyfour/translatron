@@ -5,11 +5,16 @@
     <link rel="stylesheet" type="text/css" href="/css/base.agg.css">
 
     <script type="text/javascript" src="/js/min/fe.js"></script>
+    <script type="text/javascript" src="/animatedSVG/js/snap.svg-min.js"></script>
+    <script type="text/javascript" src="/animatedSVG/js/svgicons.js"></script>
 
 </head>
-<body>
+<body canny-mod="whisker" canny-var="canny.texts.getTexts">
+
+<header class="header"><span class="beforeText">project name: </span><span class="projectName">{{projectName}}</span></header>
 
 <div id="resourceEditor" class="translationView">
+
 
     <h1 id="title">&nbsp;</h1>
 
@@ -64,25 +69,37 @@
 
 <div id="debugIncomming"></div>
 
-<div id="fixedNavigation" class="open">
+<div id="fixedNavigation" class="projectMainNavigation" canny-mod="projectMainNavigation" canny-var="main">
 
-    <p>
-        <a href="https://confluence.gameduell.de/display/MOBS/Language+properties+tool" target="_blank">How to use this tool?</a>
-        <a canny-mod="navController" canny-var="createNewProject">Create new project</a>
-    </p>
+    <div class="menuToggleButton si-icon si-icon-hamburger-cross" data-icon-name="hamburgerCross" canny-mod="projectMainNavigation" canny-var="menuToggleButton"></div>
 
-    <label for="menuNavigationFrom">Translate this page from:</label>
-    <div id="menuNavigationFrom" canny-mod="menuBuilder" canny-var="from" class="menuNavigation"><!-- place holder for the menu navigation --></div>
+    <div class="projectMainNavigation--header">
+        <p>
+            <a href="https://confluence.gameduell.de/display/MOBS/Language+properties+tool" target="_blank">How to use this tool?</a>
+            <a canny-mod="projectMainNavigation" canny-var="createNewProject">Create new project</a>
+        </p>
+    </div>
 
-    <div class="clear"></div>
+    <div class="page-scroll">
+        <div class="page-scroll--content">
 
-    <label for="menuNavigationTo">Translate this page in to:</label>
-    <div id="menuNavigationTo"canny-mod="menuBuilder" canny-var="to" class="menuNavigation"><!-- place holder for the menu navigation --></div>
+            <label for="menuNavigationFrom">Translate this page from:</label>
+            <div id="menuNavigationFrom" canny-mod="projectMainNavigation" canny-var="from" class="menuNavigation"><!-- place holder for the menu navigation --></div>
+
+            <div class="clear"></div>
+
+            <label for="menuNavigationTo">Translate this page in to:</label>
+            <div id="menuNavigationTo"canny-mod="projectMainNavigation" canny-var="to" class="menuNavigation"><!-- place holder for the menu navigation --></div>
+
+            <label for="menuNavigationTo">Available projects:</label>
+            <div canny-mod="projectMainNavigation" canny-var="projects" class="menuNavigation"><!-- place holder for the menu navigation --></div>
 
 
-    <div style="clear: both;"></div>
+            <div style="clear: both;"></div>
 
-    <a class="switchLink" canny-mod="navController" canny-var="showFileEditor">Show in editor mode</a>
+            <a class="switchLink" canny-mod="projectMainNavigation" canny-var="showFileEditor">Show in editor mode</a>
+        </div>
+    </div>
 
 </div>
 

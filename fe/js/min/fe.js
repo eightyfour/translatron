@@ -139,9 +139,11 @@ window.domOpts = window.domOpts || require('dom-opts');
 window.trade = trade;
 
 
-canny.add('navController',  require('./uiModules/nav-controller.js'));
+canny.add('whisker',  require('canny/mod/whisker'));
+
+canny.add('texts',  require('./uiModules/texts.js'));
+canny.add('projectMainNavigation',  require('./uiModules/projectMainNavigation.js'));
 canny.add('translationView',require('./uiModules/translationView.js'));
-canny.add('menuBuilder',    require('./uiModules/menu-builder.js'));
 canny.add('tabManager',     require('./uiModules/tabManager.js'));
 canny.add('pathNavigation', require('./uiModules/pathNavigation.js'));
 canny.add('fileEditor',     require('./uiModules/fileEditor.js'));
@@ -150,6 +152,10 @@ canny.add('imageViewer',    require('./uiModules/imageViewer.js'));
 // register on trade ready
 trade.ready(function () {
     "use strict";
+    trade.getJSON('project.json', function (projectConfig) {
+        canny.projectMainNavigation.setAvailableProjects(projectConfig.projects);
+        canny.projectMainNavigation.setAvailableLanguages(projectConfig.languages);
+    });
 
     console.log('TRADE READY');
 
@@ -160,6 +166,7 @@ trade.ready(function () {
     });
 
     trade.getJSON('test/project.json');
+
 });
 
 canny.add('flowControl', require('canny/mod/flowControl'));
@@ -237,7 +244,8 @@ trade.ready(function () {
 
                 // setup table title
                 if (domOpts.params.bundle) {
-                    document.getElementById('title').innerText = 'Task name: ' + domOpts.params.bundle;
+                    canny.texts.setTexts({projectName : domOpts.params.bundle});
+//                    document.getElementById('title').innerText = 'Task name: ' + domOpts.params.bundle;
                 }
                 document.getElementById('titleText').innerText = 'Text (' + canny.translationView.getFromParam() + ')';
                 if (domOpts.params.to) {
@@ -261,7 +269,7 @@ trade.ready(function () {
         handleFooterNavigation();
     }());
 });
-},{"./Toast.js":2,"./trade.js":6,"./uiModules/fileEditor.js":7,"./uiModules/imageViewer.js":8,"./uiModules/menu-builder.js":9,"./uiModules/nav-controller.js":10,"./uiModules/pathNavigation.js":11,"./uiModules/tabManager.js":12,"./uiModules/translationView.js":13,"./unicode.js":14,"canny":55,"canny/mod/flowControl":56,"dnode":57,"dom-opts":68,"shoe":69}],4:[function(require,module,exports){
+},{"./Toast.js":2,"./trade.js":6,"./uiModules/fileEditor.js":7,"./uiModules/imageViewer.js":8,"./uiModules/pathNavigation.js":9,"./uiModules/projectMainNavigation.js":10,"./uiModules/tabManager.js":11,"./uiModules/texts.js":12,"./uiModules/translationView.js":13,"./unicode.js":14,"canny":55,"canny/mod/flowControl":56,"canny/mod/whisker":57,"dnode":58,"dom-opts":69,"shoe":70}],4:[function(require,module,exports){
 /* ***** BEGIN LICENSE BLOCK *****
  * Distributed under the BSD license:
  *
@@ -618,7 +626,7 @@ var trade = (function () {
             console.log('getJSON: ask for project file');
             server.jsonFileManager.getJSON(id, function (fileObj) {
                 console.log('getJSON:', fileObj);
-                cb && cb();
+                cb && cb(fileObj);
             });
         },
         saveJSON : function (id, data, cb) {
@@ -637,7 +645,7 @@ canny.ready(function () {
 });
 
 module.exports = trade;
-},{"../CONST.js":1,"./events.js":5,"canny":55,"dnode":57,"dom-opts":68,"shoe":69}],7:[function(require,module,exports){
+},{"../CONST.js":1,"./events.js":5,"canny":55,"dnode":58,"dom-opts":69,"shoe":70}],7:[function(require,module,exports){
 /*global */
 /*jslint browser: true */
 var trade = require('../trade.js'),
@@ -818,7 +826,7 @@ var fileEditor = (function () {
 }());
 
 module.exports = fileEditor;
-},{"../../CONST.js":1,"../../sessionHandler.js":15,"../brace/properties.js":4,"../events.js":5,"../trade.js":6,"./tabManager.js":12,"brace":16,"brace/mode/css":17,"brace/mode/html":18,"brace/mode/javascript":19,"brace/mode/json":20,"brace/mode/sh":21,"brace/mode/text":22,"brace/theme/twilight":24,"dom-opts":68}],8:[function(require,module,exports){
+},{"../../CONST.js":1,"../../sessionHandler.js":15,"../brace/properties.js":4,"../events.js":5,"../trade.js":6,"./tabManager.js":11,"brace":16,"brace/mode/css":17,"brace/mode/html":18,"brace/mode/javascript":19,"brace/mode/json":20,"brace/mode/sh":21,"brace/mode/text":22,"brace/theme/twilight":24,"dom-opts":69}],8:[function(require,module,exports){
 /*global ace */
 /*jslint browser: true */
 var trade = require('../trade.js'),
@@ -906,126 +914,7 @@ var imageViewer = (function () {
 }());
 
 module.exports = imageViewer;
-},{"../../CONST.js":1,"../events.js":5,"../trade.js":6,"dom-opts":68}],9:[function(require,module,exports){
-/*global */
-/*jslint browser: true */
-
-window.domOpts = window.domOpts || require('dom-opts');
-
-var menuBuilder = (function () {
-    "use strict";
-
-    var domOperations = {
-        addNavigationMenu: function (nodeToAppend, domValue) {
-            console.log('START GENERATE MENU');
-            var ul = window.domOpts.createElement('ul', 'navigationMenu'), li,
-                locals = {
-                    da: 'Danmark',
-                    de: 'Deutschland',
-                    fr: 'France',
-                    nl: 'Nederland',
-                    en: 'United States (Default)',
-                    en_GB: 'United Kingdom',
-                    sv: 'Sverige',
-                    es: 'Espanol'
-                }, obj, a, to, from,
-                path = document.location.origin + document.location.pathname,
-                bundleName = window.domOpts.params.bundle,
-                fromTranslation = window.domOpts.params.from || 'de',
-                toTranslation = window.domOpts.params.to;
-
-            for (obj in locals) {
-                if (locals.hasOwnProperty(obj)) {
-
-                    li = window.domOpts.createElement('li');
-                    a = window.domOpts.createElement('a');
-
-                    if (domValue === 'from') {
-                        from = obj;
-                        to = toTranslation;
-                    } else {
-                        to = obj;
-                        from = fromTranslation;
-                    }
-                    if (to) {
-                        a.setAttribute('href', path + '?bundle=' + bundleName + '&from=' + from + "&to=" + to);
-                    } else {
-                        a.setAttribute('href', path + '?bundle=' + bundleName + '&from=' + from);
-                    }
-                    a.innerText = locals[obj];
-                    a.domAppendTo(li);
-                    li.domAppendTo(ul);
-                }
-            }
-
-            ul.domAppendTo(nodeToAppend);
-
-        }
-    };
-
-    return {
-        add : function (node, attr) {
-            domOperations.addNavigationMenu(node, attr);
-        }
-    };
-}());
-
-
-module.exports = menuBuilder;
-
-},{"dom-opts":68}],10:[function(require,module,exports){
-/*global */
-/*jslint browser: true*/
-
-var canny = require('canny');
-
-/**
- * E.g.: gd-module="flowControl" gd-attr="{'view' : 'viewToShow'}"
- *
- * you can activate a initial view with a anchor in the URL e.g.: yourdomain.html#viewToShow
- * Or pass a comma separated module list for activate more module #viewToShow,otherView
- *
- * TODO made it possible to summarize views with one identifier.
- * Instead of call: gdom.flowControl.show('view1', 'view2', 'view3') call gdom.flowControl.show('view').
- */
-var navController = (function () {
-    "use strict";
-
-    var modViews = {
-        showResourceBundleEditor : function () {
-            // reload the page because the files are not synced
-            location.reload();
-        },
-        showFileEditor : function () {
-            alert('This mode is only developers. Keep in mind that the file changes you made are not synced to the other clients.');
-            canny.flowControl.show('fileManager');
-        },
-        createNewProject : function () {
-            var bundle = prompt("Please enter the Task number:");
-            if (bundle) {
-                location.href = '/?bundle=' + bundle;
-            }
-        }
-    };
-
-    return {
-        mod : modViews, // part of api
-        ready : function () {
-            console.log('nav-controller ready event');
-        },
-        add : function (node, attr) {    // part of api
-            if (modViews.hasOwnProperty(attr)) {
-                node.setAttribute('href', '#');
-                node.addEventListener('click', modViews[attr]);
-            } else {
-                console.log('LINK NOT IMPLEMENTED');
-            }
-        }
-    };
-}());
-
-module.exports =  navController;
-},{"canny":55}],11:[function(require,module,exports){
+},{"../../CONST.js":1,"../events.js":5,"../trade.js":6,"dom-opts":69}],9:[function(require,module,exports){
 /*jslint browser: true */
 var trade = require('../trade.js'),
     events = require('../events.js');
@@ -1144,7 +1033,191 @@ var pathNavigation = (function () {
 }());
 
 module.exports = pathNavigation;
-},{"../events.js":5,"../trade.js":6}],12:[function(require,module,exports){
+},{"../events.js":5,"../trade.js":6}],10:[function(require,module,exports){
+/*global */
+/*jslint browser: true*/
+
+var canny = require('canny');
+
+/**
+ * E.g.: gd-module="flowControl" gd-attr="{'view' : 'viewToShow'}"
+ *
+ * you can activate a initial view with a anchor in the URL e.g.: yourdomain.html#viewToShow
+ * Or pass a comma separated module list for activate more module #viewToShow,otherView
+ *
+ * TODO made it possible to summarize views with one identifier.
+ * Instead of call: gdom.flowControl.show('view1', 'view2', 'view3') call gdom.flowControl.show('view').
+ */
+var projectMainNavigation = (function () {
+    "use strict";
+
+    var mainNode,
+        // TODO make configurable via project.json
+        localTexts = {
+            da: 'Danmark',
+            de: 'Deutschland',
+            fr: 'France',
+            nl: 'Nederland',
+            en: 'United States (Default)',
+            en_GB: 'United Kingdom',
+            sv: 'Sverige',
+            es: 'Espanol'
+        },
+        path = document.location.origin + document.location.pathname,
+        bundleName = window.domOpts.params.bundle,
+        fromTranslation = window.domOpts.params.from || 'de',
+        toTranslation = window.domOpts.params.to,
+        modViews = {
+            main : function (node) {
+                mainNode = node;
+            },
+            menuToggleButton : function (node) {
+                var svgIconNode = node.querySelector('.si-icon');
+                new svgIcon(node, {
+                    hamburgerCross : {
+                        url : 'animatedSVG/svg/hamburger.svg',
+                        animation : [
+                            {
+                                el : 'path:nth-child(1)',
+                                animProperties : {
+                                    from : { val : '{"path" : "m 5.0916789,20.818994 53.8166421,0"}' },
+                                    to : { val : '{"path" : "M 12.972944,50.936147 51.027056,12.882035"}' }
+                                }
+                            },
+                            {
+                                el : 'path:nth-child(2)',
+                                animProperties : {
+                                    from : { val : '{"transform" : "s1 1", "opacity" : 1}', before : '{"transform" : "s0 0"}' },
+                                    to : { val : '{"opacity" : 0}' }
+                                }
+                            },
+                            {
+                                el : 'path:nth-child(3)',
+                                animProperties : {
+                                    from : { val : '{"path" : "m 5.0916788,42.95698 53.8166422,0"}' },
+                                    to : { val : '{"path" : "M 12.972944,12.882035 51.027056,50.936147"}' }
+                                }
+                            }
+                        ]
+                    }
+                }, { easing : mina.elastic, speed: 1200 ,
+                    size : {
+                        w : '4em',
+                        h : '4em'
+                    }} );
+                node.addEventListener('click', function () {
+                    if (mainNode.classList.contains('c-open')) {
+                        mainNode.classList.remove('c-open');
+                    } else {
+                        mainNode.classList.add('c-open');
+                    }
+                })
+            },
+            showResourceBundleEditor : function (node) {
+                // reload the page because the files are not synced
+                node.setAttribute('href', '#');
+                node.addEventListener('click', function () {
+                    location.reload();
+                });
+            },
+            showFileEditor : function (node) {
+                node.setAttribute('href', '#');
+                node.addEventListener('click', function () {
+                    alert('This mode is only developers. Keep in mind that the file changes you made are not synced to the other clients.');
+                    canny.flowControl.show('fileManager');
+                });
+
+            },
+            createNewProject : function (node) {
+                node.setAttribute('href', '#');
+                node.addEventListener('click', function () {
+                    var bundle = prompt("Please enter the Task number:");
+                    if (bundle) {
+                        location.href = '/?bundle=' + bundle;
+                    }
+                });
+
+            },
+            from : function (node) {
+                this.from.node = node;
+            },
+            to : function (node) {
+                this.to.node = node;
+            },
+            projects : function (node) {
+                this.projects.node = node;
+            }
+        };
+
+    function setLocale(locales, node, domValue) {
+        var ul = window.domOpts.createElement('ul', 'navigationMenu'), li, from, to,a ;
+        locales.forEach(function (key) {
+
+            if (localTexts.hasOwnProperty(key)) {
+
+                li = window.domOpts.createElement('li');
+                a = window.domOpts.createElement('a');
+
+                if (domValue === 'from') {
+                    from = key;
+                    to = toTranslation;
+                } else {
+                    to = key;
+                    from = fromTranslation;
+                }
+                if (to) {
+                    a.setAttribute('href', path + '?bundle=' + bundleName + '&from=' + from + "&to=" + to);
+                } else {
+                    a.setAttribute('href', path + '?bundle=' + bundleName + '&from=' + from);
+                }
+                a.innerHTML = localTexts[key];
+                a.domAppendTo(li);
+                li.domAppendTo(ul);
+            }
+
+        });
+        ul.domAppendTo(node);
+    }
+
+    function setProjects(projects, node) {
+        var ul = window.domOpts.createElement('ul', 'navigationMenu'), li, a;
+        projects.forEach(function (projectName) {
+
+            li = window.domOpts.createElement('li');
+            a = window.domOpts.createElement('a');
+            a.setAttribute('href', path + '?bundle=' + projectName);
+            a.innerHTML = projectName;
+            a.domAppendTo(li);
+            li.domAppendTo(ul);
+
+        });
+        ul.domAppendTo(node);
+    }
+
+    return {
+        setAvailableLanguages : function (languages) {
+            setLocale(languages, modViews.from.node, 'from');
+            setLocale(languages, modViews.to.node);
+        },
+        setAvailableProjects : function (projects) {
+            setProjects(projects, modViews.projects.node)
+
+        },
+        ready : function () {
+            console.log('nav-controller ready event');
+        },
+        add : function (node, attr) {    // part of api
+            if (modViews.hasOwnProperty(attr)) {
+                modViews[attr](node);
+            } else {
+                console.log('LINK NOT IMPLEMENTED');
+            }
+        }
+    };
+}());
+
+module.exports =  projectMainNavigation;
+},{"canny":55}],11:[function(require,module,exports){
 /*global */
 /*jslint browser: true */
 
@@ -1250,7 +1323,42 @@ var tabManager = (function () {
 }());
 
 module.exports = tabManager;
-},{"dom-opts":68}],13:[function(require,module,exports){
+},{"dom-opts":69}],12:[function(require,module,exports){
+/**
+ * handles all texts
+ */
+var texts = (function () {
+    "use strict";
+    var node,
+        texts = {
+            whiskerUpdate :  function (fc) {
+               this.triggerWhiskerUpdate = fc;
+            },
+            triggerWhiskerUpdate : function () {},
+            projectName : ''
+        };
+
+    return {
+        setTexts : function (data) {
+//            Object.keys(data).forEach(function (key) {
+//                texts[key] = data[key];
+//            });
+            texts.triggerWhiskerUpdate(data);
+        },
+        getTexts : function () {
+            return texts
+        },
+        add : function (elem, attr) {
+            node = elem;
+        },
+        ready : function () {
+            console.log('texts ready!');
+        }
+    };
+}());
+
+module.exports = texts;
+},{}],13:[function(require,module,exports){
 function SaveOnLeave(node, key, bundle, text) {
     var rootKey = key, // use this key for identifier on the server
         textList = [text],
@@ -31355,13 +31463,191 @@ function isNullOrUndefined(arg) {
 }());
 
 },{}],57:[function(require,module,exports){
+/*global canny */
+/*jslint browser: true*/
+
+/**
+ * E.g. {{whisker}}:
+ *  <div canny-mod="whisker" canny-var="{'message':'dynamic text'}">
+ *     <p>DATA: {{message}})</p>
+ *  </div>
+ *
+ *  If the object implements a function named 'whiskerUpdate' whisker will push a callback to it.
+ *  This callback can be called with the data object to update the data there bind to the whiskers.
+ *
+ */
+(function () {
+    "use strict";
+
+    var openChar = '{',
+        endChar  = '}',
+        ESCAPE_RE = /[-.*+?^${}()|[\]\/\\]/g,
+        whisker = (function () {
+            var BINDING_RE = getRegex(),
+                whiskerUpdateMap = {},
+                /**
+                 *  Parse a piece of text, return an array of tokens
+                 */
+                parse = function (text) {
+                    if (!BINDING_RE.test(text)) {return null; }
+                    var m, i, token, match, tokens = [];
+                    /* jshint boss: true */
+                    while (m = text.match(BINDING_RE)) {
+                        i = m.index;
+                        if (i > 0) {tokens.push(text.slice(0, i)); }
+                        token = { key: m[1].trim() };
+                        match = m[0];
+                        token.html =
+                                match.charAt(2) === openChar &&
+                                match.charAt(match.length - 3) === endChar;
+                        tokens.push(token);
+                        text = text.slice(i + m[0].length);
+                    }
+                    if (text.length) {tokens.push(text); }
+                    return tokens;
+                },
+                /**
+                 *
+                 * @param node
+                 * @param dataObj
+                 * @param attr
+                 */
+                compileTextNode  = function (node, dataObj, attr) {
+                    var tokens = parse(node.nodeValue), obj = dataObj, el, token, i, l, span;
+
+                    if (!tokens || obj === undefined || typeof obj === 'string') {return; }
+
+                    for (i = 0, l = tokens.length; i < l; i++) {
+                        token = tokens[i];
+
+                        if (token.key && obj.hasOwnProperty(token.key)) { // a binding
+                            span = document.createElement('span');
+                            el = document.createTextNode(obj[token.key]);
+                            span.appendChild(el);
+                            if (whiskerUpdateMap.hasOwnProperty(attr)) {
+                                if (whiskerUpdateMap[attr].keyMap === undefined) {
+                                    whiskerUpdateMap[attr].keyMap = {};
+                                }
+                                if (!whiskerUpdateMap[attr].keyMap[token.key]) {
+                                    whiskerUpdateMap[attr].keyMap[token.key] = [];
+                                }
+                                whiskerUpdateMap[attr].keyMap[token.key].push(span);
+                            }
+                            node.parentNode.insertBefore(span, node);
+                        } else { // a plain string
+                            console.log('whisker obj: ', obj);
+                            el = document.createTextNode(token);
+                            node.parentNode.insertBefore(el, node);
+                        }
+                        // insert node
+
+                    }
+                    node.parentNode.removeChild(node);
+                },
+                compileElement = function (node, dataObj, attr) {
+                    // recursively compile childNodes
+                    if (node.hasChildNodes()) {
+                        [].slice.call(node.childNodes).forEach(function (child) {
+                            compile(child, dataObj, attr);
+                        });
+                    }
+                },
+                /**
+                 *  Compile a DOM node (recursive)
+                 */
+                compile = function (node, dataObj, attr) {
+                    var nodeType = node.nodeType;
+                    if (nodeType === 1 && node.tagName !== 'SCRIPT') { // a normal node
+                        compileElement(node, dataObj, attr);
+                    } else if (nodeType === 3) {
+                        compileTextNode(node, dataObj, attr);
+                    }
+                },
+                getGlobalCall = function (value) {
+                    var split = value.split('.'),
+                        end = window,
+                        rec = function (cur) {
+                            if (end[cur]) {
+                                end = end[cur];
+                                rec(split.shift());
+                            }
+                        };
+                    rec(split.shift());
+                    return end;
+                };
+
+            function initialize(node, attr) {
+                var dataObj = getGlobalCall(attr), obj;
+                if (typeof dataObj === 'function') {
+                    obj = dataObj();
+                } else {
+                    obj = dataObj;
+                }
+                if (obj.hasOwnProperty('whiskerUpdate')) {
+                    if (!whiskerUpdateMap[attr]) {
+                        whiskerUpdateMap[attr] = {
+                            obj : obj,
+                            keyMap : undefined
+                        };
+                    }
+                    whiskerUpdateMap[attr].obj.whiskerUpdate(function (data) {
+                        if (!whiskerUpdateMap[attr].keyMap) {
+                            initialize(node, attr);
+                        }
+
+                        if (whiskerUpdateMap[attr].keyMap) {
+                            Object.keys(whiskerUpdateMap[attr].keyMap).forEach(function (whiskerName) {
+                                if (data[whiskerName]) {
+                                    whiskerUpdateMap[attr].keyMap[whiskerName].forEach(function (node) {
+                                        node.innerHTML = data[whiskerName];
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+                compile(node, obj, attr);
+            }
+
+            return {
+                getTextNodes : function () {
+                    return whiskerUpdateMap;
+                },
+                add : function (node, attr) {
+                    if (typeof attr === 'string') {
+                        initialize(node, attr);
+                    }
+                }
+            };
+        }());
+
+    function escapeRegex(str) {
+        return str.replace(ESCAPE_RE, '\\$&');
+    }
+
+    function getRegex() {
+        var open = escapeRegex(openChar),
+            end  = escapeRegex(endChar);
+        return new RegExp(open + open + open + '?(.+?)' + end + '?' + end + end);
+    }
+
+    // export as module or bind to global
+    if (typeof module !== 'undefined') {
+        module.exports = whisker;
+    } else {
+        canny.add('whisker', whisker);
+    }
+
+}());
+
+},{}],58:[function(require,module,exports){
 var dnode = require('./lib/dnode');
 
 module.exports = function (cons, opts) {
     return new dnode(cons, opts);
 };
 
-},{"./lib/dnode":58}],58:[function(require,module,exports){
+},{"./lib/dnode":59}],59:[function(require,module,exports){
 (function (process){
 var protocol = require('dnode-protocol');
 var Stream = require('stream');
@@ -31518,7 +31804,7 @@ dnode.prototype.destroy = function () {
 };
 
 }).call(this,require('_process'))
-},{"_process":36,"dnode-protocol":59,"jsonify":65,"stream":52}],59:[function(require,module,exports){
+},{"_process":36,"dnode-protocol":60,"jsonify":66,"stream":52}],60:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter;
 var scrubber = require('./lib/scrub');
 var objectKeys = require('./lib/keys');
@@ -31645,7 +31931,7 @@ Proto.prototype.apply = function (f, args) {
     catch (err) { this.emit('error', err) }
 };
 
-},{"./lib/foreach":60,"./lib/is_enum":61,"./lib/keys":62,"./lib/scrub":63,"events":33}],60:[function(require,module,exports){
+},{"./lib/foreach":61,"./lib/is_enum":62,"./lib/keys":63,"./lib/scrub":64,"events":33}],61:[function(require,module,exports){
 module.exports = function forEach (xs, f) {
     if (xs.forEach) return xs.forEach(f)
     for (var i = 0; i < xs.length; i++) {
@@ -31653,7 +31939,7 @@ module.exports = function forEach (xs, f) {
     }
 }
 
-},{}],61:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 var objectKeys = require('./keys');
 
 module.exports = function (obj, key) {
@@ -31667,14 +31953,14 @@ module.exports = function (obj, key) {
     return false;
 };
 
-},{"./keys":62}],62:[function(require,module,exports){
+},{"./keys":63}],63:[function(require,module,exports){
 module.exports = Object.keys || function (obj) {
     var keys = [];
     for (var key in obj) keys.push(key);
     return keys;
 };
 
-},{}],63:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 var traverse = require('traverse');
 var objectKeys = require('./keys');
 var forEach = require('./foreach');
@@ -31748,7 +32034,7 @@ Scrubber.prototype.unscrub = function (msg, f) {
     return args;
 };
 
-},{"./foreach":60,"./keys":62,"traverse":64}],64:[function(require,module,exports){
+},{"./foreach":61,"./keys":63,"traverse":65}],65:[function(require,module,exports){
 var traverse = module.exports = function (obj) {
     return new Traverse(obj);
 };
@@ -32064,11 +32350,11 @@ var hasOwnProperty = Object.hasOwnProperty || function (obj, key) {
     return key in obj;
 };
 
-},{}],65:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 exports.parse = require('./lib/parse');
 exports.stringify = require('./lib/stringify');
 
-},{"./lib/parse":66,"./lib/stringify":67}],66:[function(require,module,exports){
+},{"./lib/parse":67,"./lib/stringify":68}],67:[function(require,module,exports){
 var at, // The index of the current character
     ch, // The current character
     escapee = {
@@ -32343,7 +32629,7 @@ module.exports = function (source, reviver) {
     }({'': result}, '')) : result;
 };
 
-},{}],67:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
     escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
     gap,
@@ -32499,7 +32785,7 @@ module.exports = function (value, replacer, space) {
     return str('', {'': value});
 };
 
-},{}],68:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 /*global HTMLElement */
 /*jslint browser: true */
 
@@ -32620,7 +32906,7 @@ HTMLElement.prototype.domChildTags = function (tag) {
     });
     return tags;
 };
-},{}],69:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 var Stream = require('stream');
 var sockjs = require('sockjs-client');
 var resolve = require('url').resolve;
@@ -32685,7 +32971,7 @@ module.exports = function (u, cb) {
     return stream;
 };
 
-},{"sockjs-client":70,"stream":52,"url":54}],70:[function(require,module,exports){
+},{"sockjs-client":71,"stream":52,"url":54}],71:[function(require,module,exports){
 /* SockJS client, version 0.3.1.7.ga67f.dirty, http://sockjs.org, MIT License
 
 Copyright (c) 2011-2012 VMware, Inc.
