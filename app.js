@@ -58,7 +58,63 @@ var trade = shoe(function (stream) {
         },
         bash : bash,
         fileManager : fileManager,
-        jsonFileManager : jsonFileManager
+        jsonFileManager : (function () {
+            var ret = {};
+
+            Object.keys(jsonFileManager).forEach(function (key) {
+                ret[key] = function () {
+                    jsonFileManager[key].apply(null, [].slice.call(arguments));
+                };
+            });
+
+            /**
+             * param: projectName(optional), callback
+             */
+            ret.getJSON = function (p0, p1) {
+                // only a callback is passed
+                var cb = p1 || p0;
+                if (typeof p0 === 'function') {
+                    // first bring project JSON up to date
+                    fileManager.readDir('', function (filesAndFolders) {
+                        var folders = [];
+                        filesAndFolders.value.forEach(function (folder) {
+                            if (folder.d) {
+                                folders.push(folder.name);
+                            }
+                        });
+                        jsonFileManager.getJSON('project.json', function (data) {
+                            data.projects = folders;
+                            cb(data);
+                        });
+                    })
+
+                } else {
+                    // first bring project JSON up to date
+                    fileManager.readDir(p0, function (filesAndFolders) {
+                        var availableLanguages = {},
+                            reg = new RegExp('messages_(.*)\.properties'),
+                            regResult;
+                        filesAndFolders.value.forEach(function (file) {
+                            if (!file.d) {
+                                regResult = reg.exec(file.name);
+                                if (regResult && regResult[1]) {
+                                    availableLanguages[regResult[1]] = {translated : -1};
+                                }
+                            }
+                        });
+                        jsonFileManager.getJSON(p0 + '/project.json', function (data) {
+                            Object.keys(availableLanguages).forEach(function (key) {
+                                if (!data.languages.hasOwnProperty(key)) {
+                                    data.languages[key] = availableLanguages[key];
+                                }
+                            });
+                            cb(data);
+                        });
+                    });
+                }
+            };
+            return ret;
+        }())
     });
     d.pipe(stream).pipe(d);
     conTrade = stream;
