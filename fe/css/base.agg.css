@@ -5,6 +5,7 @@ body {
   font-family: sans-serif;
   font-size: 80%;
   padding-top: 4.2em;
+  padding-left: 4em;
 }
 div,
 span,
@@ -171,7 +172,7 @@ header.header .projectName > span {
   top: 0;
   left: 0;
   height: 100%;
-  width: 20em;
+  width: 24.6em;
   margin-left: -20em;
   background-color: #303030;
   color: white;
@@ -193,7 +194,7 @@ header.header .projectName > span {
   position: absolute;
   top: 0;
   right: 0;
-  margin-right: -4.2em;
+  margin-right: 0.2em;
   background-color: #303030;
   transition: opacity 1s 600ms;
   opacity: 0.5;
@@ -210,7 +211,7 @@ header.header .projectName > span {
   right: 0;
 }
 .projectMainNavigation .page-scroll--content {
-  overflow-y: auto;
+  overflow-y: scroll;
   height: 100%;
   background-color: #404040;
   padding: 1em 0;
@@ -259,7 +260,8 @@ header.header .projectName > span {
 }
 .projectMainNavigation .menuNavigation li .flag-icon:after {
   display: block;
-  content: ' ';
+  text-align: center;
+  content: '+';
   width: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   height: 100%;
@@ -270,11 +272,47 @@ header.header .projectName > span {
 .projectMainNavigation .menuNavigation li.c-active .flag-icon:after {
   display: none;
 }
+.projectMainNavigation .menuNavigation li.c-active.c-inactive .flag-icon:after {
+  display: block;
+  content: ' ';
+}
 .projectMainNavigation .switchLink {
   margin-bottom: 20px;
 }
 .projectMainNavigation .clear {
   clear: both;
+}
+.translationView .c-hide_de .js_de,
+.translationViewHeader.header .c-hide_de .js_de {
+  display: none;
+}
+.translationView .c-hide_fr .js_fr,
+.translationViewHeader.header .c-hide_fr .js_fr {
+  display: none;
+}
+.translationView .c-hide_da .js_da,
+.translationViewHeader.header .c-hide_da .js_da {
+  display: none;
+}
+.translationView .c-hide_nl .js_nl,
+.translationViewHeader.header .c-hide_nl .js_nl {
+  display: none;
+}
+.translationView .c-hide_en .js_en,
+.translationViewHeader.header .c-hide_en .js_en {
+  display: none;
+}
+.translationView .c-hide_en_GB .js_en_GB,
+.translationViewHeader.header .c-hide_en_GB .js_en_GB {
+  display: none;
+}
+.translationView .c-hide_sv .js_sv,
+.translationViewHeader.header .c-hide_sv .js_sv {
+  display: none;
+}
+.translationView .c-hide_es .js_es,
+.translationViewHeader.header .c-hide_es .js_es {
+  display: none;
 }
 .translationView #resourceBundleTable {
   margin-bottom: 70px;
@@ -455,6 +493,9 @@ header.header .projectName > span {
 }
 #tabManager .tab .closeButton:hover {
   cursor: crosshair;
+}
+.translationViewHeader .flag-icon {
+  margin-right: 1em;
 }
 .flag-icon {
   position: relative;
