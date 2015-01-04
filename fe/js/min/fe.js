@@ -486,6 +486,7 @@ module.exports = {
 },{"canny":34}],6:[function(require,module,exports){
 var canny = require('canny'),
     domOpts = require('dom-opts'),
+    trade = require('../trade.js'),
     uiEvents = require('../uiEventManager.js');
 
 canny.projectMainNavigation.onLanguageSelect(function (obj) {
@@ -497,8 +498,11 @@ canny.projectMainNavigation.onLanguageSelect(function (obj) {
     console.log('Click on language', obj);
 });
 
-canny.projectMainNavigation.onProjectSelect(function (obj) {
-    console.log('Click on project', obj);
+canny.projectMainNavigation.onProjectSelect(function (projectName) {
+    console.log('Click on project', projectName);
+    trade.getJSON(projectName, function (data) {
+        console.log('Get project json:', data);
+    });
 });
 
 /**
@@ -570,7 +574,7 @@ module.exports = {
         }
     }
 };
-},{"../uiEventManager.js":10,"canny":34,"dom-opts":48}],7:[function(require,module,exports){
+},{"../trade.js":9,"../uiEventManager.js":10,"canny":34,"dom-opts":48}],7:[function(require,module,exports){
 
 var translationView = require("canny").translationView,
     translationViewHeader = require("canny").translationViewHeader,
@@ -659,17 +663,17 @@ events.addServerListener('updateKey', function (bundleObj, data) {
 });
 
 module.exports = {
-    getJSON : function (projectConfig) {
-        if (!projectConfig.hasOwnProperty('projects')) {
+    getJSON : function (newProjectConfig) {
+        if (!newProjectConfig.hasOwnProperty('projects')) {
             // project specific config
-            if (projectConfig !== null && projectConfig.project !== projectConfig.project) {
-                console.log('translationViewController get new config', projectConfig);
-                saveProjectConfig(projectConfig);
+            console.log('translationViewController get new config', newProjectConfig);
+            if (projectConfig && projectConfig.project !== newProjectConfig.project) {
+                saveProjectConfig(newProjectConfig);
                 translationView.clearView();
-                trade.getMessageBundle(projectConfig.project);
+                trade.getMessageBundle(newProjectConfig.project);
             } else {
-                saveProjectConfig(projectConfig);
-                trade.getMessageBundle(projectConfig.project);
+                saveProjectConfig(newProjectConfig);
+                trade.getMessageBundle(newProjectConfig.project);
             }
 
             translationViewHeader.addLanguages(availableLanguages);
@@ -2089,7 +2093,9 @@ var translationView = (function () {
             clearView : function () {
                 // just reset all for now
                 // TODO do it better ;)
-                rootNode.innerHTML = "";
+                [].slice.call(rootNode.children).forEach(function (child) {
+                    rootNode.removeChild(child);
+                });
             },
             showLang : function (lang) {
                 // show the lang tab
@@ -2172,6 +2178,9 @@ var flag = require('./flag'),
                 rootNode.classList.add('c-hide_' + lang);
             },
             addLanguages : function (languages) {
+                [].slice.call(rootNode.querySelectorAll('.tab')).forEach(function (node) {
+                    rootNode.removeChild(node);
+                })
                 languages.forEach(function (lang) {
                     fc.getLangTab(lang).domAppendTo(rootNode);
                 })

@@ -1,0 +1,25 @@
+{
+    "project" : "huhu",
+    "description" : "This is a test project and it is used to test the translation tool.",
+    "images" : ["/path/to/my/main_1.png", "/path/to/my/main_2.png"],
+    "defaultLanguage" : "en",
+    "numberOfKeys" : "10",
+    "languages" : {
+        "en_GB" : {
+            "translated" : "3"
+        },
+        "en" : {
+            "translated" : "10"
+        }
+    },
+    "keys" : {
+        "second" : {
+            "description" : "Second test module",
+            "images" : ["/path/to/my/image_2.png", "/path/to/my/image_1.png"]
+        },
+        "second_header" : {
+            "description" : "The title of the page",
+            "maxCharacter" : "40"
+        }
+    }
+}
