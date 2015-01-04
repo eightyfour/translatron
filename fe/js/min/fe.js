@@ -719,10 +719,10 @@ module.exports = {
 //                    translationView.printCreateNewBundle();
 //                });
 //            } else {
-                translationView.printCreateNewBundle();
+                translationView.printCreateNewBundle(projectConfig.project, projectConfig.defaultLanguage);
 //            }
         } else {
-            translationView.printCreateNewBundle();
+            translationView.printCreateNewBundle(projectConfig.project, projectConfig.defaultLanguage);
         }
     }
 };
@@ -1971,11 +1971,8 @@ var translationView = (function () {
                             // TODO dot or underscore ?
                             var value = category + '_' + input.value;
                             if (validateNewKey(input.value)) {
-                                // TODO refacor this - server should add the key for all available languages - or pass default lang
-                                con.sendResource(value, {
-                                    bundle : projectName,
-                                    locale : actualLanguage
-                                }, '', function () {
+                                // TODO refactor this - server should add the key for all available languages - or pass default lang
+                                con.sendResource(value, actualLanguage, '', function () {
                                     button.style.color = '#ffffff';
                                     input.style.backgroundColor = "#ffffff";
                                 });
@@ -2152,10 +2149,7 @@ var translationView = (function () {
                         self = this;
 
                     if (validateNewKey(newValue)) {
-                        con.sendResource(newValue, {
-                            bundle : projectName,
-                            locale : defaultLanguage
-                        }, '', function () {
+                        con.sendResource(newValue, defaultLanguage, '', function () {
                             newKey.value = newKeyValue;
                             self.style.color = '#ffffff';
                             newKey.style.backgroundColor = "#ffffff";
