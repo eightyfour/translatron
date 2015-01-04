@@ -67,9 +67,17 @@ var conTrade,
             sendResource : function () {
                 client.sendResource.apply(null, [].slice.call(arguments));
             },
+            /**
+             * initial call - all client methods are saved here.
+             * returns a id as callback. The client needs this as identifier.
+             */
             setupClient : function () {
                 client.setupClient.apply(null, [].slice.call(arguments));
             },
+            /**
+             *  TODO refactor - do it only if the client ask for - methods are saved in client
+             *  Rename init in getPathList
+             */
             init : function (clientEvents) {
                 bash.exec({
                     comand : C.BASH.LS,
@@ -78,6 +86,9 @@ var conTrade,
                     clientEvents.sendPathList(obj);
                 });
             },
+            /**
+             * TODO remove bash
+             */
             bash : bash,
             fileManager : fileManager,
             jsonFileManager : (function () {

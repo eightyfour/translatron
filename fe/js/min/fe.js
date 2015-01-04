@@ -177,17 +177,13 @@ window.toast = toast;
 
 trade.ready(function () {
     "use strict";
+    // TODO remove static project name
+    var projectName = 'test';
 
-    trade.getJSON('test', function (data) {
+    // this is the initial call to trigger a project load - you will get
+    // the project.json and all message bundle keys
+    trade.getJSON(projectName, function (data) {
         console.log('Get project json:', data);
-    });
-
-    // set bundle name for only notify clients with same bundle
-    canny.translationView.client.broadCast.fromBundle = canny.translationView.getBundleNameFrom();
-    canny.translationView.client.broadCast.toBundle  = canny.translationView.getBundleNameTo();
-
-    trade.setupClient(canny.translationView.client, function (id) {
-        canny.translationView.client.id = id;
     });
 
     console.log('REQUEST PARAMS: ' + domOpts.params);
@@ -501,6 +497,10 @@ canny.projectMainNavigation.onLanguageSelect(function (obj) {
     console.log('Click on language', obj);
 });
 
+canny.projectMainNavigation.onProjectSelect(function (obj) {
+    console.log('Click on project', obj);
+});
+
 /**
  * if from and to in the request disable all except the languages in the request params
  * @param langs
@@ -527,20 +527,45 @@ uiEvents.addUiEventListener({
 });
 
 /**
+ * sometimes the specific project config is provided faster as the main project config.
+ */
+var callProjectInitQueue = (function () {
+    var waitForMainConfigQueue = [];
+    return {
+        free : function () {
+            waitForMainConfigQueue.forEach(function (fc) {
+                fc();
+            });
+            waitForMainConfigQueue = null;
+        },
+        ready : function (fc) {
+            if (waitForMainConfigQueue !== null) {
+                waitForMainConfigQueue.push(fc);
+            } else {
+                fc();
+            }
+        }
+   }
+}());
+/**
  * just the implementation of the callbacks
- *
  * @type {{getJSON: getJSON}}
  */
 module.exports = {
     getJSON : function (data) {
+        console.log('projectMainNavigationController:getJSON', data);
         if (data.hasOwnProperty('projects')) {
             // main project config
-            canny.projectMainNavigation.setAvailableProjects(data.projects);
-            canny.projectMainNavigation.setAvailableLanguages(data.languages);
+                canny.projectMainNavigation.setAvailableProjects(data.projects);
+                canny.projectMainNavigation.setAvailableLanguages(data.languages);
+                activateLanguages(data.languages, data.defaultLanguage);
 
-            activateLanguages(data.languages, data.defaultLanguage);
+                callProjectInitQueue.free();
+
         } else {
-            canny.projectMainNavigation.setActivatedProjectLanguages(data);
+            callProjectInitQueue.ready(function () {
+                canny.projectMainNavigation.setActivatedProjectLanguages(data)
+            });
             // project specific config
         }
     }
@@ -551,6 +576,7 @@ var translationView = require("canny").translationView,
     translationViewHeader = require("canny").translationViewHeader,
     domOpts = require('dom-opts'),
     uiEvents = require('../uiEventManager.js'),
+    events = require('../events.js'),
     trade = require('../trade.js'),
     sortByKey = function (a, b) {
         if (a.key < b.key) {return -1; }
@@ -574,6 +600,43 @@ function saveProjectConfig(config) {
         availableLanguages.splice(0, 0, availableLanguages.splice(idx, 1)[0]);
     }
 }
+
+/**
+ * TODO replace bundle with locale and refactor the calls from translationView
+ */
+translationView.onAddNewKey(function (bundle, key, value, cb) {
+    console.log('translationViewController:onAddNewKey', [].slice.call(arguments));
+    trade.sendResource({
+        bundle: projectConfig.project,
+        locale: bundle.locale
+    }, {
+        key: key,
+        value: value
+    }, function (key) {
+        cb(key)
+    });
+});
+
+/**
+ * TODO replace bundle with locale and refactor the calls from translationView
+ */
+translationView.onSaveValue(function (bundle, key, value, cb) {
+    console.log('translationViewController:onSaveValue', [].slice.call(arguments));
+    trade.sendResource({
+        bundle: projectConfig.project,
+        locale: bundle.locale
+    }, {
+        key: key,
+        value: value
+    }, function (key) {
+        cb(key)
+    });
+});
+
+//translationView.onRenameKey(function (oldKey, newKey) {
+//   TODO implement a rename key method
+//});
+
 // register listener function to the ui events
 uiEvents.addUiEventListener({
     activateLanguage : function (lang) {
@@ -584,6 +647,15 @@ uiEvents.addUiEventListener({
         translationViewHeader.hideLang(lang);
         translationView.hideLang(lang);
     }
+});
+
+/**
+ *
+ */
+events.addServerListener('updateKey', function (bundleObj, data) {
+    // TODO check if the incoming message matched with my project - if not than fix this on server side
+    console.log("translationViewController:updateKey: ", bundleObj, data);
+    translationView.printBundleTemplate([data], bundleObj.locale, availableLanguages, projectConfig.project);
 });
 
 module.exports = {
@@ -633,7 +705,7 @@ module.exports = {
         }
     }
 };
-},{"../trade.js":9,"../uiEventManager.js":10,"canny":34,"dom-opts":48}],8:[function(require,module,exports){
+},{"../events.js":8,"../trade.js":9,"../uiEventManager.js":10,"canny":34,"dom-opts":48}],8:[function(require,module,exports){
 /**
  * Created by han.
  *
@@ -659,6 +731,14 @@ var events = (function () {
             },
             sendPathList : function () {
                 callQueue('sendPathList', [].slice.call(arguments));
+            },
+            /**
+             *
+             * @param bundleObj {locale: string, bundle: string}
+             * @param data {key:string, value: string}
+             */
+            updateKey : function () {
+                callQueue('updateKey', [].slice.call(arguments));
             }
         },
         addServerListener : function (name, cb) {
@@ -693,6 +773,7 @@ var trade = (function () {
     "use strict";
     // ready queue call registered call backs when trade is ready
     var cbs = [],
+        connectionId, // client identifier for the server
         server,
         registeredController = [];
 
@@ -725,16 +806,11 @@ var trade = (function () {
          * @param data
          * @param cb
          */
-        sendResource : function (id, bundle, data, cb) {
-            server.sendResource.apply(null, [].slice.call(arguments));
-        },
-        /**
-         *
-         * @param client
-         * @param cb
-         */
-        setupClient : function (client, cb) {
-            server.setupClient.apply(null, [].slice.call(arguments));
+        sendResource : function (bundle, data, cb) {
+            var args = [].slice.call(arguments);
+            // connectionId id to the first
+            args.splice(0, 0, connectionId);
+            server.sendResource.apply(null, args);
         },
         // Not really tested
         ready : function (cb) {
@@ -748,6 +824,11 @@ var trade = (function () {
 
             server = s;
             server.init(events.serverEvents);
+
+            server.setupClient(events.serverEvents, function (id) {
+                connectionId = id;
+            });
+
             // call ready queue
             cbs.map(function (cb) {
                 cb && cb();
@@ -1290,16 +1371,14 @@ var projectMainNavigation = (function () {
 
     var mainNode,
         selectLanguageQueue = [],
+        selectProjectQueue = [],
         path = document.location.origin + document.location.pathname,
         bundleName = window.domOpts.params.bundle,
-        fromTranslation = window.domOpts.params.from || 'de',
-        toTranslation = window.domOpts.params.to,
         modViews = {
             main : function (node) {
                 mainNode = node;
             },
             menuToggleButton : function (node) {
-                var svgIconNode = node.querySelector('.si-icon');
                 new svgIcon(node, {
                     hamburgerCross : {
                         url : 'animatedSVG/svg/hamburger.svg',
@@ -1327,11 +1406,9 @@ var projectMainNavigation = (function () {
                             }
                         ]
                     }
-                }, { easing : mina.elastic, speed: 1200 ,
-                    size : {
-                        w : '4em',
-                        h : '4em'
-                    }} );
+                }, {
+                    easing : mina.elastic, speed: 1200, size : {w : '4em', h : '4em'}
+                });
                 node.addEventListener('click', function () {
                     if (mainNode.classList.contains('c-open')) {
                         mainNode.classList.remove('c-open');
@@ -1377,7 +1454,15 @@ var projectMainNavigation = (function () {
         };
 
     function setLocale(locales, node) {
-        var ul = window.domOpts.createElement('ul', 'navigationMenu'), li, span, progressNode;
+        var ul = node.querySelector('.languages'), li, span, progressNode;
+        if (ul) {
+            // remove all existing children first
+            [].slice.call(ul.querySelectorAll('li')).forEach(function (elem) {
+                ul.removeChild(elem);
+            });
+        } else {
+            ul = window.domOpts.createElement('ul', null, 'navigationMenu languages');
+        }
         locales.forEach(function (key) {
 
             li = window.domOpts.createElement('li');
@@ -1417,14 +1502,26 @@ var projectMainNavigation = (function () {
     }
 
     function setProjects(projects, node) {
-        var ul = window.domOpts.createElement('ul', 'navigationMenu'), li, a;
-        projects.forEach(function (projectName) {
+        var ul = node.querySelector('.projects'), li;
+        if (ul) {
+            // remove all existing children first
+            [].slice.call(ul.querySelectorAll('li')).forEach(function (elem) {
+                ul.removeChild(elem);
+            });
+        } else {
+            ul = window.domOpts.createElement('ul', null, 'navigationMenu projects');
+        }
 
+        projects.forEach(function (projectName) {
+            var span = window.domOpts.createElement('span');
             li = window.domOpts.createElement('li');
-            a = window.domOpts.createElement('a');
-            a.setAttribute('href', path + '?bundle=' + projectName);
-            a.innerHTML = projectName;
-            a.domAppendTo(li);
+            li.addEventListener('click', function () {
+                selectProjectQueue.forEach(function (fc) {
+                    fc(projectName);
+                });
+            });
+            span.innerHTML = projectName;
+            span.domAppendTo(li);
             li.domAppendTo(ul);
 
         });
@@ -1434,6 +1531,9 @@ var projectMainNavigation = (function () {
     return {
         onLanguageSelect : function (fc) {
             selectLanguageQueue.push(fc);
+        },
+        onProjectSelect : function (fc) {
+            selectProjectQueue.push(fc);
         },
         activateLang : function (lang) {
             var node = mainNode.querySelector('li.' + lang);
@@ -1635,30 +1735,14 @@ var texts = (function () {
 module.exports = texts;
 },{}],18:[function(require,module,exports){
 
-var trade = require('../trade.js'),
-    flag = require('./flag.js'),
+var flag = require('./flag.js'),
     conf = {
         projectPrefix : "_prj",
         rowPrefix : "_row",
         inputPrefix : "_value",
         inputTransPrefix : "_trans"
     };
-// TODO remove project name - only the controller needs to know this
-function SaveOnLeave(node, key, projectName, lang, text) {
-    var textList = [text],
-        textIdx = 0;
 
-    node.addEventListener('change', function (e) {
-        console.log("Old: " + textList[textIdx]);
-        var newValue = this.value;
-        if (textList[textIdx] !== newValue) {
-            textList.push(newValue);
-            textIdx++;
-        }
-        console.log(textList);
-        translationView.con.sendResource(key, {bundle: projectName, locale : lang}, newValue);
-    });
-}
 
 function textAreaKeyPressListener(e) {
     var key = e.keyCode || e.which;
@@ -1685,10 +1769,28 @@ function getLanguageTextId(key, lang) {
 }
 /**
  * handle the translation overview
- * TODO before refactor base.connection and use trade
+ * TODO refactor base.connection
  */
 var translationView = (function () {
     "use strict";
+
+    // TODO remove project name - only the controller needs to know this
+    function SaveOnLeave(node, key, projectName, lang, text) {
+        var textList = [text],
+            textIdx = 0;
+
+        node.addEventListener('change', function (e) {
+            console.log("Old: " + textList[textIdx]);
+            var newValue = this.value;
+            if (textList[textIdx] !== newValue) {
+                textList.push(newValue);
+                textIdx++;
+            }
+            console.log(textList);
+            con.sendResource(key, {bundle: projectName, locale : lang}, newValue);
+        });
+    }
+
     var rootNode, // main node all content are added to here
         selectors = {
             root : "resourceBundleTable",
@@ -1696,31 +1798,13 @@ var translationView = (function () {
             tpl : {
                 tableBody : 'tableBody'
             }
+        },
+        onQueues = {
+            addNewKey : [],
+            addSaveValue : []
         };
 
-
-    // used on server side to call clients
-    var client = {
-            id : undefined, // set on server side ,
-            broadCast : {fromBundle : null, toBundle : null}, // set it before setup
-            updateKey : function (bundleObj, data) {
-                var inputPrefix = conf.inputPrefix,
-                    message = data,
-                    keyNode;
-                if (fc.isBundleEqual(bundleObj, fc.getBundleNameTo())) {
-                    inputPrefix = conf.inputTransPrefix;
-                }
-                keyNode = document.getElementById(message.key + inputPrefix);
-                console.log("updateKey: ", message);
-                if (!keyNode) {
-                    fc.printBundleTemplate([data]);
-                } else {
-                    keyNode.value = message.value;
-                    ui.updateInputFields(message.key, inputPrefix);
-                }
-            }
-        },
-        ui = {
+    var ui = {
             css : {
                 sendSuccess : 'sendSuccess',
                 updateKey : 'updateKey'
@@ -1764,18 +1848,22 @@ var translationView = (function () {
         con = {
             // TODO move this to controller
             sendResource : function (key, bundle, value, cb) {
-                var inputPrefix = conf.inputPrefix, cb = cb || function () {};
+                var inputPrefix = conf.inputPrefix, callback = cb || function () {};
+
+                function sendResourceCallback(key) {
+                    ui.sendSuccess(key, inputPrefix);
+                    toast.showMessage('Auto save: "' + key + '" (success)');
+                    callback(key, inputPrefix);
+                }
+
                 if (fc.isBundleEqual(bundle, fc.getBundleNameTo())) {
                     inputPrefix = conf.inputTransPrefix;
                 }
 
-                console.log('sendResource:', [client.id, bundle, {key: key, value: value}]);
+                console.log('sendResource:', [bundle, {key: key, value: value}]);
 
-                trade.sendResource(client.id, bundle, {key: key, value: value}, function (key) {
-                    console.log('send success');
-                    ui.sendSuccess(key, inputPrefix);
-                    toast.showMessage('Auto save: "' + key + '" (success)');
-                    cb(key, inputPrefix);
+                onQueues.addSaveValue.forEach(function (fc) {
+                    fc(bundle, key, value, sendResourceCallback);
                 });
             }
         },
@@ -1804,7 +1892,7 @@ var translationView = (function () {
                     key : obj.key,
                     contextName : contextName,
                     keyName : newKey.join(delemitter),
-                    data : obj.data
+                    value : obj.value
                 };
             },
             isBundleEqual : function (bundle1, bundle2) {
@@ -1834,7 +1922,14 @@ var translationView = (function () {
                 var bundle  = domOpts.params.bundle || 'messages';
                 return bundle + '_' + locale;
             },
-            printBundleTemplate : function (args, actualLanguage, availableProjectLanguages, projectName) {
+            /**
+             *
+             * @param bundles {key: string, data: string}
+             * @param actualLanguage
+             * @param availableProjectLanguages
+             * @param projectName
+             */
+            printBundleTemplate : function (bundles, actualLanguage, availableProjectLanguages, projectName) {
                 var keyObj,
                     projectNode,
                     getAddNewKeyInputNode = function (category) {
@@ -1848,11 +1943,16 @@ var translationView = (function () {
                         input.addEventListener('keypress', keyKeyPressListener);
                         label.innerText = category + "_";
                         button.innerText = "add key";
+
                         button.addEventListener('click', function () {
                             // TODO dot or underscore ?
                             var value = category + '_' + input.value;
                             if (validateNewKey(input.value)) {
-                                translationView.con.sendResource(value, fc.getBundleNameFrom(), '', function () {
+                                // TODO refacor this - server should add the key for all available languages - or pass default lang
+                                con.sendResource(value, {
+                                    bundle : projectName,
+                                    locale : actualLanguage
+                                }, '', function () {
                                     button.style.color = '#ffffff';
                                     input.style.backgroundColor = "#ffffff";
                                 });
@@ -1861,6 +1961,7 @@ var translationView = (function () {
                                 input.style.backgroundColor = "#ff4444";
                             }
                         });
+
                         return {
                             label : label,
                             input : input,
@@ -1899,7 +2000,7 @@ var translationView = (function () {
                         return categoryNode;
                     };
 
-                args.forEach(function (data) {
+                bundles.forEach(function (data) {
                     keyObj =  fc.getViewKeyObject(data);
                     projectNode = prepareCategoryNode(rootNode, keyObj);
                     fc.addRowWithLanguages(projectNode, keyObj, actualLanguage, availableProjectLanguages, projectName);
@@ -1982,7 +2083,7 @@ var translationView = (function () {
                 fc.addKeyField(row, data.keyName);
 
                 allProjectLanguages.forEach(function (lang) {
-                    fc.addLanguageField(row, data.key, actualLanguage === lang ? data.data : null, projectName, lang);
+                    fc.addLanguageField(row, data.key, actualLanguage === lang ? data.value : null, projectName, lang);
                 });
             },
             clearView : function () {
@@ -1998,11 +2099,12 @@ var translationView = (function () {
                 rootNode.classList.add('c-hide_' + lang);
             },
             /**
+             * TODO not in use
              *
              * @param parentNode
              * @param keyObj
              */
-            printCreateNewBundle : function (parentNode, keyObj) {
+            printCreateNewBundle : function (projectName, defaultLanguage) {
                 var newKeyButton = document.getElementById('addNewKeyButton'),
                     newKeyValue = document.getElementById('newKey').value;
 
@@ -2014,7 +2116,10 @@ var translationView = (function () {
                         self = this;
 
                     if (validateNewKey(newValue)) {
-                        translationView.con.sendResource(newValue, fc.getBundleNameFrom(), '', function () {
+                        con.sendResource(newValue, {
+                            bundle : projectName,
+                            locale : defaultLanguage
+                        }, '', function () {
                             newKey.value = newKeyValue;
                             self.style.color = '#ffffff';
                             newKey.style.backgroundColor = "#ffffff";
@@ -2025,16 +2130,18 @@ var translationView = (function () {
                     }
                 });
             },
-            con : con,
-            client : client,
-            ui : ui,
-            error : error
+            onAddNewKey : function (cb) {
+               onQueues.addNewKey.push(cb);
+            },
+            onSaveValue : function (cb) {
+                onQueues.addSaveValue.push(cb);
+            }
         };
     return fc;
 }());
 
 module.exports = translationView;
-},{"../trade.js":9,"./flag.js":12}],19:[function(require,module,exports){
+},{"./flag.js":12}],19:[function(require,module,exports){
 /**
  *
  */
