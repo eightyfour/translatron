@@ -492,8 +492,10 @@ var canny = require('canny'),
 canny.projectMainNavigation.onLanguageSelect(function (obj) {
     var eventName;
     if (obj.isActive) {
-        eventName = obj.isInactive ? 'deActivateLanguage' : 'activateLanguage';
-        uiEvents.callUievent(eventName, obj.language);
+         eventName = obj.isInactive ? 'deActivateLanguage' : 'activateLanguage';
+         uiEvents.callUievent(eventName, obj.language);
+    } else {
+         uiEvents.callUievent('addLanguage', obj.language);
     }
     console.log('Click on language', obj);
 });
@@ -527,6 +529,9 @@ uiEvents.addUiEventListener({
     },
     deActivateLanguage : function (lang) {
         canny.projectMainNavigation.deActivateLang(lang);
+    },
+    addLanguage : function (lang) {
+        canny.projectMainNavigation.activateLang(lang);
     }
 });
 
@@ -588,7 +593,8 @@ var translationView = require("canny").translationView,
         return 0;
     },
     projectConfig,
-    availableLanguages = [];
+    availableLanguages = [],
+    collectKeysMap = {}; // saves all keys which added by the getMessageBundle method
 
 /**
  * Read the from param as default language otherwise take it from the project.json
@@ -608,11 +614,11 @@ function saveProjectConfig(config) {
 /**
  * TODO replace bundle with locale and refactor the calls from translationView
  */
-translationView.onAddNewKey(function (bundle, key, value, cb) {
+translationView.onAddNewKey(function (lang, key, value, cb) {
     console.log('translationViewController:onAddNewKey', [].slice.call(arguments));
     trade.sendResource({
         bundle: projectConfig.project,
-        locale: bundle.locale
+        locale: lang
     }, {
         key: key,
         value: value
@@ -624,11 +630,11 @@ translationView.onAddNewKey(function (bundle, key, value, cb) {
 /**
  * TODO replace bundle with locale and refactor the calls from translationView
  */
-translationView.onSaveValue(function (bundle, key, value, cb) {
+translationView.onSaveValue(function (lang, key, value, cb) {
     console.log('translationViewController:onSaveValue', [].slice.call(arguments));
     trade.sendResource({
         bundle: projectConfig.project,
-        locale: bundle.locale
+        locale: lang
     }, {
         key: key,
         value: value
@@ -650,6 +656,13 @@ uiEvents.addUiEventListener({
     deActivateLanguage : function (lang) {
         translationViewHeader.hideLang(lang);
         translationView.hideLang(lang);
+    },
+    // TODO
+    addLanguage : function (lang) {
+        // TODO don't trigger it twice
+        translationView.addLanguage(Object.keys(collectKeysMap), lang);
+        translationViewHeader.showLang(lang);
+        translationView.showLang(lang);
     }
 });
 
@@ -691,6 +704,10 @@ module.exports = {
 
         if (obj) {
             sorted = obj.data.sort(sortByKey);
+            sorted.forEach(function (data) {
+                collectKeysMap[data.key] = undefined;
+            });
+
             // TODO projectConfig.project will be removed if the trade call moved to this controller
             translationView.printBundleTemplate(sorted, obj.language, availableLanguages, projectConfig.project);
 //            if (bundleTo) {
@@ -910,8 +927,9 @@ module.exports = trade;
 var uiEvent = (function () {
     var eventQueues = {
             activateLanguage : [],
-            deActivateLanguage : []
-        }
+            deActivateLanguage : [],
+            addLanguage: []
+        };
     return {
         addUiEventListener : function (obj) {
             Object.keys(obj).forEach(function (key) {
@@ -1542,6 +1560,7 @@ var projectMainNavigation = (function () {
         activateLang : function (lang) {
             var node = mainNode.querySelector('li.' + lang);
             node.classList.remove('c-inactive');
+            node.classList.add('c-active');
         },
         deActivateLang : function (lang) {
             var node = mainNode.querySelector('li.' + lang);
@@ -1779,7 +1798,7 @@ var translationView = (function () {
     "use strict";
 
     // TODO remove project name - only the controller needs to know this
-    function SaveOnLeave(node, key, projectName, lang, text) {
+    function SaveOnLeave(node, key, lang, text) {
         var textList = [text],
             textIdx = 0;
 
@@ -1791,7 +1810,7 @@ var translationView = (function () {
                 textIdx++;
             }
             console.log(textList);
-            con.sendResource(key, {bundle: projectName, locale : lang}, newValue);
+            con.sendResource(key, lang, newValue);
         });
     }
 
@@ -1851,7 +1870,7 @@ var translationView = (function () {
     // methods needs to be implemented on server side
         con = {
             // TODO move this to controller
-            sendResource : function (key, bundle, value, cb) {
+            sendResource : function (key, lang, value, cb) {
                 var inputPrefix = conf.inputPrefix, callback = cb || function () {};
 
                 function sendResourceCallback(key) {
@@ -1860,14 +1879,14 @@ var translationView = (function () {
                     callback(key, inputPrefix);
                 }
 
-                if (fc.isBundleEqual(bundle, fc.getBundleNameTo())) {
+                if (fc.isBundleEqual(lang, fc.getBundleNameTo())) {
                     inputPrefix = conf.inputTransPrefix;
                 }
 
-                console.log('sendResource:', [bundle, {key: key, value: value}]);
+                console.log('sendResource:', [lang, {key: key, value: value}]);
 
                 onQueues.addSaveValue.forEach(function (fc) {
-                    fc(bundle, key, value, sendResourceCallback);
+                    fc(lang, key, value, sendResourceCallback);
                 });
             }
         },
@@ -2035,7 +2054,7 @@ var translationView = (function () {
              * @param key
              * @param lang
              */
-            addLanguageField : function (node, key, value, projectName, lang) {
+            addLanguageField : function (node, key, value, lang) {
 
                 var textNode = document.getElementById(getLanguageTextId(key, lang)),
                     dataNode;
@@ -2056,7 +2075,7 @@ var translationView = (function () {
 
                     textNode.setAttribute('type', 'text');
 
-                    new SaveOnLeave(textNode, key, projectName, lang, value);
+                    new SaveOnLeave(textNode, key, lang, value);
 
                     dataNode.appendChild(textNode);
                     dataNode.appendChild(flag.getFlag(lang));
@@ -2087,7 +2106,18 @@ var translationView = (function () {
                 fc.addKeyField(row, data.keyName);
 
                 allProjectLanguages.forEach(function (lang) {
-                    fc.addLanguageField(row, data.key, actualLanguage === lang ? data.value : null, projectName, lang);
+                    fc.addLanguageField(row, data.key, actualLanguage === lang ? data.value : null, lang);
+                });
+            },
+            addLanguage : function (keys, lang) {
+                var row;
+                keys.forEach(function (key) {
+                    row = document.getElementById(key + conf.rowPrefix);
+                    if (row) {
+                        fc.addLanguageField(row, key, null, lang);
+                    } else {
+                        console.log('translationView:addLanguage found key which is not available in view:', key);
+                    }
                 });
             },
             clearView : function () {
@@ -2180,7 +2210,7 @@ var flag = require('./flag'),
             addLanguages : function (languages) {
                 [].slice.call(rootNode.querySelectorAll('.tab')).forEach(function (node) {
                     rootNode.removeChild(node);
-                })
+                });
                 languages.forEach(function (lang) {
                     fc.getLangTab(lang).domAppendTo(rootNode);
                 })
