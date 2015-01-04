@@ -660,6 +660,7 @@ uiEvents.addUiEventListener({
     // TODO
     addLanguage : function (lang) {
         // TODO don't trigger it twice
+        availableLanguages.push(lang);
         translationView.addLanguage(Object.keys(collectKeysMap), lang);
         translationViewHeader.showLang(lang);
         translationView.showLang(lang);
@@ -670,6 +671,7 @@ uiEvents.addUiEventListener({
  *
  */
 events.addServerListener('updateKey', function (bundleObj, data) {
+    collectKeysMap[data.key] = undefined; // save the key
     // TODO check if the incoming message matched with my project - if not than fix this on server side
     console.log("translationViewController:updateKey: ", bundleObj, data);
     translationView.printBundleTemplate([data], bundleObj.locale, availableLanguages, projectConfig.project);
@@ -2032,7 +2034,7 @@ var translationView = (function () {
              *
              * @param key
              */
-            addKeyField : function (node, key) {
+            addKeyField : function (node, key, keyName) {
                 var keyInputNode = document.getElementById(key + conf.inputPrefix),
                     keyNode;
                 if (!keyInputNode) {
@@ -2043,7 +2045,7 @@ var translationView = (function () {
                     node.appendChild(keyNode);
                 }
 
-                keyInputNode.value =  key;
+                keyInputNode.value =  keyName;
             },
             /**
              * creates a languages field
@@ -2100,7 +2102,7 @@ var translationView = (function () {
             addRowWithLanguages : function (node, data, actualLanguage, allProjectLanguages, projectName) {
                 var row = fc.getRow(node, data.key);
 
-                fc.addKeyField(row, data.keyName);
+                fc.addKeyField(row, data.key, data.keyName);
 
                 allProjectLanguages.forEach(function (lang) {
                     fc.addLanguageField(row, data.key, actualLanguage === lang ? data.value : null, lang);
