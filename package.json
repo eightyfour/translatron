@@ -2,7 +2,7 @@
 	"name" : "resourceMessagesLiveEditor",
     "auth": "eightyfour",
     "email": "eightyfour@thinkuseful.de",
-	"version" : "0.2.2",
+	"version" : "0.2.3",
     "readmeFilename": "README.md",
     "engines": {
         "node": ">= v0.10.0"
