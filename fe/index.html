@@ -15,10 +15,7 @@
 
 <div id="resourceEditor" class="translationView">
 
-
-    <h1 id="title">&nbsp;</h1>
-
-    <div id="resourceBundleTable" canny-mod="flowControl" canny-flowControl="{'view':'resourceBundle'}">
+    <div style="display: none" id="resourceBundleTable" canny-mod="flowControl" canny-flowControl="{'view':'resourceBundle'}">
 
             <div class="header translationViewHeader">
                 <div class="row" canny-mod="translationViewHeader" canny-var="main">
@@ -45,6 +42,17 @@
             </div>
 
     </div>
+
+    <div style="display: block" id="initialView" class="initialView" canny-mod="flowControl" canny-flowControl="{'view':'initialView'}">
+        <div class="sun">
+            <div class="wrap" canny-mod="initialView" canny-var="root">
+                <div class="projectName ownProject"><span>Or create here your own project</span></div>
+                <div class="projectName">dsafsdfdsffdsfds</div>
+                <div class="projectName">dsafsgggdgfgf</div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div id="fileManager" canny-mod="flowControl" canny-var="{'view':'fileManager'}" style="display: none">
@@ -72,30 +80,38 @@
     <div class="menuToggleButton si-icon si-icon-hamburger-cross" data-icon-name="hamburgerCross" canny-mod="projectMainNavigation" canny-var="menuToggleButton"></div>
 
     <div class="projectMainNavigation--header">
-        <p>
-            <a href="https://confluence.gameduell.de/display/MOBS/Language+properties+tool" target="_blank">How to use this tool?</a>
-            <a canny-mod="projectMainNavigation" canny-var="createNewProject">Create new project</a>
-        </p>
+
     </div>
 
     <div class="page-scroll">
         <div class="page-scroll--content">
 
-            <label for="menuNavigationFrom">Translate this page from:</label>
-            <div id="menuNavigationFrom" canny-mod="projectMainNavigation" canny-var="from" class="menuNavigation"><!-- place holder for the menu navigation --></div>
+            <div id="menuNavigationFrom" canny-mod="projectMainNavigation" canny-var="from" class="menuNavigation language"><!-- place holder for the menu navigation --></div>
 
-            <div class="clear"></div>
-
-            <label for="menuNavigationTo">Translate this page in to:</label>
             <div id="menuNavigationTo"canny-mod="projectMainNavigation" canny-var="to" class="menuNavigation"><!-- place holder for the menu navigation --></div>
 
-            <label for="menuNavigationTo">Available projects:</label>
-            <div canny-mod="projectMainNavigation" canny-var="projects" class="menuNavigation"><!-- place holder for the menu navigation --></div>
+            <label for="menuNavigationTo">Project manager</label>
+            <div class="menuNavigation manager">
+                <ul class="navigationMenu manager">
+                    <li><a canny-mod="projectMainNavigation" canny-var="createNewProject"><span>Create new project</span><span class="icon octicon octicon-plus"></span></a></li>
+                    <li><a canny-mod="projectMainNavigation" canny-var="showFileEditor"><span>Show in editor mode</span><span class="icon octicon octicon-squirrel"></span></a></li>
+                </ul>
+            </div>
 
+            <label for="menuNavigationTo">Project overview</label>
+            <div canny-mod="projectMainNavigation" canny-var="projects" class="menuNavigation projects"><!-- place holder for the menu navigation --></div>
+
+            <label for="menuNavigationTo">Info and help</label>
+            <div  class="menuNavigation manager">
+                <ul class="navigationMenu manager">
+                    <li><a href="https://confluence.gameduell.de/display/MOBS/Language+properties+tool" target="_blank"><span>about translation tool</span><span class="icon octicon octicon-light-bulb"></span></a></li>
+                    <li><a href="https://github.com/eightyfour/resourceMessagesLiveEditor" target="_blank"><span class="icon octicon octicon-octoface"></span></a></li>
+                </ul>
+            </div>
 
             <div style="clear: both;"></div>
 
-            <a class="switchLink" canny-mod="projectMainNavigation" canny-var="showFileEditor">Show in editor mode</a>
+
         </div>
     </div>
 

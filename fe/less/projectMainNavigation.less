@@ -14,6 +14,15 @@
   &.c-open{
     margin-left:0;
     transition: margin 300ms;
+
+    .menuNavigation {
+      &.manager, &.projects {
+        li {
+          margin:0;
+        }
+      }
+    }
+
     .menuToggleButton{
       transition: opacity 600ms;
       opacity: 1;
@@ -50,7 +59,6 @@
       overflow-y: scroll;
       height: 100%;
       background-color: #404040;
-      padding: 1em 0;
       box-sizing: border-box;
     }
   }
@@ -64,7 +72,13 @@
     margin-top: 5px;
   }
 
-  label{font-weight: bold;}
+  label{
+    font-weight: bold;
+    padding: 0.7em;
+    display: block;
+    font-size: 1.7em;
+    background-color: #303030;
+  }
 
   a {
     color: #FFF;
@@ -76,51 +90,114 @@
     margin: 0;
   }
 
-  .menuNavigation li {
-    cursor: pointer ;
-    text-decoration: none;
-    font-size: 1.5em;
-    padding: .5em 0 .5em .5em;
-    border-top: 1px solid black;
-    box-shadow: 0px 1px 2px 0px rgba(250, 250, 250, 0.2) inset;
-    position: relative;
-    &:active{
-      box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1) inset, 0px 1px 2px 1px rgba(0, 0, 0, 0.8) inset;
-    }
-    &:last-child{
-      border-bottom: 1px solid black;
-    }
+  .menuNavigation {
 
-    .flag-icon{
-      position: absolute;
-      right: 5px;
-      font-size: 1.6em;
-      top: 50%;
-      margin-top: -5.2%;
-      &:after{
-        display: block;
-        text-align: center;
-        content: '+';
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
+    &.language {
+      li {
+        background-color: rgba(0, 110, 60, 0.2);
       }
     }
-    &.c-active{
-      .flag-icon:after{
-          display: none;
+    &.manager, &.projects {
+      li {
+        background-color: rgba(100, 150,200, 0.2);
+        margin: 0 3em 0 0
       }
-      &.c-inactive{
-        .flag-icon:after{
+    }
+    &.manager {
+      li {
+        padding:0;
+        a {
+          width: 100%;
+          min-height: 2.2em;
           display: block;
-          content: ' ';
+          padding: 0.6em 0 0.7em 0.5em;
+          text-decoration: none;
+          box-sizing: border-box;
+        }
+        background-color: rgba(150, 150,100, 0.2);
+      }
+    }
+    li {
+      min-height: 2.2em;
+      box-sizing: border-box;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 1.5em;
+      padding: .5em 0 .5em .5em;
+      border-top: 1px solid black;
+      box-shadow: 0px 1px 2px 0px rgba(250, 250, 250, 0.2) inset;
+      position: relative;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:active {
+        box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1) inset, 0px 1px 2px 1px rgba(0, 0, 0, 0.8) inset;
+      }
+      &:last-child {
+        border-bottom: 1px solid black;
+      }
+      .icon {
+        position: absolute;
+        right: 0px;
+        font-size: 1.5em;
+        top: 50%;
+        margin-top: -4.5%;
+        line-height: 1em;
+        display: inline-block;
+        width: 1.33333333em;
+        text-align: center;
+      }
+      .flag-icon {
+          position: absolute;
+          right: 5px;
+          font-size: 1.6em;
+          top: 50%;
+          margin-top: -5.2%;
+          line-height: 1em;
+          display: inline-block;
+          width: 1.33333333em;
+        &:after {
+          display: block;
+          text-align: center;
+          width: 100%;
+          background-color: rgba(0, 0, 0, 0.7);
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          content: '';
+        }
+        &:before {
+          z-index: 1;
+          position: relative;
+        }
+      }
+      .icon{
+        &.plus:after {
+          content: '+';
+        }
+        &.info:after {
+          content: '!';
+        }
+        &.question:after {
+          content: '?';
+        }
+      }
+      &.c-active {
+        .flag-icon:after {
+          display: none;
+        }
+        .flag-icon:before {
+          content: "\00a0";
+        }
+        &.c-inactive {
+          .flag-icon:after, {
+            display: block;
+            content: "\00a0";
+          }
         }
       }
     }
-
   }
   .switchLink{margin-bottom: 20px;}
   .clear{clear: both;}

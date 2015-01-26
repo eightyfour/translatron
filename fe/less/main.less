@@ -63,6 +63,8 @@ body ::-webkit-scrollbar-thumb {
 body.invert ::-webkit-scrollbar-track {background-color: #424242;}
 body.invert ::-webkit-scrollbar-thumb {background-color: #131313;}
 
+@octicons-font-path: '../octicons';
+
 header.header {
   height: @header-height;
   padding-left: @header-height;
@@ -94,6 +96,7 @@ header.header {
 .floatL {float: left;}
 
 @import "projectMainNavigation";
+@import "initialView";
 @import "translationView";
 @import "fileEditor";
 @import "imageViewer";
@@ -102,3 +105,4 @@ header.header {
 @import "translationViewHeader";
 
 @import "../flags/less/flag-icon";
+@import "../octicons/octicons";
