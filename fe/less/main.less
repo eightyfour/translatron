@@ -8,6 +8,7 @@ body{
   font-size: 80%;
   padding-top: @header-height;
   padding-left: @navigation-left-space;
+  overflow-x: hidden; // needed for the overlay
 }
 // Reset
 div, span, applet, object, iframe,
@@ -96,6 +97,7 @@ header.header {
 .floatL {float: left;}
 
 @import "projectMainNavigation";
+@import "layoutManager";
 @import "initialView";
 @import "translationView";
 @import "fileEditor";

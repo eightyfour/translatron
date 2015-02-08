@@ -17,29 +17,15 @@
 
     <div style="display: none" id="resourceBundleTable" canny-mod="flowControl" canny-flowControl="{'view':'resourceBundle'}">
 
-            <div class="header translationViewHeader">
-                <div class="row" canny-mod="translationViewHeader" canny-var="main">
-                    <div id="titleKey" class="data key">Identifier <em>(must be unique)</em></div>
-                </div>
+        <div class="header translationViewHeader">
+            <div class="row" canny-mod="translationViewHeader" canny-var="main">
+                <div id="titleKey" class="data key">Identifier <em>(must be unique)</em></div>
             </div>
+        </div>
 
-            <div id="tableBody" class="content" canny-mod="translationView" canny-translationView="main">
+        <div id="tableBody" class="content" canny-mod="translationView" canny-translationView="main">
 
-            </div>
-
-            <div class="row">
-                <div class="data">
-                    <input id="newKey" class="keyField" type="text"
-                           onfocus="if (this.value === 'Enter new category name') {
-                                                   this.value = '';
-                                               }"
-                           value="Enter new Key" autocomplete="off">
-                </div>
-                <div class="data">
-                    <a id="addNewKeyButton" href="javascript:void(0);">add new key</a>
-                    (Add a new category. All keys in the category will be automatical prefixed with the category name.)
-                </div>
-            </div>
+        </div>
 
     </div>
 
@@ -54,6 +40,10 @@
     </div>
 
 </div>
+
+
+
+
 
 <div id="fileManager" canny-mod="flowControl" canny-var="{'view':'fileManager'}" style="display: none">
 
@@ -88,22 +78,22 @@
 
             <div id="menuNavigationFrom" canny-mod="projectMainNavigation" canny-var="from" class="menuNavigation language"><!-- place holder for the menu navigation --></div>
 
-            <label for="menuNavigationTo">Project manager</label>
+            <label>Project manager</label>
             <div class="menuNavigation manager">
                 <ul class="navigationMenu manager">
-                    <li><a canny-mod="projectMainNavigation" canny-var="createNewProject"><span>New category key</span><span class="icon octicon octicon-key"></span></a></li>
+                    <li canny-mod="translationView" canny-var="projectShow"><span>New category key</span><span class="icon octicon octicon-key"></span></li>
                     <li><a canny-mod="projectMainNavigation" canny-var="showFileEditor"><span>Show in editor mode</span><span class="icon octicon octicon-squirrel"></span></a></li>
                 </ul>
             </div>
 
-            <label for="menuNavigationTo">Project overview</label>
+            <label>Project overview</label>
             <div canny-mod="projectMainNavigation" canny-var="projects" class="menuNavigation projects">
                 <ul class="navigationMenu">
                     <li><a canny-mod="projectMainNavigation" canny-var="createNewProject"><span>Create new project</span><span class="icon octicon octicon-plus"></span></a></li>
                 </ul>
             </div>
 
-            <label for="menuNavigationTo">Info and help</label>
+            <label>Info and help</label>
             <div  class="menuNavigation infoHelp">
                 <ul class="navigationMenu infoHelp">
                     <li><a href="https://confluence.gameduell.de/display/MOBS/Language+properties+tool" target="_blank"><span>about translation tool</span><span class="icon octicon octicon-light-bulb"></span></a></li>
@@ -119,5 +109,23 @@
 
 </div>
 
+    <div canny-mod="layoutManager" canny-var="{'overlay':'translationViewProjectCategoryKey'}">
+        <div class="translationView-projectCategory">
+            <h2>Create a new category</h2>
+            <!--<label class="octicon octicon-key">Which name has the category</label>-->
+            <div class="inputWrap octicon octicon-key">
+                <input canny-mod="translationView" canny-var="projectInputCategory"
+                       class="inputField category" placeholder="enter category name"/>
+            </div>
+            <!--<label>Enter a key name</label>-->
+            <div class="inputWrap octicon octicon-file-text">
+                <input canny-mod="translationView" canny-var="projectInputKey"
+                       class="inputField key" placeholder="enter a key"/>
+            </div>
+            <div canny-mod="translationView" canny-var="projectSubmit"
+                 class="button">Create category</div>
+            <p>Please add also a key. Categories can't exists without keys!</p>
+        </div>
+    </div>
 </body>
 </html>
