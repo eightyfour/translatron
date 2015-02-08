@@ -80,7 +80,7 @@
     <div class="menuToggleButton si-icon si-icon-hamburger-cross" data-icon-name="hamburgerCross" canny-mod="projectMainNavigation" canny-var="menuToggleButton"></div>
 
     <div class="projectMainNavigation--header">
-
+        {{projectName}}
     </div>
 
     <div class="page-scroll">
@@ -88,22 +88,24 @@
 
             <div id="menuNavigationFrom" canny-mod="projectMainNavigation" canny-var="from" class="menuNavigation language"><!-- place holder for the menu navigation --></div>
 
-            <div id="menuNavigationTo"canny-mod="projectMainNavigation" canny-var="to" class="menuNavigation"><!-- place holder for the menu navigation --></div>
-
             <label for="menuNavigationTo">Project manager</label>
             <div class="menuNavigation manager">
                 <ul class="navigationMenu manager">
-                    <li><a canny-mod="projectMainNavigation" canny-var="createNewProject"><span>Create new project</span><span class="icon octicon octicon-plus"></span></a></li>
+                    <li><a canny-mod="projectMainNavigation" canny-var="createNewProject"><span>New category key</span><span class="icon octicon octicon-key"></span></a></li>
                     <li><a canny-mod="projectMainNavigation" canny-var="showFileEditor"><span>Show in editor mode</span><span class="icon octicon octicon-squirrel"></span></a></li>
                 </ul>
             </div>
 
             <label for="menuNavigationTo">Project overview</label>
-            <div canny-mod="projectMainNavigation" canny-var="projects" class="menuNavigation projects"><!-- place holder for the menu navigation --></div>
+            <div canny-mod="projectMainNavigation" canny-var="projects" class="menuNavigation projects">
+                <ul class="navigationMenu">
+                    <li><a canny-mod="projectMainNavigation" canny-var="createNewProject"><span>Create new project</span><span class="icon octicon octicon-plus"></span></a></li>
+                </ul>
+            </div>
 
             <label for="menuNavigationTo">Info and help</label>
-            <div  class="menuNavigation manager">
-                <ul class="navigationMenu manager">
+            <div  class="menuNavigation infoHelp">
+                <ul class="navigationMenu infoHelp">
                     <li><a href="https://confluence.gameduell.de/display/MOBS/Language+properties+tool" target="_blank"><span>about translation tool</span><span class="icon octicon octicon-light-bulb"></span></a></li>
                     <li><a href="https://github.com/eightyfour/resourceMessagesLiveEditor" target="_blank"><span class="icon octicon octicon-octoface"></span></a></li>
                 </ul>

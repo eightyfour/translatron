@@ -16,7 +16,7 @@
     transition: margin 300ms;
 
     .menuNavigation {
-      &.manager, &.projects {
+      &.infoHelp, &.projects {
         li {
           margin:0;
         }
@@ -66,6 +66,13 @@
   &--header{
     width: 100%;
     height: @header-height;
+    > span{
+      // header in menu - font style
+      font-weight: bold;
+      padding: 0.7em;
+      display: block;
+      font-size: 1.7em;
+    }
   }
 
   p{
@@ -83,7 +90,6 @@
   a {
     color: #FFF;
     line-height: 18px;
-    margin-right: 30px;
   }
   ul{
     padding: 0;
@@ -97,27 +103,32 @@
         background-color: rgba(0, 110, 60, 0.2);
       }
     }
-    &.manager, &.projects {
+    &.infoHelp, &.projects {
       li {
         background-color: rgba(100, 150,200, 0.2);
         margin: 0 3em 0 0
       }
     }
-    &.manager {
-      li {
-        padding:0;
-        a {
-          width: 100%;
-          min-height: 2.2em;
-          display: block;
-          padding: 0.6em 0 0.7em 0.5em;
-          text-decoration: none;
-          box-sizing: border-box;
-        }
-        background-color: rgba(150, 150,100, 0.2);
+    li {
+      padding:0;
+      a {
+        position: absolute;
+        width: 100%;
+        display: block;
+        text-decoration: none;
+        box-sizing: border-box;
+        height: 100%;
+        padding: .5em 0 .5em .5em;
+        top:0;
+        left:0;
       }
+      background-color: rgba(150, 150,100, 0.2);
+    }
+    ul:last-child li:last-child{
+      border-bottom: 1px solid black;
     }
     li {
+      position: relative;
       min-height: 2.2em;
       box-sizing: border-box;
       cursor: pointer;
@@ -134,7 +145,7 @@
         box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1) inset, 0px 1px 2px 1px rgba(0, 0, 0, 0.8) inset;
       }
       &:last-child {
-        border-bottom: 1px solid black;
+
       }
       .icon {
         position: absolute;
@@ -144,7 +155,7 @@
         margin-top: -4.5%;
         line-height: 1em;
         display: inline-block;
-        width: 1.33333333em;
+        width: 1.833333em;
         text-align: center;
       }
       .flag-icon {
