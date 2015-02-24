@@ -64,22 +64,6 @@ var conTrade,
                     })
                 });
             },
-            getPropertiesFiles : function(bundle, cb) {
-                fileManager.readDir(bundle, function(filesAndFolders) {
-                    var langFiles = filterLanguageFiles(filesAndFolders.value);
-                    cb(langFiles);
-                });
-
-                function filterLanguageFiles(files) {
-                    var filtered = [];
-                    files.forEach(function(file) {
-                        if (file.name.indexOf('.properties') !== -1) {
-                            filtered.push(file);
-                        }
-                    });
-                    return filtered;
-                }
-            },
             sendResource : function () {
                 client.sendResource.apply(null, [].slice.call(arguments));
             },
