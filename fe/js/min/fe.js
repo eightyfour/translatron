@@ -150,7 +150,7 @@ canny.add('tabManager',     require('./uiModules/tabManager.js'));
 canny.add('pathNavigation', require('./uiModules/pathNavigation.js'));
 canny.add('fileEditor',     require('./uiModules/fileEditor.js'));
 canny.add('imageViewer',    require('./uiModules/imageViewer.js'));
-canny.add('messagesExportDialog',    require('./uiModules/messagesExportDialog.js'));
+canny.add('messagesExportOverlay',    require('./uiModules/messagesExportOverlay.js'));
 
 trade.addController(require('./controller/messagesExportController.js'));
 trade.addController(require('./controller/initialViewController.js'));
@@ -219,7 +219,7 @@ trade.ready(function () {
        //  handleFooterNavigation();
     }());
 });
-},{"./Toast.js":2,"./controller/initialViewController.js":5,"./controller/messagesExportController.js":6,"./controller/pageHeaderController.js":7,"./controller/projectMainNavigationController.js":8,"./controller/translationViewController.js":9,"./trade.js":11,"./uiModules/fileEditor.js":13,"./uiModules/imageViewer.js":15,"./uiModules/initialView.js":16,"./uiModules/layoutManager.js":17,"./uiModules/messagesExportDialog.js":18,"./uiModules/pathNavigation.js":19,"./uiModules/projectMainNavigation.js":20,"./uiModules/tabManager.js":21,"./uiModules/texts.js":22,"./uiModules/translationView.js":23,"./uiModules/translationViewHeader.js":24,"./unicode.js":25,"canny":65,"canny/mod/flowControlInstance":66,"canny/mod/whisker":67,"dnode":68,"dom-opts":79,"shoe":80}],4:[function(require,module,exports){
+},{"./Toast.js":2,"./controller/initialViewController.js":5,"./controller/messagesExportController.js":6,"./controller/pageHeaderController.js":7,"./controller/projectMainNavigationController.js":8,"./controller/translationViewController.js":9,"./trade.js":11,"./uiModules/fileEditor.js":13,"./uiModules/imageViewer.js":15,"./uiModules/initialView.js":16,"./uiModules/layoutManager.js":17,"./uiModules/messagesExportOverlay.js":18,"./uiModules/pathNavigation.js":19,"./uiModules/projectMainNavigation.js":20,"./uiModules/tabManager.js":21,"./uiModules/texts.js":22,"./uiModules/translationView.js":23,"./uiModules/translationViewHeader.js":24,"./unicode.js":25,"canny":65,"canny/mod/flowControlInstance":66,"canny/mod/whisker":67,"dnode":68,"dom-opts":79,"shoe":80}],4:[function(require,module,exports){
 /* ***** BEGIN LICENSE BLOCK *****
  * Distributed under the BSD license:
  *
@@ -499,7 +499,7 @@ module.exports = {
 },{"../trade.js":11,"canny":65}],6:[function(require,module,exports){
 var trade = require('../trade'),
 	mainNavigation = require('canny').projectMainNavigation,
-	dialogView = require('canny').messagesExportDialog,
+	dialogView = require('canny').messagesExportOverlay,
 	uiEvents = require('../uiEventManager.js'),
 	jsonData = {};
 
@@ -524,12 +524,11 @@ uiEvents.addUiEventListener({
 	}
 });
 
-
 function parseToJSON(obj, keyPath, value) {
+
 	var key;
 	var i = 0;
 	var lastKeyIndex = keyPath.length - 1;
-
 	for (i; i < lastKeyIndex; i++) {
 		key = keyPath[i];
 		if (!obj.hasOwnProperty(key)) {
@@ -541,13 +540,12 @@ function parseToJSON(obj, keyPath, value) {
 }
 
 function msgBundle2json(data) {
-	var result = {};
 
+	var result = {};
 	data.map(function(obj) {
 		var keyPath = obj.key.split('_');
 		parseToJSON(result, keyPath, obj.value);
 	});
-
 	return result;
 }
 
@@ -1497,12 +1495,11 @@ module.exports = function () {
     }
 }
 },{}],18:[function(require,module,exports){
-var messagesExportDialog = (function() {
+var messagesExportOverlay = (function() {
 
 	var domNode;
 	var codeContent;
 	var closeButton;
-
 
 	function onTransitionEnd(event) {
 		if (!domNode.classList.contains('show')) {
@@ -1559,19 +1556,14 @@ var messagesExportDialog = (function() {
 			if (!animated) {
 				domNode.classList.remove('animated');
 			}
-
 			domNode.classList.remove('show');
-
 			return this;
-		},
-		isOpen: function() {
-			return domNode.classList.contains('show');
 		}
 	}
 
 }());
 
-module.exports = messagesExportDialog;
+module.exports = messagesExportOverlay;
 
 },{}],19:[function(require,module,exports){
 /*jslint browser: true */

@@ -758,7 +758,7 @@ header.header .projectName > span {
 .translationViewHeader .flag-icon {
   margin-right: 1em;
 }
-#messagesExportDialog {
+#messagesExportOverlay {
   display: none;
   position: absolute;
   box-sizing: border-box;
@@ -773,16 +773,16 @@ header.header .projectName > span {
   box-shadow: 0em 0.5em 3em rgba(0, 0, 0, 0.5);
   z-index: 11;
 }
-#messagesExportDialog.animated {
+#messagesExportOverlay.animated {
   transition: top 0.65s cubic-bezier(0.8, 0, 0.36, 0.48);
 }
-#messagesExportDialog.show {
+#messagesExportOverlay.show {
   top: 0;
 }
-#messagesExportDialog.show.animated {
+#messagesExportOverlay.show.animated {
   transition: top 0.5s cubic-bezier(0.14, 0.74, 0.28, 1);
 }
-#messagesExportDialog .codeContainer {
+#messagesExportOverlay .codeContainer {
   margin: 0 0 1em 0;
   border-radius: 5px;
   padding: 2em;
@@ -791,10 +791,10 @@ header.header .projectName > span {
   background: #4d5053;
   overflow: auto;
 }
-#messagesExportDialog .codeContainer pre {
+#messagesExportOverlay .codeContainer pre {
   font-size: 1.2em;
 }
-#messagesExportDialog .close {
+#messagesExportOverlay .close {
   display: block;
   margin: 2em auto 0;
 }
