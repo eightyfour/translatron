@@ -32,7 +32,7 @@
     <div style="display: block" id="initialView" class="initialView" canny-mod="flowControl" canny-flowControl="{'view':'initialView'}">
         <div class="sun">
             <div class="wrap" canny-mod="initialView" canny-var="root">
-                <div class="projectName ownProject"><span>Or create here your own project</span></div>
+                <div canny-mod="projectMainNavigation" canny-var="createNewProject" class="projectName ownProject"><span>Or create here your own project</span></div>
                 <div class="projectName">dsafsdfdsffdsfds</div>
                 <div class="projectName">dsafsgggdgfgf</div>
             </div>
@@ -89,7 +89,7 @@
             <label>Project overview</label>
             <div canny-mod="projectMainNavigation" canny-var="projects" class="menuNavigation projects">
                 <ul class="navigationMenu">
-                    <li><a canny-mod="projectMainNavigation" canny-var="createNewProject"><span>Create new project</span><span class="icon octicon octicon-plus"></span></a></li>
+                    <li canny-mod="projectMainNavigation" canny-var="createNewProject"><span>Create new project</span><span class="icon octicon octicon-plus"></span></li>
                 </ul>
             </div>
 
@@ -110,7 +110,7 @@
 </div>
 
     <div canny-mod="layoutManager" canny-var="{'overlay':'translationViewProjectCategoryKey'}">
-        <div class="translationView-projectCategory">
+        <div class="translationView-projectCategory overlayWindow">
             <h2>Create a new category</h2>
             <!--<label class="octicon octicon-key">Which name has the category</label>-->
             <div class="inputWrap octicon octicon-key">
@@ -125,6 +125,25 @@
             <div canny-mod="translationView" canny-var="projectSubmit"
                  class="button">Create category</div>
             <p>Please add also a key. Categories can't exists without keys!</p>
+        </div>
+    </div>
+
+    <div canny-mod="layoutManager" canny-var="{'overlay':'createNewProjectView'}">
+        <div class="createNewProjectView overlayWindow">
+            <h2>Create a new project</h2>
+            <!--<label class="octicon octicon-key">Which name has the category</label>-->
+            <div class="inputWrap octicon octicon-bug">
+                <input canny-mod="translationView" canny-var="createNewProjectInputProject"
+                       class="inputField category" placeholder="enter the project name"/>
+            </div>
+            <div class="inputWrap octicon octicon-light-bulb">
+                <textarea canny-mod="translationView" canny-var="createNewProjectProjectDescription"
+                       class="inputField category" placeholder="enter a project description"></textarea>
+            </div>
+            <div canny-mod="translationView" canny-var="createNewProjectSubmit"
+                 class="button">Create category</div>
+            <p>A project name could be a translation task number. Or ask your developer
+                for a technical specific name.</p>
         </div>
     </div>
 </body>

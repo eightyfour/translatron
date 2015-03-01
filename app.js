@@ -18,6 +18,15 @@ global.projectFolder = __dirname + '/static';
 app.use(express.static(__dirname + '/fe'));
 
 
+/**
+ * If no project exists I ignore the bundle attribute and open the project create view with the bundle name as default...
+ * Only if the create project is triggered only than create a new project.
+ *
+ * TODO
+ *  * add create project server interface
+ *  * and implement view handling
+ * @type {http.Server}
+ */
 
 var server = app.listen(serverPort);
 
@@ -55,13 +64,18 @@ var conTrade,
         var d = dnode({
             getMessageBundle : function (projectName, cb) {
                 fileManager.readDir(projectName, function (filesAndFolders) {
-                    var availableLanguages = getMessageBundleLanguages(filesAndFolders.value);
-                    Object.keys(availableLanguages).forEach(function (lang) {
-                        client.getMessageBundle({
-                            bundle : projectName,
-                            locale : lang
-                        }, cb);
-                    })
+                    if (!filesAndFolders) {
+                        // there are no message bundles actually
+                        cb(false);
+                    } else {
+                        var availableLanguages = getMessageBundleLanguages(filesAndFolders.value);
+                        Object.keys(availableLanguages).forEach(function (lang) {
+                            client.getMessageBundle({
+                                bundle: projectName,
+                                locale: lang
+                            }, cb);
+                        })
+                    }
                 });
             },
             sendResource : function () {
@@ -101,12 +115,12 @@ var conTrade,
                 });
 
                 /**
-                 * param: projectName(optional), callback
+                 * param: projectName(optional - otherwise take main project.json), callback
                  */
-                ret.getJSON = function (p0, p1) {
+                ret.getJSON = function (projectName, p1) {
                     // only a callback is passed
-                    var cb = p1 || p0;
-                    if (typeof p0 === 'function') {
+                    var cb = p1 || projectName;
+                    if (typeof projectName === 'function') {
                         // first bring project JSON up to date
                         fileManager.readDir('', function (filesAndFolders) {
                             var folders = [];
@@ -123,16 +137,42 @@ var conTrade,
 
                     } else {
                         // first bring project JSON up to date
-                        fileManager.readDir(p0, function (filesAndFolders) {
-                            var availableLanguages = getMessageBundleLanguages(filesAndFolders.value);
-                            jsonFileManager.getJSON(p0 + '/project.json', function (data) {
-                                Object.keys(availableLanguages).forEach(function (key) {
-                                    if (!data.languages.hasOwnProperty(key)) {
-                                        data.languages[key] = availableLanguages[key];
+                        fileManager.readDir(projectName, function (filesAndFolders) {
+                            var availableLanguages;
+                            if (filesAndFolders === false) {
+                                console.log('app:getJSON The project does not exists', projectName);
+
+                                // TODO instead of read save the project here
+                                // Add project.json template in main project.json
+                                jsonFileManager.getJSON(projectName + '/project.json', function () {
+
+                                    cb({
+                                        "project" : projectName,
+                                        "description" : "",
+                                        "images" : [],
+                                        "defaultLanguage" : "en",
+                                        "numberOfKeys" : "0",
+                                        "languages" : {},
+                                        "keys" : {}
+                                    });
+                                });
+                            } else {
+                                availableLanguages = getMessageBundleLanguages(filesAndFolders.value);
+                                jsonFileManager.getJSON(projectName + '/project.json', function (data) {
+                                    if (data) {
+                                        Object.keys(availableLanguages).forEach(function (key) {
+                                            if (!data.languages.hasOwnProperty(key)) {
+                                                data.languages[key] = availableLanguages[key];
+                                            }
+                                        });
+                                        cb(data);
+                                    } else {
+                                        console.log('app:getJSON the project specific project.json is missing for project', projectName);
+                                        cb(false);
                                     }
                                 });
-                                cb(data);
-                            });
+                            }
+
                         });
                     }
                 };

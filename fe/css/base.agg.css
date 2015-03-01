@@ -454,104 +454,6 @@ header.header .projectName > span {
 .translationViewHeader.header .c-hide_es .js_es {
   display: none;
 }
-.translationView-projectCategory {
-  font-size: 150%;
-  width: 100%;
-  max-width: 22em;
-  padding: 2em;
-  background-color: white;
-  border-radius: 4px;
-  box-shadow: 0 0 6px 2px #640000 inset;
-}
-.translationView-projectCategory .inputWrap {
-  width: 70%;
-  position: relative;
-  padding-left: 1.4em;
-  box-sizing: border-box;
-  font-size: 1em;
-  margin: auto;
-  display: table;
-}
-.translationView-projectCategory .inputWrap:before {
-  position: absolute;
-  top: 0.3em;
-  left: 0;
-}
-.translationView-projectCategory h2 {
-  font-size: 2em;
-  font-weight: bold;
-  position: absolute;
-  margin-top: -2.6em;
-  color: white;
-  text-shadow: 0 0 5px #000;
-}
-.translationView-projectCategory p {
-  padding: 2em 0 0 0;
-  font-style: italic;
-  color: #666;
-}
-.translationView-projectCategory label {
-  margin: 0 0 0.4em 0;
-  display: block;
-}
-.translationView-projectCategory input {
-  margin: 0 0 1em auto;
-}
-.translationView-projectCategory .inputField {
-  font-size: 1em;
-  background-color: #f7f7f7;
-  border: 2px solid #a6a6a6;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-  -webkit-box-shadow: inset 0px 0px 5px 0px #c8c8c8;
-  -moz-box-shadow: inset 0px 0px 5px 0px #c8c8c8;
-  box-shadow: inset 0px 0px 5px 0px #c8c8c8;
-  box-sizing: border-box;
-  color: #565656;
-  display: block;
-  line-height: 1.4em;
-  width: 100%;
-  padding-left: 16px;
-}
-.translationView-projectCategory .button {
-  font-size: 1em;
-  min-height: 40px;
-  padding: 0.4em 0;
-  color: #FFF;
-  text-align: center;
-  cursor: pointer;
-  box-sizing: border-box;
-  border: none;
-  outline: none;
-  font-weight: bold;
-  font-family: inherit;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-  -o-text-shadow: 0 1px 1px #464d52;
-  -moz-text-shadow: 0 1px 1px #464d52;
-  -webkit-text-shadow: 0 1px 1px #464d52;
-  text-shadow: 0 1px 1px #464d52;
-  background: #a2a8ad;
-  background: -webkit-gradient(linear, 0 0, 0 bottom, from(#a2a8ad), to(#82888d));
-  background: -webkit-linear-gradient(#a2a8ad, #82888d);
-  background: -moz-linear-gradient(#a2a8ad, #82888d);
-  background: -ms-linear-gradient(#a2a8ad, #82888d);
-  background: -o-linear-gradient(#a2a8ad, #82888d);
-  background: linear-gradient(#a2a8ad, #82888d);
-  -webkit-box-shadow: 0px -2px 0px 0px #636a70 inset;
-  -moz-box-shadow: 0px -2px 0px 0px #636a70 inset;
-  box-shadow: 0px -2px 0px 0px #636a70 inset;
-  margin: 0.3em auto 0;
-  width: 70%;
-}
 .translationView #resourceBundleTable {
   margin-bottom: 70px;
 }
@@ -757,6 +659,109 @@ header.header .projectName > span {
 }
 .translationViewHeader .flag-icon {
   margin-right: 1em;
+}
+.button {
+  font-size: 1em;
+  min-height: 40px;
+  padding: 0.4em 0;
+  color: #FFF;
+  text-align: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  font-weight: bold;
+  font-family: inherit;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  -o-text-shadow: 0 1px 1px #464d52;
+  -moz-text-shadow: 0 1px 1px #464d52;
+  -webkit-text-shadow: 0 1px 1px #464d52;
+  text-shadow: 0 1px 1px #464d52;
+  background: #a2a8ad;
+  background: -webkit-gradient(linear, 0 0, 0 bottom, from(#a2a8ad), to(#82888d));
+  background: -webkit-linear-gradient(#a2a8ad, #82888d);
+  background: -moz-linear-gradient(#a2a8ad, #82888d);
+  background: -ms-linear-gradient(#a2a8ad, #82888d);
+  background: -o-linear-gradient(#a2a8ad, #82888d);
+  background: linear-gradient(#a2a8ad, #82888d);
+  -webkit-box-shadow: 0px -2px 0px 0px #636a70 inset;
+  -moz-box-shadow: 0px -2px 0px 0px #636a70 inset;
+  box-shadow: 0px -2px 0px 0px #636a70 inset;
+}
+.inputField {
+  font-size: 1em;
+  background-color: #f7f7f7;
+  border: 2px solid #a6a6a6;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  -webkit-box-shadow: inset 0px 0px 5px 0px #c8c8c8;
+  -moz-box-shadow: inset 0px 0px 5px 0px #c8c8c8;
+  box-shadow: inset 0px 0px 5px 0px #c8c8c8;
+  box-sizing: border-box;
+  color: #565656;
+  display: block;
+  line-height: 1.4em;
+  width: 100%;
+  padding-left: 16px;
+}
+.overlayWindow {
+  font-size: 150%;
+  width: 100%;
+  max-width: 22em;
+  padding: 2em;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 0 6px 2px #640000 inset;
+  position: relative;
+}
+.overlayWindow .inputWrap {
+  width: 70%;
+  position: relative;
+  padding-left: 1.4em;
+  box-sizing: border-box;
+  font-size: 1em;
+  margin: auto;
+  display: table;
+}
+.overlayWindow .inputWrap:before {
+  position: absolute;
+  top: 0.3em;
+  left: 0;
+}
+.overlayWindow h2 {
+  width: 100%;
+  left: 0;
+  font-size: 2em;
+  font-weight: bold;
+  position: absolute;
+  margin-top: -2.6em;
+  color: white;
+  text-shadow: 0 0 5px #000;
+}
+.overlayWindow p {
+  padding: 2em 0 0 0;
+  font-style: italic;
+  color: #666;
+}
+.overlayWindow label {
+  margin: 0 0 0.4em 0;
+  display: block;
+}
+.overlayWindow input {
+  margin: 0 0 1em auto;
+}
+.overlayWindow .button {
+  margin: 0.3em auto 0;
+  width: 70%;
 }
 .flag-icon {
   position: relative;
