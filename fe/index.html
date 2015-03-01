@@ -148,11 +148,13 @@
         </div>
     </div>
 
-    <div canny-mod="messagesExportOverlay" canny-var="displayEncodedMessage" id="messagesExportOverlay">
-        <div class="codeContainer">
-            <pre></pre>
+    <div canny-mod="layoutManager" canny-var="{'overlay':'messagesExportOverlay'}">
+        <div id="messagesExportOverlay" class="overlayWindow">
+            <div class="codeContainer-wrap">
+                <pre class="codeContainer" id="messagesExportOverlay_code" canny-mod="messagesExportOverlay" canny-var="codeContent"></pre>
+            </div>
+            <button canny-mod="messagesExportOverlay" canny-var="closeButton" class="button">Close</button>
         </div>
-        <button class="close">Close</button>
     </div>
 </body>
 </html>
