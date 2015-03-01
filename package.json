@@ -9,20 +9,14 @@
   },
   "license": "MIT",
   "dependencies": {
-    "body-parser": "~1.10.2",
-    "brace" : "x",
-    "browserify" : "~8.1.3",
-    "canny" : "git://github.com/eightyfour/canny.git",
-    "cookie-parser": "~1.3.3",
-    "debug": "~2.1.1",
-    "dnode" : "x",
-    "domready" : "x",
-    "dom-opts" : "git://github.com/eightyfour/dom-opts.git",
-    "express": "~4.11.1",
-    "less": "~2.4.0",
-    "morgan": "~1.5.1",
-    "serve-favicon": "~2.2.0",
-    "shoe" : "x"
+      "express": "x",
+      "dnode" : "x",
+      "shoe" : "x",
+      "brace" : "x",
+      "dom-opts" : "git://github.com/eightyfour/dom-opts.git",
+      "canny" : "git://github.com/eightyfour/canny.git",
+      "browserify" : "~8.1.3",
+      "less": "~2.4.0"
   },
   "config": {
     "port" : "3000"
