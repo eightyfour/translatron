@@ -83,6 +83,7 @@
                 <ul class="navigationMenu manager">
                     <li canny-mod="translationView" canny-var="projectShow"><span>New category key</span><span class="icon octicon octicon-key"></span></li>
                     <li><a canny-mod="projectMainNavigation" canny-var="showFileEditor"><span>Show in editor mode</span><span class="icon octicon octicon-squirrel"></span></a></li>
+                    <li><a canny-mod="projectMainNavigation" canny-var="showJSONBundle"><span>View as JSON</span><span class="icon octicon octicon-eye"></span></a></li>
                 </ul>
             </div>
 
@@ -145,6 +146,13 @@
             <p>A project name could be a translation task number. Or ask your developer
                 for a technical specific name.</p>
         </div>
+    </div>
+
+    <div canny-mod="messagesExportOverlay" canny-var="displayEncodedMessage" id="messagesExportOverlay">
+        <div class="codeContainer">
+            <pre></pre>
+        </div>
+        <button class="close">Close</button>
     </div>
 </body>
 </html>
