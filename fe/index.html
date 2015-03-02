@@ -18,6 +18,14 @@
     <div style="display: none" id="resourceBundleTable" canny-mod="flowControl" canny-flowControl="{'view':'resourceBundle'}">
 
         <div class="header translationViewHeader">
+            <!--
+             TODO make this configurable: add module which supports 'projectConfigUpdate'. Than I can easier
+             made this kind of configuration configurable (if click on 'edit' just replace the current view with an
+             textAre or something like that)
+             If this is implemented I need a separate controller which update all texts (also from other users) if
+             a texts has been changed...
+              -->
+            <p class="octicon octicon-light-bulb projectDescription">{{projectDescription}}</p>
             <div class="row" canny-mod="translationViewHeader" canny-var="main">
                 <div id="titleKey" class="data key">Identifier <em>(must be unique)</em></div>
             </div>

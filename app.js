@@ -17,6 +17,29 @@ global.projectFolder = __dirname + '/static';
 
 app.use(express.static(__dirname + '/fe'));
 
+// TODO move the create project in a separate file
+function getDefaultProjectJson(projectName, obj) {
+    var cb = function () {
+        console.log('Second function param callback: DEFAULT');
+    };
+
+    jsonFileManager.getJSON('project.json', function (data) {
+        cb({
+            "project" : projectName,
+            "description" : obj.description || "",
+            "images" : [],
+            "defaultLanguage" : data.defaultLanguage || "en",
+            "numberOfKeys" : "0",
+            "languages" : {},
+            "keys" : {}
+        });
+    });
+    return function (fc) {
+        cb = fc;
+        console.log('Second function param callback: CALLED');
+    }
+}
+
 
 /**
  * If no project exists I ignore the bundle attribute and open the project create view with the bundle name as default...
@@ -81,6 +104,17 @@ var conTrade,
             sendResource : function () {
                 client.sendResource.apply(null, [].slice.call(arguments));
             },
+            createNewProject : function (id, projectName, obj, cb) {
+                // TODO instead of read save the project here
+                // Add project.json template in main project.json
+                getDefaultProjectJson(projectName, obj)(function (json) {
+                    // send back
+                    cb(json);
+                    client.createNewProject(id, projectName);
+                    // and save config
+                    jsonFileManager.saveJSON(projectName + '/project.json', json);
+                });
+            },
             /**
              * initial call - all client methods are saved here.
              * returns a id as callback. The client needs this as identifier.
@@ -141,21 +175,7 @@ var conTrade,
                             var availableLanguages;
                             if (filesAndFolders === false) {
                                 console.log('app:getJSON The project does not exists', projectName);
-
-                                // TODO instead of read save the project here
-                                // Add project.json template in main project.json
-                                jsonFileManager.getJSON(projectName + '/project.json', function () {
-
-                                    cb({
-                                        "project" : projectName,
-                                        "description" : "",
-                                        "images" : [],
-                                        "defaultLanguage" : "en",
-                                        "numberOfKeys" : "0",
-                                        "languages" : {},
-                                        "keys" : {}
-                                    });
-                                });
+                                cb(false);
                             } else {
                                 availableLanguages = getMessageBundleLanguages(filesAndFolders.value);
                                 jsonFileManager.getJSON(projectName + '/project.json', function (data) {

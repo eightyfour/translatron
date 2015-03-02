@@ -660,6 +660,12 @@ header.header .projectName > span {
 .translationViewHeader .flag-icon {
   margin-right: 1em;
 }
+.translationViewHeader .projectDescription {
+  width: 100%;
+  padding: 1em;
+  font-size: 1.5em;
+  color: chocolate;
+}
 #messagesExportOverlay {
   margin-left: 3em;
   border-radius: 1.5em 1.5em;
