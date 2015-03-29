@@ -252,6 +252,9 @@ header.header .projectName > span {
 .projectMainNavigation .menuNavigation.language li {
   background-color: rgba(0, 110, 60, 0.2);
 }
+.projectMainNavigation .menuNavigation.language li .langName {
+  margin-right: 10px;
+}
 .projectMainNavigation .menuNavigation.infoHelp li,
 .projectMainNavigation .menuNavigation.projects li {
   background-color: rgba(100, 150, 200, 0.2);
@@ -478,6 +481,12 @@ header.header .projectName > span {
 }
 .translationView .keyField {
   width: 100%;
+}
+.translationView .addKeyButton {
+  min-width: 4em;
+}
+.translationView .addKeyButton:before {
+  font-size: 2em;
 }
 .translationView .header {
   font-size: 14px;
