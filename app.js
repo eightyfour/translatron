@@ -141,12 +141,34 @@ var conTrade,
             fileManager : fileManager,
             jsonFileManager : (function () {
                 var ret = {};
-
+                // lo0ks like a listener :-)
                 Object.keys(jsonFileManager).forEach(function (key) {
                     ret[key] = function () {
                         jsonFileManager[key].apply(null, [].slice.call(arguments));
                     };
                 });
+                /**
+                 * currently the merge flag supports only flat merge - TODO deep merge
+                 *
+                 * @param projectName
+                 * @param data
+                 * @param merge
+                 * @param cb
+                 */
+                ret.saveJSON = function (projectName, data, merge, cb) {
+                    if (merge) {
+                        jsonFileManager.getJSON(projectName + '/project.json', function (oldData) {
+                            Object.keys(data).forEach(function (key) {
+                                oldData[key] = data[key];
+                            });
+                            jsonFileManager.saveJSON(projectName + '/project.json', oldData, cb);
+                            console.log('app:saveJSON', projectName, oldData);
+                        });
+                    } else {
+                        jsonFileManager.saveJSON(projectName + '/project.json', oldData, cb);
+                        console.log('app:saveJSON', projectName, data);
+                    }
+                };
 
                 /**
                  * param: projectName(optional - otherwise take main project.json), callback

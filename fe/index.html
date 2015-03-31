@@ -11,7 +11,7 @@
 </head>
 <body canny-mod="whisker" canny-var="canny.texts.getTexts">
 
-<header class="header"><span class="beforeText">project name: </span><span class="projectName">{{projectName}}</span></header>
+<header class="header"><span class="beforeText">project name: </span><span class="projectName"><span>{{projectName}}</span></span></header>
 
 <div id="resourceEditor" class="translationView">
 
@@ -25,7 +25,7 @@
              If this is implemented I need a separate controller which update all texts (also from other users) if
              a texts has been changed...
               -->
-            <p class="octicon octicon-light-bulb projectDescription">{{projectDescription}}</p>
+            <p canny-mod="textEditor" canny-var="changeProjectDescription" class="octicon octicon-light-bulb projectDescription">{{projectDescription}}</p>
             <div class="row" canny-mod="translationViewHeader" canny-var="main">
                 <div id="titleKey" class="data key">Identifier <em>(must be unique)</em></div>
             </div>
@@ -50,27 +50,6 @@
 </div>
 
 
-
-
-
-<div id="fileManager" canny-mod="flowControl" canny-var="{'view':'fileManager'}" style="display: none">
-
-    <a class="switchLink" canny-mod="navController" canny-var="showResourceBundleEditor">Show bundle translation</a>
-
-    <div id="pathMenu" class="floatL">
-        <div canny-mod="pathNavigation"></div>
-    </div>
-
-    <div class="floatL">
-        <div canny-mod="tabManager"></div>
-
-        <div canny-mod="fileEditor"></div>
-
-        <div canny-mod="imageViewer"></div>
-    </div>
-
-</div>
-
 <div id="debugIncomming"></div>
 
 <div id="fixedNavigation" class="projectMainNavigation" canny-mod="projectMainNavigation" canny-var="main">
@@ -78,7 +57,7 @@
     <div class="menuToggleButton si-icon si-icon-hamburger-cross" data-icon-name="hamburgerCross" canny-mod="projectMainNavigation" canny-var="menuToggleButton"></div>
 
     <div class="projectMainNavigation--header">
-        {{projectName}}
+        <span>{{projectName}}</span>
     </div>
 
     <div class="page-scroll">
@@ -89,7 +68,7 @@
             <label>Project manager</label>
             <div class="menuNavigation manager">
                 <ul class="navigationMenu manager">
-                    <li canny-mod="translationView" canny-var="projectShow"><span>New category key</span><span class="icon octicon octicon-key"></span></li>
+                    <li canny-mod="translationView" canny-var="projectShow"><span>Create new category</span><span class="icon octicon octicon-puzzle"></span></li>
                     <li><a canny-mod="projectMainNavigation" canny-var="showFileEditor"><span>Show in editor mode</span><span class="icon octicon octicon-squirrel"></span></a></li>
                     <li><a canny-mod="projectMainNavigation" canny-var="showJSONBundle"><span>View as JSON</span><span class="icon octicon octicon-eye"></span></a></li>
                 </ul>
@@ -122,12 +101,12 @@
         <div class="translationView-projectCategory overlayWindow">
             <h2>Create a new category</h2>
             <!--<label class="octicon octicon-key">Which name has the category</label>-->
-            <div class="inputWrap octicon octicon-key">
+            <div class="inputWrap octicon octicon-puzzle">
                 <input canny-mod="translationView" canny-var="projectInputCategory"
                        class="inputField category" placeholder="enter category name"/>
             </div>
             <!--<label>Enter a key name</label>-->
-            <div class="inputWrap octicon octicon-file-text">
+            <div class="inputWrap octicon octicon-key">
                 <input canny-mod="translationView" canny-var="projectInputKey"
                        class="inputField key" placeholder="enter a key"/>
             </div>
@@ -140,7 +119,7 @@
     <div canny-mod="layoutManager" canny-var="{'overlay':'createNewProjectView'}">
         <div class="createNewProjectView overlayWindow">
             <h2>Create a new project</h2>
-            <!--<label class="octicon octicon-key">Which name has the category</label>-->
+            <!--<label class="octicon octicon-puzzle">Which name has the category</label>-->
             <div class="inputWrap octicon octicon-bug">
                 <input canny-mod="translationView" canny-var="createNewProjectInputProject"
                        class="inputField category" placeholder="enter the project name"/>
@@ -157,11 +136,32 @@
     </div>
 
     <div canny-mod="layoutManager" canny-var="{'overlay':'messagesExportOverlay'}">
-        <div id="messagesExportOverlay" class="overlayWindow">
+        <div id="messagesExportOverlay" class="overlayDark overlayWindow">
             <div class="codeContainer-wrap">
                 <pre class="codeContainer" id="messagesExportOverlay_code" canny-mod="messagesExportOverlay" canny-var="codeContent"></pre>
             </div>
             <button canny-mod="messagesExportOverlay" canny-var="closeButton" class="button">Close</button>
+        </div>
+    </div>
+
+    <div canny-mod="layoutManager" canny-var="{'overlay':'editorModeView'}">
+        <div id="editorModeView" class="overlayDark overlayWindow">
+            <div class="codeContainer-wrap">
+
+                <div id="pathMenu" class="menu-wrapper">
+                    <div canny-mod="pathNavigation"></div>
+                </div>
+
+                <div canny-mod="tabManager"></div>
+
+                <div class="editor-wrapper">
+                    <div id="fileEditor" canny-mod="fileEditor">
+
+                    </div>
+                    <!--<div canny-mod="imageViewer"></div>-->
+                </div>
+
+            </div>
         </div>
     </div>
 </body>
