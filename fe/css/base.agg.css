@@ -530,7 +530,23 @@ header.header .projectName > span {
 }
 .translationView .header .row,
 .translationView .row {
+  position: relative;
   display: table-row;
+}
+.translationView .header .row.c-removed,
+.translationView .row.c-removed {
+  background-color: red !important;
+}
+.translationView .header .row .remove-button,
+.translationView .row .remove-button {
+  position: relative;
+  width: 1em;
+  height: 1em;
+  color: #fff;
+  font-size: 2em;
+  font-weight: bold;
+  text-shadow: 0px 0px 6px #000;
+  cursor: pointer;
 }
 .translationView .header .row > div,
 .translationView .row > div {

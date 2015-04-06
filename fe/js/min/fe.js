@@ -5606,8 +5606,8 @@ var toast = new (function Toast(id){
         toastNode.id = id;
         toastNode.style.cssText = "position:fixed;z-index:999;top:13px;right:10px;border-radius:5px;color:#fff;font-size:1.2em;font-weight:bold;background-color:rgba(80,110,110,0.8);padding: 0.3em 1em;"
         rootNode.appendChild(toastNode);
-    }
-    ,toast = {
+    },
+    toast = {
         fadeOut : function(_node,_done){
             var node = _node;
             var done = _done;
@@ -6546,6 +6546,35 @@ translationView.onCreateNewProject(function (prjName, obj) {
 });
 
 /**
+ * TODO
+ * Problem:
+ *  the translation textareas needs also the new key to save the text to the correct file.
+ *  Quickfix will be to trigger a message bundle reload if a key is renamed.
+ *  But be careful with other users there are working on the same project. Don't just reload the project!
+ *
+ *  The optimal way will be:
+ *  * create a new translation row and remove the old. For this it would be the best to send the text plus key like
+ *  in the updatekey message.
+ *
+ *  At the end we can split the functionality in two use cases:
+ *   * one is delete a key row (the old key) or just mark it as deleted!? (What is a other user is working on it?)
+ *   * second is just call the updateKey for all clients from the client.js (broadcast)
+ */
+translationView.onRenameKey(function (obj) {
+    console.log('translationViewController:onRenameKey', obj, {
+        bundle: projectConfig.project,
+        locales: availableLanguages
+    });
+    trade.renameKey({
+        bundle: projectConfig.project,
+        locales: availableLanguages
+    }, {
+        newKey : obj.newKey,
+        oldKey : obj.oldKey
+    });
+});
+
+/**
  * TODO replace bundle with locale and refactor the calls from translationView
  */
 translationView.onSaveValue(function (lang, key, value, cb) {
@@ -6595,6 +6624,15 @@ events.addServerListener('updateKey', function (bundleObj, data) {
     translationView.printBundleTemplate([data], bundleObj.locale, availableLanguages, projectConfig.project);
 });
 
+/**
+ * server event listener
+ */
+events.addServerListener('keyRemoved', function (bundleName, obj) {
+    console.log('translationViewController:keyRenamed', bundleName, obj);
+    toast.showMessage('Key deleted!' + obj.key);
+    translationView.markKeyAsRemoved(obj.key);
+});
+
 function handleNewProjectConfig (newProjectConfig) {
     if (!newProjectConfig.hasOwnProperty('projects')) {
         // project specific config
@@ -6612,6 +6650,14 @@ function handleNewProjectConfig (newProjectConfig) {
 }
 
 module.exports = {
+    /**
+     * is called if the user rename key request was successful
+     * @param newKey
+     * @param oldKey
+     */
+    renameKey : function (newKey, oldKey) {
+        toast.showMessage('Key renamed successful! From ' + oldKey + ' to ' + newKey);
+    },
     /**
      * is called if the user has created successfully a new project
      * @param projectName
@@ -6684,7 +6730,14 @@ var events = (function () {
              */
             updateKey : function () {
                 callQueue('updateKey', [].slice.call(arguments));
-            } ,
+            },
+            /**
+             * @param bundleObj {locale: string, bundle: string}
+             * @param data {oldKey:string, newKey: string}
+             */
+            keyRemoved : function () {
+                callQueue('keyRemoved', [].slice.call(arguments));
+            },
             newProjectWasCreated : function () {
                 callQueue('newProjectWasCreated', [].slice.call(arguments));
             }
@@ -6894,7 +6947,6 @@ var trade = (function () {
         },
         /**
          *
-         * @param id
          * @param bundle
          * @param data
          * @param cb
@@ -6911,10 +6963,22 @@ var trade = (function () {
          * @param obj
          */
         createNewProject : function (projectName, obj) {
-            var args = [].slice.call(arguments);
             server.createNewProject(connectionId, projectName, obj, function () {
                 var args = [].slice.call(arguments);
                 callController('createNewProject', args);
+            });
+        },
+        /**
+         * @param bundle
+         * @param obj {newKey: string, oldKey: string}
+         * @param cb
+         */
+        renameKey : function (bundle, obj) {
+            server.renameKey(connectionId, bundle, {
+                newKey : obj.newKey,
+                oldKey : obj.oldKey
+            }, function (newKey, oldKey) {
+                callController('renameKey', [newKey, oldKey]);
             });
         },
         // Not really tested
@@ -8254,7 +8318,7 @@ var translationView = (function () {
         var textList = [text],
             textIdx = 0;
 
-        node.addEventListener('change', function (e) {
+        node.addEventListener('change', function saveOnChange(e) {
             console.log("Old: " + textList[textIdx]);
             var newValue = this.value;
             if (textList[textIdx] !== newValue) {
@@ -8263,6 +8327,18 @@ var translationView = (function () {
             }
             console.log(textList);
             con.sendResource(key, lang, newValue);
+        });
+    }
+
+    function removeEventListenersFromRow(rowNode) {
+        [].slice.call(rowNode.querySelectorAll('textarea')).forEach(function (tarea) {
+            tarea.removeEventListener('change', false);
+            tarea.setAttribute('readonly', 'true');
+        });
+
+        [].slice.call(rowNode.querySelectorAll('input')).forEach(function (input) {
+            input.removeEventListener('keypress', false);
+            input.setAttribute('readonly', 'true');
         });
     }
 
@@ -8277,7 +8353,8 @@ var translationView = (function () {
         onQueues = {
             addNewKey : [],
             addSaveValue : [],
-            createNewProject : []
+            createNewProject : [],
+            renameKey : []
         };
 
     var ui = {
@@ -8573,18 +8650,37 @@ var translationView = (function () {
              *
              * @param key
              */
-            addKeyField : function (node, key, keyName) {
-                var keyInputNode = document.getElementById(key + conf.inputPrefix),
+            addKeyField : function (node, data) {
+                var keyInputNode = document.getElementById(data.key + conf.inputPrefix),
                     keyNode;
                 if (!keyInputNode) {
-                    keyInputNode = domOpts.createElement('input', key + conf.inputPrefix, 'keyField');
+                    keyInputNode = domOpts.createElement('input', data.key + conf.inputPrefix, 'keyField');
                     keyNode = domOpts.createElement('div', null, 'data key octicon octicon-key');
-                    keyInputNode.setAttribute('readonly', 'true');
+//                    keyInputNode.setAttribute('readonly', 'true');
+                    keyInputNode.addEventListener('keypress', keyKeyPressListener);
+                    keyInputNode.addEventListener('keypress', function (e) {
+                        var keyCode = e.keyCode || e.which,
+                            value = data.contextName ? data.contextName + '_' + keyInputNode.value : keyInputNode.value;
+
+                        if (keyCode === 13 && keyInputNode.value != '' && value != data.key) {
+                            // TODO currently you can only rename the key once
+                            onQueues.renameKey.forEach(function (fc) {
+                                fc({
+                                    newKey: value,
+                                    oldKey: data.key
+                                });
+                            });
+                            // reset the key to show the old key - it's not really a rename it's more
+                            // an add new key and mark old one as deleted
+                            keyInputNode.value = data.keyName;
+                        }
+                        return true;
+                    });
                     keyNode.appendChild(keyInputNode);
                     node.appendChild(keyNode);
                 }
 
-                keyInputNode.value =  keyName;
+                keyInputNode.value =  data.keyName;
             },
             /**
              * creates a languages field
@@ -8632,6 +8728,10 @@ var translationView = (function () {
              */
             getRow : function (node, key) {
                 var row = document.getElementById(key + conf.rowPrefix);
+                if (row && row.classList.contains('c-removed')) {
+                    row.domRemove();
+                    row = undefined;
+                }
                 if (!row) {
                     row = domOpts.createElement('div', key + conf.rowPrefix, 'row');
                     node.appendChild(row);
@@ -8641,7 +8741,7 @@ var translationView = (function () {
             addRowWithLanguages : function (node, data, actualLanguage, allProjectLanguages) {
                 var row = fc.getRow(node, data.key);
 
-                fc.addKeyField(row, data.key, data.keyName);
+                fc.addKeyField(row, data, data);
 
                 allProjectLanguages.forEach(function (lang) {
                     fc.addLanguageField(row, data.key, actualLanguage === lang ? data.value : null, lang);
@@ -8669,6 +8769,19 @@ var translationView = (function () {
                 // show the lang tab
                 rootNode.classList.remove('c-hide_' + lang);
             },
+            markKeyAsRemoved : function (key) {
+                var row = document.getElementById(key + conf.rowPrefix),
+                    removeIc;
+                if (row && !row.classList.contains('c-removed')) {
+                    row.classList.add('c-removed');
+                    removeIc = domOpts.createElement('div', null, 'remove-button octicon octicon-x');
+                    removeIc.addEventListener('click', function () {
+                        row.domRemove();
+                    });
+                    removeIc.domAppendTo(row);
+                    removeEventListenersFromRow(row);
+                }
+            },
             hideLang : function (lang) {
                 rootNode.classList.add('c-hide_' + lang);
             },
@@ -8680,6 +8793,9 @@ var translationView = (function () {
             },
             onSaveValue : function (cb) {
                 onQueues.addSaveValue.push(cb);
+            },
+            onRenameKey : function (cb) {
+                onQueues.renameKey.push(cb);
             }
         };
     return fc;

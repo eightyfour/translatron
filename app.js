@@ -101,8 +101,11 @@ var conTrade,
                     }
                 });
             },
-            sendResource : function () {
+            sendResource : function (id, bundleObj, data, cb) {
                 client.sendResource.apply(null, [].slice.call(arguments));
+            },
+            renameKey : function () {
+                client.renameKey.apply(null, [].slice.call(arguments));
             },
             createNewProject : function (id, projectName, obj, cb) {
                 // TODO instead of read save the project here
