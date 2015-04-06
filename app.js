@@ -107,6 +107,9 @@ var conTrade,
             renameKey : function () {
                 client.renameKey.apply(null, [].slice.call(arguments));
             },
+            removeKey : function () {
+                client.removeKey.apply(null, [].slice.call(arguments));
+            },
             createNewProject : function (id, projectName, obj, cb) {
                 // TODO instead of read save the project here
                 // Add project.json template in main project.json

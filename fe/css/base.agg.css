@@ -557,12 +557,12 @@ header.header .projectName > span {
 }
 .translationView .row .data.key:before {
   position: absolute;
-  left: 0px;
+  left: 4px;
   top: 15px;
   opacity: 0.4;
 }
 .translationView .row .data.key {
-  padding-left: 10px;
+  padding-left: 1.5em;
 }
 .translationView .content .row > div {
   padding: .5em;
