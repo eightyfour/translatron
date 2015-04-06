@@ -557,9 +557,12 @@ header.header .projectName > span {
 }
 .translationView .row .data.key:before {
   position: absolute;
-  right: 10px;
+  left: 0px;
   top: 15px;
   opacity: 0.4;
+}
+.translationView .row .data.key {
+  padding-left: 10px;
 }
 .translationView .content .row > div {
   padding: .5em;
@@ -598,6 +601,39 @@ header.header .projectName > span {
   position: absolute;
   width: 500px;
   height: 400px;
+}
+.inputEditManager.wrap {
+  position: absolute;
+  overflow: hidden;
+  height: 1.2em;
+  width: auto;
+  right: 0.2em;
+  top: -0.4em;
+}
+.inputEditManager-button {
+  transition: margin 200ms;
+  margin-top: -2em;
+  font-size: 2em;
+  width: 1.5em;
+  height: 100%;
+  float: right;
+  text-align: center;
+  cursor: pointer;
+}
+.inputEditManager.c-edit .edit {
+  margin-top: -2em;
+  position: absolute;
+  right: 0;
+}
+.inputEditManager.c-edit .cancel,
+.inputEditManager.c-edit .save,
+.inputEditManager.c-edit .delete {
+  margin-top: 0;
+}
+.inputEditManager .edit {
+  margin-top: 0;
+  position: absolute;
+  right: 0;
 }
 #imageViewer {
   display: inline-block;
