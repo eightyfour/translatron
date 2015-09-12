@@ -1,28 +1,32 @@
 {
-  "name" : "resourceMessagesLiveEditor",
+  "name": "resourceMessagesLiveEditor",
   "auth": "eightyfour",
   "email": "eightyfour@thinkuseful.de",
-  "version" : "0.2.3",
+  "version": "0.2.3",
   "readmeFilename": "README.md",
   "engines": {
     "node": ">= v0.10.0"
   },
   "license": "MIT",
   "dependencies": {
-      "express": "x",
-      "dnode" : "x",
-      "shoe" : "x",
-      "brace" : "x",
-      "dom-opts" : "git://github.com/eightyfour/dom-opts.git",
-      "canny" : "git://github.com/eightyfour/canny.git",
-      "browserify" : "~8.1.3",
-      "less": "~2.4.0"
+    "brace": "x",
+    "browserify": "~8.1.3",
+    "canny": "0.0.x",
+    "dnode": "x",
+    "dom-opts": "git://github.com/eightyfour/dom-opts.git",
+    "express": "x",
+    "less": "~2.4.0",
+    "shoe": "x"
   },
   "config": {
-    "port" : "3000"
+    "port": "3000"
   },
   "scripts": {
-    "prestart" : "browserify lib/client/base.js -o fe/js/min/fe.js && lessc fe/less/main.less fe/css/base.agg.css",
-    "start": "node app.js"
+    "prestart": "browserify lib/client/base.js -o fe/js/min/fe.js && lessc fe/less/main.less fe/css/base.agg.css",
+    "start": "forever -w start app.js &&  watchify lib/client/base.js -o fe/js/min/fe.js -v"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-phantomas": "^0.12.0"
   }
 }
