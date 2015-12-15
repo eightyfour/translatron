@@ -1,0 +1,7 @@
+{
+  "name": "resourceMessagesLiveEditor",
+  "dependencies": {
+      "jquery": "~2.1.4",
+      "jasmine-jquery": "~2.1.0"
+  }
+}
