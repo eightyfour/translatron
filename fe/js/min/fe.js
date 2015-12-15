@@ -141,17 +141,17 @@ window.canny = canny;
 canny.add('whisker',  require('canny/mod/whisker'));
 canny.add('textEditor',  require('./textEditor.js'));
 
-canny.add('texts',  require('./uiModules/texts.js'));
-canny.add('layoutManager',  require('./uiModules/layoutManager.js'));
-canny.add('initialView',    require('./uiModules/initialView.js'));
+canny.add('texts',                  require('./uiModules/texts.js'));
+canny.add('layoutManager',          require('./uiModules/layoutManager.js'));
+canny.add('initialView',            require('./uiModules/initialView.js'));
 canny.add('projectMainNavigation',  require('./uiModules/projectMainNavigation.js'));
-canny.add('translationView',require('./uiModules/translationView.js'));
-canny.add('translationViewHeader',require('./uiModules/translationViewHeader.js'));
-canny.add('tabManager',     require('./uiModules/tabManager.js'));
-canny.add('pathNavigation', require('./uiModules/pathNavigation.js'));
-canny.add('fileEditor',     require('./uiModules/fileEditor.js'));
-canny.add('imageViewer',    require('./uiModules/imageViewer.js'));
-canny.add('messagesExportOverlay',    require('./uiModules/messagesExportOverlay.js'));
+canny.add('translationView',        require('./uiModules/translationView.js'));
+canny.add('translationViewHeader',  require('./uiModules/translationViewHeader.js'));
+canny.add('tabManager',             require('./uiModules/tabManager.js'));
+canny.add('pathNavigation',         require('./uiModules/pathNavigation.js'));
+canny.add('fileEditor',             require('./uiModules/fileEditor.js'));
+canny.add('imageViewer',            require('./uiModules/imageViewer.js'));
+canny.add('messagesExportOverlay',  require('./uiModules/messagesExportOverlay.js'));
 
 trade.addController(require('./controller/messagesExportController.js'));
 trade.addController(require('./controller/initialViewController.js'));
@@ -201,27 +201,6 @@ trade.ready(function () {
         console.log('getJson:', projectConfig);
     });
 
-
-    console.log('REQUEST PARAMS: ' + domOpts.params);
-
-    // setup title read from URL
-    (function () {
-        var handleFooterNavigation = function () {
-
-            var footerNav = document.getElementById('fixedNavigation');
-
-            function removeOpen() {
-                footerNav.removeEventListener('mouseover', removeOpen);
-                footerNav.domRemoveClass('open');
-            }
-
-            footerNav.addEventListener('mouseover', removeOpen);
-            // hide automatical
-            setTimeout(removeOpen, 5000);
-        };
-
-       //  handleFooterNavigation();
-    }());
 });
 },{"./Toast.js":2,"./controller/fileEditorController.js":5,"./controller/initialViewController.js":6,"./controller/messagesExportController.js":7,"./controller/pageHeaderController.js":8,"./controller/projectMainNavigationController.js":9,"./controller/textEditorController.js":10,"./controller/translationViewController.js":11,"./textEditor.js":13,"./trade.js":14,"./uiModules/fileEditor.js":16,"./uiModules/imageViewer.js":18,"./uiModules/initialView.js":19,"./uiModules/layoutManager.js":21,"./uiModules/messagesExportOverlay.js":22,"./uiModules/pathNavigation.js":23,"./uiModules/projectMainNavigation.js":24,"./uiModules/tabManager.js":25,"./uiModules/texts.js":26,"./uiModules/translationView.js":27,"./uiModules/translationViewHeader.js":28,"./unicode.js":29,"canny":44,"canny/mod/flowControlInstance":45,"canny/mod/whisker":46,"dnode":47,"dom-opts":58,"shoe":59}],4:[function(require,module,exports){
 /* ***** BEGIN LICENSE BLOCK *****
@@ -1143,12 +1122,13 @@ module.exports = {
 };
 },{"../events.js":12,"../trade.js":14,"../uiEventManager.js":15,"canny":44,"dom-opts":58}],12:[function(require,module,exports){
 /**
- * Created by han.
+ * Created by eightyfour.
  *
  * All server events. Multiple clients can register on each event
  * and will be notified if method is called from server.
  *
  * TODO RENAME FILE
+ * TODO to what? :)
  */
 var events = (function () {
     "use strict";
@@ -2350,7 +2330,7 @@ var canny = require('canny'),
     uiEvents = require('../uiEventManager.js');
 
 /**
- * E.g.: gd-module="flowControl" gd-attr="{'view' : 'viewToShow'}"
+ * E.g.: canny-mod="flowControl" canny-var="{'view' : 'viewToShow'}"
  *
  * you can activate a initial view with a anchor in the URL e.g.: yourdomain.html#viewToShow
  * Or pass a comma separated module list for activate more module #viewToShow,otherView
