@@ -1,4 +1,4 @@
-resourceMessagesLiveEditor
+translatron
 ==========================
 
 Handle your message resource files in the browser. 
