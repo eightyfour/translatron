@@ -2,7 +2,7 @@
 /*jslint browser: true */
 var trade = require('../trade.js'),
     events = require('../events.js'),
-    C = require('../../CONST.js');
+    C = require('../CONST.js');
 
 window.domOpts = window.domOpts || require('dom-opts');
 

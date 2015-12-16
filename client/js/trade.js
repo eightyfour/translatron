@@ -3,7 +3,7 @@
  * handle the connection between server and client
  */
 var canny = require('canny'),
-    C = require('../CONST.js'),
+    C = require('./CONST.js'),
     events = require('./events.js'),
     shoe = require('shoe'),
     dnode = require('dnode'),

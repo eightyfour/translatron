@@ -4,19 +4,19 @@ var express = require('express'),
     fs = require('fs'),
     shoe = require('shoe'),
     dnode = require('dnode'),
-    client = require('./lib/client.js')(__dirname),
-    C = require('./lib/CONST.js'),
-    fileManager = require('./lib/server/fileManager.js'),
-    bash = require('./lib/server/bash.js'),
+    client = require('./server/client.js')(__dirname),
+    C = require('./server/CONST.js'),
+    fileManager = require('./server/server/fileManager.js'),
+    bash = require('./server/server/bash.js'),
     serverPort = process.env.npm_package_config_port || 3000,
-    jsonFileManager = require('./lib/server/jsonFileManager');
+    jsonFileManager = require('./server/server/jsonFileManager');
 
 var app = express();
 
 global.projectFolder = __dirname + '/static';
 
-app.use(express.static(__dirname + '/fe'));
-
+app.use(express.static(__dirname + '/dist'));
+app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 // TODO move the create project in a separate file
 function getDefaultProjectJson(projectName, obj) {
     var cb = function () {

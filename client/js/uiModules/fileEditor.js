@@ -1,9 +1,9 @@
 /*global */
 /*jslint browser: true */
 var events = require('../events.js'),
-    C = require('../../CONST.js'),
+    C = require('../CONST.js'),
     tabManager = require('./tabManager.js'),
-    sessionHandler = require('../../sessionHandler.js')('fileEditor_'),
+    sessionHandler = require('../sessionHandler.js')('fileEditor_'),
     ace = require("brace");
 
 require('brace/mode/javascript');

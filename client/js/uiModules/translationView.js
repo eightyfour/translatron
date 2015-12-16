@@ -352,7 +352,7 @@ var translationView = (function () {
                                 newKeyInputNode = getAddNewKeyInputNode(keyObj.contextName);
                                 header = document.createElement("h2");
                                 // <span class="icon octicon octicon-key"></span>
-                                header.className = "icon octicon octicon-puzzle";
+                                header.className = "icon octicon octicon-tag";
                                 header.innerText = keyObj.contextName;
                                 rowNode.appendChild(newKeyInputNode.label);
                                 rowNode.appendChild(newKeyInputNode.input);
