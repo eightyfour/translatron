@@ -9,7 +9,7 @@ var keyValueFileManager = require('./keyValueFileManager');
  *      updateKey : fc()
  *  }
  */
-var client = function (dirName) {
+var dto = function (dirName) {
     "use strict";
 
     var clientMap = [],    // contains all clients connections
@@ -160,4 +160,4 @@ var client = function (dirName) {
     };
 };
 
-module.exports = client;
+module.exports = dto;

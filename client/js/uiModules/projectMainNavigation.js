@@ -29,7 +29,7 @@ var projectMainNavigation = (function () {
             menuToggleButton : function (node) {
                 new svgIcon(node, {
                     hamburgerCross : {
-                        url : 'animatedSVG/svg/hamburger.svg',
+                        url : '/dist/animatedSVG/svg/hamburger.svg',
                         animation : [
                             {
                                 el : 'path:nth-child(1)',

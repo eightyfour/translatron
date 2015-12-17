@@ -67,7 +67,7 @@ var pathNavigation = (function () {
         },
         renderPathList = function (parentNode, obj, doneCb) {
             var li, a;
-            if (!obj.fail) {
+            if (obj && !obj.fail) {
                 obj.value.forEach(function (elm) {
                     li = window.domOpts.createElement('li');
                     a = window.domOpts.createElement('a');

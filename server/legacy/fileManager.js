@@ -1,4 +1,10 @@
 /*global projectFolder */
+/**
+ * fileManager
+ *
+ * The file manager saves the message bundles from the editor view.
+ *
+ */
 var fs = require('fs'),
     C = require('../CONST.js');
 

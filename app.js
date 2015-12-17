@@ -4,7 +4,7 @@ var express = require('express'),
     fs = require('fs'),
     shoe = require('shoe'),
     dnode = require('dnode'),
-    client = require('./server/client.js')(__dirname),
+    dto = require('./server/dto.js')(__dirname),
     C = require('./server/CONST.js'),
     fileManager = require('./server/legacy/fileManager.js'),
     bash = require('./server/legacy/bash.js'),
@@ -12,11 +12,37 @@ var express = require('express'),
     jsonFileManager = require('./server/legacy/jsonFileManager');
 
 var app = express();
-
+// TODO avoid global scope definements
 global.projectFolder = __dirname + '/static';
 
-app.use(express.static(__dirname + '/dist'));
+app.use('/dist',express.static(__dirname + '/dist'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+
+/**
+ * match except for folder dist and bower_components
+ *
+ * If the URL has a dot inside it expect to send a files. Otherwise it sends the index.
+ */
+app.get(/^((?!(\/dist|\/bower_components)).)*$/,  function (req, res) {
+    if (/\./.test(req.originalUrl)) {
+        // contains a . - looks like a file request so check the files system
+        fs.exists(__dirname + '/files' + req.originalUrl, function (exists) {
+            if (exists) {
+                res.sendFile(__dirname + '/files' + req.originalUrl);
+            } else {
+                // no file found - send 404 file
+//                res.sendFile(__dirname + '/dist/404.html');
+                res.send('404');
+            }
+        });
+
+    } else {
+        // send index
+        res.sendFile(__dirname + '/dist/index.html');
+    }
+});
+
+
 // TODO move the create project in a separate file
 function getDefaultProjectJson(projectName, obj) {
     var cb = function () {
@@ -84,6 +110,10 @@ function getMessageBundleLanguages(filesAndFolders) {
 var conTrade,
     trade = shoe(function (stream) {
         "use strict";
+        console.log('app:huha a new websocket connection?');
+//        Object.keys(stream).forEach(function (key) {
+//            console.log('app:' + key,stream[key]);
+//        })
         var d = dnode({
             getMessageBundle : function (projectName, cb) {
                 fileManager.readDir(projectName, function (filesAndFolders) {
@@ -93,7 +123,7 @@ var conTrade,
                     } else {
                         var availableLanguages = getMessageBundleLanguages(filesAndFolders.value);
                         Object.keys(availableLanguages).forEach(function (lang) {
-                            client.getMessageBundle({
+                            dto.getMessageBundle({
                                 bundle: projectName,
                                 locale: lang
                             }, cb);
@@ -102,13 +132,13 @@ var conTrade,
                 });
             },
             sendResource : function (id, bundleObj, data, cb) {
-                client.sendResource.apply(null, [].slice.call(arguments));
+                dto.sendResource.apply(null, [].slice.call(arguments));
             },
             renameKey : function () {
-                client.renameKey.apply(null, [].slice.call(arguments));
+                dto.renameKey.apply(null, [].slice.call(arguments));
             },
             removeKey : function () {
-                client.removeKey.apply(null, [].slice.call(arguments));
+                dto.removeKey.apply(null, [].slice.call(arguments));
             },
             createNewProject : function (id, projectName, obj, cb) {
                 // TODO instead of read save the project here
@@ -116,7 +146,7 @@ var conTrade,
                 getDefaultProjectJson(projectName, obj)(function (json) {
                     // send back
                     cb(json);
-                    client.createNewProject(id, projectName);
+                    dto.createNewProject(id, projectName);
                     // and save config
                     jsonFileManager.saveJSON(projectName + '/project.json', json);
                 });
@@ -126,7 +156,8 @@ var conTrade,
              * returns a id as callback. The client needs this as identifier.
              */
             setupClient : function () {
-                client.setupClient.apply(null, [].slice.call(arguments));
+                // TODO draft: authenticate the client - and pass the name to the setupClient
+                dto.setupClient.apply(null, [].slice.call(arguments));
             },
             /**
              *  TODO refactor - do it only if the client ask for - methods are saved in client
