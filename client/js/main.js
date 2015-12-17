@@ -33,6 +33,7 @@ trade.addController(require('./controller/pageHeaderController.js'));
 trade.addController(require('./controller/translationViewController.js'));
 trade.addController(require('./controller/fileEditorController.js'));
 trade.addController(require('./controller/textEditorController.js'));
+trade.addController(require('./controller/urlManipulator.js'));
 
 // register on trade ready
 trade.ready(function () {
@@ -58,7 +59,12 @@ window.toast = toast;
 trade.ready(function () {
     "use strict";
     // TODO remove static project name
-    var projectName = domOpts.params.bundle;
+//    var projectName = domOpts.params.bundle;
+    var projectName = (function () {
+        var split = location.pathname.split('/');
+        return split[split.length - 1];
+    }());
+
 
     if (projectName) {
         // this is the initial call to trigger a project load - you will get
