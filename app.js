@@ -6,10 +6,10 @@ var express = require('express'),
     dnode = require('dnode'),
     client = require('./server/client.js')(__dirname),
     C = require('./server/CONST.js'),
-    fileManager = require('./server/server/fileManager.js'),
-    bash = require('./server/server/bash.js'),
+    fileManager = require('./server/legacy/fileManager.js'),
+    bash = require('./server/legacy/bash.js'),
     serverPort = process.env.npm_package_config_port || 3000,
-    jsonFileManager = require('./server/server/jsonFileManager');
+    jsonFileManager = require('./server/legacy/jsonFileManager');
 
 var app = express();
 

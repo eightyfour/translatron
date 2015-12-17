@@ -1,16 +1,8 @@
 "use strict";
-var fs = require('fs');
-var fileMgr =  {},
-    // TODO can not create multiple sub directories
-    createFileWithPath = function (filePath, cb) {
-        var directories = filePath.split('/'), file, dir;
-
-        dir = directories.splice(0, directories.length - 1).join('/');
-
-        fs.mkdir(dir, function () {
-            fs.open(filePath, 'w', cb);
-        });
-    };
+"use strict";
+var fs = require('fs'),
+    mkdirP = require('../mkdir-p'),
+    fileMgr =  {};
 
 fileMgr.getJSON = function (file, cb) {
     var jsonFile = projectFolder + '/' + file;
@@ -39,7 +31,7 @@ fileMgr.getJSON = function (file, cb) {
  */
 fileMgr.saveJSON = function (jsonFileName, obj, cb) {
     console.log('jsonFileManager:saveJSON', jsonFileName, obj);
-    createFileWithPath(projectFolder + '/' + jsonFileName, function () {
+    mkdirP(projectFolder, jsonFileName, function () {
         fs.writeFile(projectFolder + '/' + jsonFileName, JSON.stringify(obj), cb);
     });
 };
