@@ -1,5 +1,6 @@
 translatron
 ==========================
+![Translatron hero](./dist/images/translatron.jpg)
 
 <img scr="./dist/images/translatron.jpg" width="200px"/> 
 
