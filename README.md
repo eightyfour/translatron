@@ -1,8 +1,7 @@
 translatron
 ==========================
-![Translatron hero](./dist/images/translatron.jpg)
 
-<img scr="./dist/images/translatron.jpg" width="200px"/> 
+<img title="Translatron hero" src="./dist/images/translatron.jpg" width="250px"/> 
 
 Handle your message resource files in the browser. 
 The tool synchronized the texts between the messages bundles and it's possible that more than one translators are working on the same file. The translator will be notified when a other translator change a text or add new one. 
