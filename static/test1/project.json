@@ -1,1 +1,9 @@
-{"project":"test1","description":"This is the test project ONE. Use it for testing the applications!","images":[],"defaultLanguage":"en","numberOfKeys":"0","languages":{},"keys":{}}
+{
+  "project": "test1",
+  "description": "This is the test project ONE. Use it for testing the applications!",
+  "images": [],
+  "defaultLanguage": "en",
+  "numberOfKeys": "0",
+  "languages": {},
+  "keys": {}
+}

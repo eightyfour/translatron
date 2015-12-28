@@ -187,12 +187,17 @@ module.exports = {
      * @param obj {data: [data: [{data: string, key: string}], language: string]}
      */
     getMessageBundle : function (obj) {
-        var sorted;
+        var sorted, datas = [];
 
         console.log('getMessageBundle callback', obj);
 
         if (obj) {
-            sorted = obj.data.sort(sortByKey);
+            Object.keys(obj.data).forEach(function (key) {
+                // transfer this in to the old format
+                datas.push({key: key, value : obj.data[key]});
+            })
+
+            sorted = datas.sort(sortByKey);
             sorted.forEach(function (data) {
                 collectKeysMap[data.key] = undefined;
             });

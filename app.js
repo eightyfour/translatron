@@ -110,46 +110,49 @@ function getMessageBundleLanguages(filesAndFolders) {
 var conTrade,
     trade = shoe(function (stream) {
         "use strict";
-        console.log('app:huha a new websocket connection?');
-//        Object.keys(stream).forEach(function (key) {
-//            console.log('app:' + key,stream[key]);
-//        })
+
         var d = dnode({
-            getMessageBundle : function (projectName, cb) {
-                fileManager.readDir(projectName, function (filesAndFolders) {
-                    if (!filesAndFolders) {
-                        // there are no message bundles actually
-                        cb(false);
-                    } else {
-                        var availableLanguages = getMessageBundleLanguages(filesAndFolders.value);
-                        Object.keys(availableLanguages).forEach(function (lang) {
-                            dto.getMessageBundle({
-                                bundle: projectName,
-                                locale: lang
-                            }, cb);
+            /**
+             * TODO rename method to something common (the client side needs also to be refactored (controller methods and so on))
+             * @param projectPath
+             * @param cb
+             */
+            getMessageBundle : function (projectPath, cb) {
+                // read the project JSON and format the data into the old format {data:{}, language:""}
+                // TODO format can be changed later on if we want
+                jsonFileManager.getJSON(projectPath + '/project.json', function (data) {
+                    if (data) {
+                        Object.keys(data.keys).forEach(function (lang) {
+                            cb({
+                                data : data.keys[lang],
+                                language : lang
+                            })
                         })
+                    } else {
+                        // the project doesn't exists
+                        cb(false);
                     }
                 });
             },
             sendResource : function (id, bundleObj, data, cb) {
-                dto.sendResource.apply(null, [].slice.call(arguments));
+                // dto.sendResource.apply(null, [].slice.call(arguments));
             },
             renameKey : function () {
-                dto.renameKey.apply(null, [].slice.call(arguments));
+                // dto.renameKey.apply(null, [].slice.call(arguments));
             },
             removeKey : function () {
-                dto.removeKey.apply(null, [].slice.call(arguments));
+                // dto.removeKey.apply(null, [].slice.call(arguments));
             },
             createNewProject : function (id, projectName, obj, cb) {
                 // TODO instead of read save the project here
                 // Add project.json template in main project.json
-                getDefaultProjectJson(projectName, obj)(function (json) {
-                    // send back
-                    cb(json);
-                    dto.createNewProject(id, projectName);
-                    // and save config
-                    jsonFileManager.saveJSON(projectName + '/project.json', json);
-                });
+                //getDefaultProjectJson(projectName, obj)(function (json) {
+                //    // send back
+                //    cb(json);
+                //    dto.createNewProject(id, projectName);
+                //    // and save config
+                //    jsonFileManager.saveJSON(projectName + '/project.json', json);
+                //});
             },
             /**
              * initial call - all client methods are saved here.

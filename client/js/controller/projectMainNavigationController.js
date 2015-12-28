@@ -149,7 +149,7 @@ var callProjectInitQueue = (function () {
    }
 }());
 /**
- * just the implementation of the callbacks
+ * the implementation of the callbacks
  * @type {{getJSON: getJSON}}
  */
 module.exports = {
@@ -165,8 +165,8 @@ module.exports = {
 
         if (obj && availableLanguages.indexOf(obj.language) !== -1) {
 
-            obj.data.forEach(function (data) {
-                saveKeyToProjectMap(obj.project, obj.language, data.key, data.value);
+            Object.keys(obj.data).forEach(function (key) {
+                saveKeyToProjectMap(obj.project, obj.language, key, obj.data[key]);
             });
 
             console.log('projectMainNavigationController:getMessageBundle ',  obj, keyValueCounter.projectMap[obj.project].langMap[obj.language]);

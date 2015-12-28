@@ -29,7 +29,7 @@ fileMgr.getJSON = function (file, cb) {
  */
 fileMgr.saveJSON = function (jsonFileName, obj, cb) {
     mkdirP(projectFolder, jsonFileName, function () {
-        fs.writeFile(projectFolder + '/' + jsonFileName, JSON.stringify(obj), cb);
+        fs.writeFile(projectFolder + '/' + jsonFileName, JSON.stringify(obj, null, 2), cb);
     });
 };
 
