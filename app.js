@@ -120,7 +120,7 @@ var conTrade,
             getMessageBundle : function (projectPath, cb) {
                 // read the project JSON and format the data into the old format {data:{}, language:""}
                 // TODO format can be changed later on if we want
-                dto.getMessageBundle(projectPath, cb);
+                dto.getProjectTranslation(projectPath, cb);
             },
             sendResource : function (id, bundleObj, data, cb) {
                 // dto.sendResource.apply(null, [].slice.call(arguments));

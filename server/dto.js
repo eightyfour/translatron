@@ -67,7 +67,7 @@ var dto = function (dirName) {
          * @param obj {bundle: string, locale: string}
          * @param cb
          */
-        getMessageBundle : function (projectPath, cb) {
+        getProjectTranslation : function (projectPath, cb) {
             jsonFileManager.getJSON(projectPath + '/project.json', function (data) {
                 if (data) {
                     Object.keys(data.keys).forEach(function (lang) {
