@@ -21,7 +21,7 @@ var dto = function (dirName) {
                 if (bundleObj.locale) {
                     fileName += '_' + bundleObj.locale;
                 }
-                return dirName + '/static/' + bundleObj.bundle + '/' + fileName + '.properties';
+                return dirName + bundleObj.bundle + '/' + fileName + '.properties';
             },
             isBundleEqual : function (bundle1, bundle2) {
                 return bundle1 === bundle2
