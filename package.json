@@ -22,13 +22,11 @@
     "port": "3000"
   },
   "scripts": {
-    "test": "karma start karma.conf.js",
+    "test": "jasmine spec/server/*Spec.js && karma start karma.conf.js",
     "prestart": "browserify client/js/main.js -o dist/js/translatron.js && lessc client/less/main.less dist/css/translatron.css",
     "start": "forever -w start app.js && watchify client/js/main.js -o dist/js/translatron.js -v"
   },
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-phantomas": "^0.12.0",
     "jasmine": "^2.3.2",
     "jasmine-core": "^2.3.4",
     "karma": "^0.13.9",
