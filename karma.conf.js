@@ -21,7 +21,7 @@ module.exports = function(config) {
             'node_modules/canny/canny.js',
             'node_modules/canny/mod/*.js',
 //            'spec/helper/fixture.js'
-            'spec/*Spec.js'
+            'spec/client/*Spec.js'
         ],
 
 
@@ -76,6 +76,6 @@ module.exports = function(config) {
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: false
+        singleRun: true
     })
 }
