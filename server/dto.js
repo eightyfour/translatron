@@ -64,7 +64,7 @@ var dto = function (dirName) {
     return {
         /**
          *
-         * @param obj {bundle: string, locale: string}
+         * @param projectPath
          * @param cb
          */
         getProjectTranslation : function (projectPath, cb) {
