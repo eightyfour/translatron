@@ -1,4 +1,5 @@
-var keyValueFileManager = require('./keyValueFileManager');
+var keyValueFileManager = require('./keyValueFileManager'),
+    jsonFileManager = require('./legacy/jsonFileManager');
 /**
  * Each client need a client object
  *  - register onclose and remove if client connection is lost
@@ -66,15 +67,18 @@ var dto = function (dirName) {
          * @param obj {bundle: string, locale: string}
          * @param cb
          */
-        getMessageBundle : function (obj, cb) {
-            console.log('getMessageBundle', obj);
-            keyValueFileManager.readFile(fc.generatePathName(obj), function (objKeyValues) {
-                console.log('getMessageBundle callback ', objKeyValues);
-                if (objKeyValues) {
-                    cb({
-                        data : objKeyValues.data,
-                        language : obj.locale
-                    });
+        getMessageBundle : function (projectPath, cb) {
+            jsonFileManager.getJSON(projectPath + '/project.json', function (data) {
+                if (data) {
+                    Object.keys(data.keys).forEach(function (lang) {
+                        cb({
+                            data : data.keys[lang],
+                            language : lang
+                        })
+                    })
+                } else {
+                    // the project doesn't exists
+                    cb(false);
                 }
             });
         },

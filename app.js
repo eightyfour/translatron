@@ -120,19 +120,7 @@ var conTrade,
             getMessageBundle : function (projectPath, cb) {
                 // read the project JSON and format the data into the old format {data:{}, language:""}
                 // TODO format can be changed later on if we want
-                jsonFileManager.getJSON(projectPath + '/project.json', function (data) {
-                    if (data) {
-                        Object.keys(data.keys).forEach(function (lang) {
-                            cb({
-                                data : data.keys[lang],
-                                language : lang
-                            })
-                        })
-                    } else {
-                        // the project doesn't exists
-                        cb(false);
-                    }
-                });
+                dto.getMessageBundle(projectPath, cb);
             },
             sendResource : function (id, bundleObj, data, cb) {
                 // dto.sendResource.apply(null, [].slice.call(arguments));
