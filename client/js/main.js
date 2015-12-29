@@ -81,7 +81,7 @@ trade.ready(function () {
     }
 
     // and load the main
-    trade.getJSON(function (projectConfig) {
+    trade.getJSON(prj.path, function (projectConfig) {
         console.log('getJson:', projectConfig);
     });
 

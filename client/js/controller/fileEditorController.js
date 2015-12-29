@@ -27,7 +27,8 @@ fileEditor.onFileSaved(function (data, obj) {
         if (lang) {
             // trigger language reload
             // currently it not possible to trigger only a specific language - need to ask for all
-            trade.getJSON(currentProject);
+            // TODO this will not work anymore
+            //trade.getJSON(currentProject);
 
             console.log('fileEditorControlleronFileSaved:', lang);
 

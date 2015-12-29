@@ -6,6 +6,7 @@ var express = require('express'),
     dnode = require('dnode'),
     dto = require('./server/dto.js')(__dirname + '/static/'),
     C = require('./server/CONST.js'),
+    sm = require('./util/stringManipulator.js'),
     fileManager = require('./server/legacy/fileManager.js'),
     bash = require('./server/legacy/bash.js'),
     serverPort = process.env.npm_package_config_port || 3000,
@@ -37,18 +38,23 @@ app.get(/^((?!(\/dist|\/bower_components)).)*$/,  function (req, res) {
 //        });
 //
 //    } else {
+    // TODO check the extension
+
+    // if the extension is .prj it is a project file
+    if (/\.prj/.test(req.originalUrl)) {
+        res.sendFile(__dirname + '/dist/index.html');
+    } else {
+        // else if there is no extension just show the project overview page
         // send index
         res.sendFile(__dirname + '/dist/index.html');
+    }
+
     //}
 });
 
 
 // TODO move the create project in a separate file
-function getDefaultProjectJson(projectName, obj) {
-    var cb = function () {
-        console.log('Second function param callback: DEFAULT');
-    };
-
+function getDefaultProjectJson(projectName, obj, cb) {
     jsonFileManager.getJSON('project.json', function (data) {
         cb({
             "project" : projectName,
@@ -60,10 +66,6 @@ function getDefaultProjectJson(projectName, obj) {
             "keys" : {}
         });
     });
-    return function (fc) {
-        cb = fc;
-        console.log('Second function param callback: CALLED');
-    }
 }
 
 
@@ -79,39 +81,6 @@ function getDefaultProjectJson(projectName, obj) {
 
 var server = app.listen(serverPort);
 
-//var conDnode;
-//var dnodeCon = shoe(function (stream) {
-//    "use strict";
-//    var d = dnode(client);
-//    d.pipe(stream).pipe(d);
-//    conDnode = stream;
-//
-//    conDnode.on('end', function () {
-//        console.log('end');
-//    });
-//});
-//dnodeCon.install(server, '/dnode');
-
-/**
- * calculates the number of translated keys
- * @param filesAndFolders
- * @returns {{}}
- */
-function getMessageBundleLanguages(filesAndFolders) {
-    var availableLanguages = {},
-        reg = new RegExp('messages_(.*)\.properties'),
-        regResult;
-    filesAndFolders.forEach(function (file) {
-        if (!file.d) {
-            regResult = reg.exec(file.name);
-            if (regResult && regResult[1]) {
-                availableLanguages[regResult[1]] = {translated : -1};
-            }
-        }
-    });
-    return availableLanguages;
-}
-
 var conTrade,
     trade = shoe(function (stream) {
         "use strict";
@@ -124,7 +93,7 @@ var conTrade,
              */
             getMessageBundle : function (path, projectName, cb) {
                 // read the project JSON and format the data into the old format {data:{}, language:""}
-                // TODO format can be changed later on if we want
+                // TODO format can be changed later if we want
                 dto.getProjectTranslation(path, projectName, cb);
             },
             sendResource : function (id, bundleObj, data, cb) {
@@ -139,10 +108,12 @@ var conTrade,
             createNewProject : function (id, path, projectName, obj, cb) {
                 // TODO instead of read save the project here
                 // Add project.json template in main project.json
-                getDefaultProjectJson(projectName, obj)(function (json) {
+                var nPath = sm.addFirstAndLastSlash(path);
+                getDefaultProjectJson(projectName, obj, function (json) {
                     // send back
+                    json.projectURL = nPath + projectName + '.prj';
                     cb(json);
-                    dto.createNewProject(id, path, projectName);
+                    dto.createNewProject(id, nPath, projectName, json);
                 });
             },
             /**
@@ -203,20 +174,27 @@ var conTrade,
                 };
 
                 /**
+                 * Refactor this function - it do multiple jobs
                  * param: projectName(optional - otherwise take main project.json), callback
                  */
                 ret.getJSON = function (path, projectName, p1) {
                     // only a callback is passed
-                    var cb = p1 || path;
-                    if (typeof path === 'function') {
+                    var cb = p1 || projectName;
+                    // if the second parameter a function the client asks for the actual projects in this path
+                    // TODO change it to a separate function call or find a better solution (e.g. server pre render with JADE)
+                    if (typeof projectName === 'function') {
                         // first bring project JSON up to date
-                        fileManager.readDir('', function (filesAndFolders) {
+                        fileManager.readDir(path, function (filesAndFolders) {
                             var folders = [];
-                            filesAndFolders.value.forEach(function (folder) {
-                                if (folder.d) {
-                                    folders.push(folder.name);
-                                }
-                            });
+                            // if the folder is not exists then the value is undefined
+                            if (filesAndFolders.value) {
+                                filesAndFolders.value.forEach(function (folder) {
+                                    if (!folder.d && folder.name !== 'project.json' && /\.json/.test(folder.name)) {
+                                        folders.push(folder.name.split('.')[0]);
+                                    }
+                                });
+                            }
+                            // load the default root project.json
                             jsonFileManager.getJSON('project.json', function (data) {
                                 data.projects = folders;
                                 cb(data);
@@ -228,7 +206,7 @@ var conTrade,
                         (function loadProjectJSON() {
                             var prjName = projectName.split('.')[0];
 
-                            jsonFileManager.getJSON(path + prjName + '.json', function (data) {
+                            jsonFileManager.getJSON(path + '/' + prjName + '.json', function (data) {
                                 if (data) {
                                     // initialize all languages with default -1
                                     Object.keys(data.keys).forEach(function (lang) {

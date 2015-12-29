@@ -1,21 +1,18 @@
 {
-  "project": "test1",
-  "projectURL": "/test1.prj",
-  "description": "Test1 applications",
+  "project": "sub2",
+  "description": "Sub2 in a sub folder",
   "defaultLanguage": "en",
   "languages": {},
   "keyDescriptions" : {
     "first": {
       "__description" : "Description for the category",
       "__image" : [],
-      "key_2" : "Only German translation required"
+      "key_1" : "Only German translation required"
     }
   },
   "keys": {
     "de" : {
       "first_key_1" : "Schluessel Eins",
-      "first_key_2" : "Schluessel Zwei",
-      "first_key_3" : "Schluessel Drei"
     },
     "en": {
       "first_key_1" : "key one"

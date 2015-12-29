@@ -77,7 +77,13 @@ var trade = (function () {
          */
         createNewProject : function (projectName, obj) {
             var path = location.pathname;
-                server.createNewProject(connectionId, path, projectName, obj, function () {
+            if (/\.prj/.test(path)) {
+                path = (function (s) {
+                    var split = s.split('/');
+                    return split.splice(0, split.length - 1).join('/');
+                }(path));
+            }
+            server.createNewProject(connectionId, path, projectName, obj, function () {
                 var args = [].slice.call(arguments);
                 callController('createNewProject', args);
             });

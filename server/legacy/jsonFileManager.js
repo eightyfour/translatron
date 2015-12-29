@@ -23,13 +23,13 @@ fileMgr.getJSON = function (file, cb) {
 /**
  * saves a object as JSON format in a file. If there is no existing json or folder it will create a new one.
  *
- * @param jsonFileName e.g.: projectName/project.json or just project.json
+ * @param path e.g.: projectName/project.json or just project.json
  * @param obj
  * @param cb
  */
-fileMgr.saveJSON = function (jsonFileName, obj, cb) {
-    mkdirP(projectFolder, jsonFileName, function () {
-        fs.writeFile(projectFolder + '/' + jsonFileName, JSON.stringify(obj, null, 2), cb);
+fileMgr.saveJSON = function (path, fileName, obj, cb) {
+    mkdirP(projectFolder, path, function () {
+        fs.writeFile(projectFolder + path + fileName, JSON.stringify(obj, null, 2), cb);
     });
 };
 

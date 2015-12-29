@@ -1,5 +1,6 @@
 var keyValueFileManager = require('./keyValueFileManager'),
-    jsonFileManager = require('./legacy/jsonFileManager');
+    jsonFileManager = require('./legacy/jsonFileManager'),
+    sm = require('../util/stringManipulator.js');
 /**
  * Each client need a client object
  *  - register onclose and remove if client connection is lost
@@ -87,10 +88,10 @@ var dto = function (dirName) {
         /**
          *
          */
-        createNewProject : function (id, path, projectName) {
+        createNewProject : function (id, path, projectName, json) {
             console.log('client:createNewProject', id, path, projectName);
 
-            jsonFileManager.saveJSON(path + '/' + projectName + '.json', json);
+            jsonFileManager.saveJSON(sm.removeAllDoubleSlashes(path + '/' ), projectName + '.json', json);
 
             //Object.keys(clientMap).forEach(function (clientIds) {
             //    var client = clientMap[clientIds];

@@ -1,7 +1,6 @@
 {
-  "project": "test",
-  "projectURL": "/test.prj",
-  "description": "This is only for testing the test application. Use it for free",
+  "project": "sub1",
+  "description": "This is only for testing the test application. This is part of a sub folder",
   "defaultLanguage": "en",
   "numberOfKeys": "10",
   "languages": {
@@ -22,12 +21,9 @@
   "keys": {
     "de" : {
       "first_key_1" : "test Schluessel Nummer Eins",
-      "first_key_2" : "test Schluessel Nummer Zwei"
     },
     "en": {
       "first_key_1" : "test key number one 1",
-      "first_key_2" : "test key number two 2",
-      "first_key_3" : "test key number three 3"
     }
   }
 }

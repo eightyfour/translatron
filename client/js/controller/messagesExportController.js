@@ -37,9 +37,10 @@ uiEvents.addUiEventListener({
     showExportDialog : function (lang) {
         // fetch fresh data fro server
         if (active && currentProjectName) {
-            trade.getJSON(currentProjectName, function (data) {
-                console.log('Get project json:', data);
-            });
+            // TODO this will not work anymore
+            //trade.getJSON(currentProjectName, function (data) {
+            //    console.log('Get project json:', data);
+            //});
         }
 	}
 });
