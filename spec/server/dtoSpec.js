@@ -1,4 +1,4 @@
-var dto = require('../../server/dto')(__dirname + '/spec/server/fixtures/');
+var dto = require('../../lib/server/dto')(__dirname + '/spec/server/fixtures/');
 
 global.projectFolder = __dirname + '/fixtures';
 

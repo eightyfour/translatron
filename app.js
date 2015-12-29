@@ -4,13 +4,13 @@ var express = require('express'),
     fs = require('fs'),
     shoe = require('shoe'),
     dnode = require('dnode'),
-    dto = require('./server/dto.js')(__dirname + '/static/'),
-    C = require('./server/CONST.js'),
-    sm = require('./util/stringManipulator.js'),
-    fileManager = require('./server/legacy/fileManager.js'),
-    bash = require('./server/legacy/bash.js'),
+    dto = require('./lib/server/dto.js')(__dirname + '/static/'),
+    C = require('./lib/server/CONST.js'),
+    sm = require('./lib/util/stringManipulator.js'),
+    fileManager = require('./lib/server/legacy/fileManager.js'),
+    bash = require('./lib/server/legacy/bash.js'),
     serverPort = process.env.npm_package_config_port || 3000,
-    jsonFileManager = require('./server/legacy/jsonFileManager');
+    jsonFileManager = require('./lib/server/legacy/jsonFileManager');
 
 var app = express();
 // TODO avoid global scope definements
