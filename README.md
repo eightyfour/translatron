@@ -3,55 +3,22 @@ translatron
 
 <img title="Translatron hero" src="./dist/images/translatron.jpg" width="250px"/> 
 
-Handle your message resource files in the browser. 
-The tool synchronized the texts between the messages bundles and it's possible that more than one translators are working on the same file. The translator will be notified when a other translator change a text or add new one. 
+Translate your texts in the browser. 
 
+#dev
 
-Parameters:
- * bundle -> bundle name for you messages
- * from -> is the language which needs to be translate
- * to -> is the language in to translate 
-
-"admin-mode":
-
-The following URL http://localhost:3000/?bundle=messages&from=de will create a messages_de.properties file. In this mode you can add new keys and edit the texts.
-
-"translation-mode":
-
-The following URL http://localhost:3000/?bundle=messages&from=de&to=fr will create a message bundle like: messages_fr.properties and will read the keys from messages_de.properties
- * in this mode you can add new keys
- * you can't edit "translate from" column
- * you can edit the texts in the "translation to" column
-
-
-Requirements:
- * You need browserify
- 
-
-TODO:
- * add download message bundles (currently you have to downloaded directly from the server)
- * add key editor in admin-mode
- * the view design at all ;-)
- * show all languages at same time (overview about all)
- * save messages as key value (redis - or json files)
- * write a naming convention
-
-## naming convention
-
-First of all you create a new project for the message bundles. Could be a project name or if you don't know the project name just take the translation task number.
-
-The default language is english US.
-
-### keys
-
-a key has the following convention:
+##test setup
+There are two types of test. 
+1. a Karma setup with phantomjs which tests the client side code. Run it with:
+ ```sh
+ karma start karma.conf.js
+ ```
+2. a jasmine unit test to test the server side code (see spec/support/jasmine.json for config). Run it with:
+ ```sh
+ jasmine
+ ```
+Or run both with
+```sh
+npm test
 ```
-[contextName]_[textInside]  (if you can't brake it down in smaller use cases)
-[contextName]_[specifcName]_[textInside]
-```
-
- *contextName:* is the name that describes a context inside the project. E.g. homepage is the project and aboutGameduell could be the context to summarize the keys
- *specifcName:* e.g. for the homepage project about aboutGameduell_textBox1 and aboutGameduell_textBox1
-
-If you need to brake
-  *specifcName:* e.g. for the homepage project about aboutGameduell_textBox1 and aboutGameduell_textBox1
+All test files are in the spec folder separated by client and server folder.
