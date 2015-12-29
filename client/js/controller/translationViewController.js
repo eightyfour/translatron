@@ -84,7 +84,8 @@ translationView.onRemoveKey(function (obj) {
 translationView.onSaveValue(function (lang, key, value, cb) {
     console.log('translationViewController:onSaveValue', [].slice.call(arguments));
     trade.sendResource({
-        bundle: projectConfig.project,
+        project: projectConfig.project,
+        projectId: projectConfig.projectId,
         locale: lang
     }, {
         key: key,

@@ -1,5 +1,6 @@
 {
   "project": "sub1",
+  "projectId": "/sub/sub1",
   "description": "This is only for testing the test application. This is part of a sub folder",
   "defaultLanguage": "en",
   "numberOfKeys": "10",

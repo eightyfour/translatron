@@ -1,6 +1,6 @@
 {
   "project": "test",
-  "projectURL": "/test.prj",
+  "projectId": "/test",
   "description": "This is only for testing the test application. Use it for free",
   "defaultLanguage": "en",
   "numberOfKeys": "10",
@@ -12,22 +12,22 @@
       "translated": "10"
     }
   },
-  "keyDescriptions" : {
+  "keyDescriptions": {
     "first": {
-      "__description" : "Description for the category",
-      "__image" : [],
-      "key_1" : "That's the description for key 1"
+      "__description": "Description for the category",
+      "__image": [],
+      "key_1": "That's the description for key 1"
     }
   },
   "keys": {
-    "de" : {
-      "first_key_1" : "test Schluessel Nummer Eins",
-      "first_key_2" : "test Schluessel Nummer Zwei"
+    "de": {
+      "first_key_1": "test Schluessel Nummer Eins",
+      "first_key_2": "test Schluessel Nummer Zwei"
     },
     "en": {
-      "first_key_1" : "test key number one 1",
-      "first_key_2" : "test key number two 2",
-      "first_key_3" : "test key number three 3"
+      "first_key_1": "test key number one 1 sd",
+      "first_key_2": "test key number two 2",
+      "first_key_3": "test key number three 3"
     }
   }
 }

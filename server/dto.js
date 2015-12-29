@@ -90,18 +90,7 @@ var dto = function (dirName) {
          */
         createNewProject : function (id, path, projectName, json) {
             console.log('client:createNewProject', id, path, projectName);
-
             jsonFileManager.saveJSON(sm.removeAllDoubleSlashes(path + '/' ), projectName + '.json', json);
-
-            //Object.keys(clientMap).forEach(function (clientIds) {
-            //    var client = clientMap[clientIds];
-            //    if (clientIds !== id) {
-            //        // if (client.projectName === bundleName) {
-            //        console.log('createNewProject: call client about new projectName');
-            //        client.newProjectWasCreated(projectName);
-            //        // }
-            //    }
-            //})
         },
         /**
          *
@@ -111,9 +100,23 @@ var dto = function (dirName) {
          * @param cb
          */
         sendResource : function (id, bundle, data, cb) {
-            keyValueFileManager.saveAsKeyEqualsValue(fc.generatePathName(bundle), data.key, data.value, function (key, value) {
-                cb(key);
-                broadcast(id, bundle, {key: key, value: value});
+            jsonFileManager.getJSON(bundle.projectId + '.json', function (projectObj) {
+                console.log('dto:data', data);
+                var split = bundle.projectId.split('/');
+                // check if lang exists
+                if (!projectObj.keys[bundle.locale]) {
+                    projectObj.keys[bundle.locale] = {};
+                }
+                projectObj.keys[bundle.locale][data.key] = data.value;
+                var url = split.slice(0, split.length - 1).join('/');
+                jsonFileManager.saveJSON(url === '' ? '/' : url, bundle.project + '.json', projectObj , function (err) {
+                    cb(data.key);
+                    broadcast(id, bundle, {key: data.key, value: data.value});
+                });
+
+            //keyValueFileManager.saveAsKeyEqualsValue(fc.generatePathName(bundle), data.key, data.value, function (key, value) {
+            //
+            //});
             });
         },
         /**

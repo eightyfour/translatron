@@ -97,7 +97,7 @@ var conTrade,
                 dto.getProjectTranslation(path, projectName, cb);
             },
             sendResource : function (id, bundleObj, data, cb) {
-                // dto.sendResource.apply(null, [].slice.call(arguments));
+                dto.sendResource.apply(null, [].slice.call(arguments));
             },
             renameKey : function () {
                 // dto.renameKey.apply(null, [].slice.call(arguments));
@@ -111,7 +111,7 @@ var conTrade,
                 var nPath = sm.addFirstAndLastSlash(path);
                 getDefaultProjectJson(projectName, obj, function (json) {
                     // send back
-                    json.projectURL = nPath + projectName + '.prj';
+                    json.projectId = nPath + projectName;
                     cb(json);
                     dto.createNewProject(id, nPath, projectName, json);
                 });

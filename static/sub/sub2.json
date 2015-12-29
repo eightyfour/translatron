@@ -1,5 +1,6 @@
 {
   "project": "sub2",
+  "projectId": "/sub/sub2",
   "description": "Sub2 in a sub folder",
   "defaultLanguage": "en",
   "languages": {},
