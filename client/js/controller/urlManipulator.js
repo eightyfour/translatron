@@ -14,7 +14,7 @@ module.exports = {
     getJSON : function (data) {
         // add the project path to the URL
         if (data.project) {
-            processAjaxData({pageTitle : data.project, html:''},'/' + data.project);
+            processAjaxData({pageTitle : data.project, html:''},'/' + data.project + '.prj');
         }
     }
 };

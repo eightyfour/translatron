@@ -20,8 +20,51 @@ describe('Check that the dto.js do the job correctly', function() {
             expect(data.first_key_3).toEqual('test key number three');
         }
 
+        it("should load a project from root with /", function (fc) {
+            dto.getProjectTranslation('/', 'project1', function (data) {
+                expect(data.data).toBeDefined();
+                fc();
+            });
+        });
+
+        it("should load a project from root without /", function (fc) {
+            dto.getProjectTranslation('', 'project1', function (data) {
+                expect(data.data).toBeDefined();
+                fc();
+            });
+        });
+
+        it("should load a project from subFolder with first and last /", function (fc) {
+            dto.getProjectTranslation('/subFolder/', 'project2', function (data) {
+                expect(data.data).toBeDefined();
+                fc();
+            });
+        });
+
+        it("should load a project from subFolder without front /", function (fc) {
+            dto.getProjectTranslation('subFolder/', 'project2', function (data) {
+                expect(data.data).toBeDefined();
+                fc();
+            });
+        });
+
+        //it("should load a project from subFolder without last /", function (fc) {
+        //    dto.getProjectTranslation('/subFolder', 'project2', function (data) {
+        //        expect(data.data).toBeDefined();
+        //        fc();
+        //    });
+        //});
+        //
+        //it("should load a project from subFolder without any /", function (fc) {
+        //    dto.getProjectTranslation('/subFolder', 'project2', function (data) {
+        //        expect(data.data).toBeDefined();
+        //        fc();
+        //    });
+        //});
+
         it("should get the data correct formatted", function (fc) {
-            dto.getProjectTranslation('project1', function (data) {
+
+            dto.getProjectTranslation('/', 'project1', function (data) {
 
                 expect(data.data).toBeDefined();
 

@@ -58,18 +58,23 @@ window.toast = toast;
 
 trade.ready(function () {
     "use strict";
-    // TODO remove static project name
-//    var projectName = domOpts.params.bundle;
-    var projectName = (function () {
-        var split = location.pathname.split('/');
-        return split[split.length - 1];
+    var prj = (function getProjectNameAndPathFromURL() {
+        var split = location.pathname.split('/'),
+            path = location.pathname,
+            prjName;
+        if (/\.prj/.test(split[split.length - 1])) {
+            prjName = split[split.length - 1];
+            path = '/' + split.slice(0, split.length - 1).join('/');
+        }
+
+        return {projectName : prjName, path : path};
     }());
 
 
-    if (projectName) {
+    if (prj.projectName) {
         // this is the initial call to trigger a project load - you will get
         // the project.json and all message bundle keys
-        trade.getJSON(projectName, function (data) {
+        trade.getJSON(prj.path, prj.projectName, function (data) {
             console.log('Get project from request parameter bundle:', data);
         });
 

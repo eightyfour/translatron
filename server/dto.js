@@ -9,6 +9,8 @@ var keyValueFileManager = require('./keyValueFileManager'),
  *      broadCast : {fromBundle : null, toBundle : null},
  *      updateKey : fc()
  *  }
+ *
+ *  TODO instead of save the project JSON in the folder
  */
 var dto = function (dirName) {
     "use strict";
@@ -67,8 +69,8 @@ var dto = function (dirName) {
          * @param projectPath
          * @param cb
          */
-        getProjectTranslation : function (projectPath, cb) {
-            jsonFileManager.getJSON(projectPath + '/project.json', function (data) {
+        getProjectTranslation : function (path, project, cb) {
+            jsonFileManager.getJSON(path + project + '.json', function (data) {
                 if (data) {
                     Object.keys(data.keys).forEach(function (lang) {
                         cb({
@@ -85,17 +87,20 @@ var dto = function (dirName) {
         /**
          *
          */
-        createNewProject : function (id, projectName) {
-            console.log('client:createNewProject', id, projectName);
-            Object.keys(clientMap).forEach(function (clientIds) {
-                var client = clientMap[clientIds];
-                if (clientIds !== id) {
-                    // if (client.projectName === bundleName) {
-                    console.log('createNewProject: call client about new projectName');
-                    client.newProjectWasCreated(projectName);
-                    // }
-                }
-            })
+        createNewProject : function (id, path, projectName) {
+            console.log('client:createNewProject', id, path, projectName);
+
+            jsonFileManager.saveJSON(path + '/' + projectName + '.json', json);
+
+            //Object.keys(clientMap).forEach(function (clientIds) {
+            //    var client = clientMap[clientIds];
+            //    if (clientIds !== id) {
+            //        // if (client.projectName === bundleName) {
+            //        console.log('createNewProject: call client about new projectName');
+            //        client.newProjectWasCreated(projectName);
+            //        // }
+            //    }
+            //})
         },
         /**
          *

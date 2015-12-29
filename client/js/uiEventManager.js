@@ -18,6 +18,9 @@ var uiEvent = (function () {
         callUievent : function (eventName, args) {
             var argsList = [].slice.call(arguments, 1, arguments.length);
             if (eventQueues.hasOwnProperty(eventName)) {
+                if (eventName === 'projectSelected') {
+                    argsList = [args + '.prj'];
+                }
                 eventQueues[eventName].forEach(function (fc) {
                    fc.apply(null, argsList);
                 });

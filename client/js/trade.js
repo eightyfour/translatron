@@ -35,11 +35,19 @@ var trade = (function () {
             registeredController.push(obj);
         },
         /**
-         *
+         * loads the translation project from the actual path
          * @param bundle
          */
         getMessageBundle : function (bundle) {
-            server.getMessageBundle(bundle, function (err) {
+
+            var split = location.pathname.split('/'),
+                path = location.pathname;
+
+            if (/\.prj/.test(split[split.length - 1])) {
+                path = '/' + split.slice(0, split.length - 1).join('/');
+            }
+
+            server.getMessageBundle(path, bundle, function (err) {
                 if (err === false) {
                     console.log('trade:getMessageBundle There are no existing message bundles');
                 } else {
@@ -68,7 +76,8 @@ var trade = (function () {
          * @param obj
          */
         createNewProject : function (projectName, obj) {
-            server.createNewProject(connectionId, projectName, obj, function () {
+            var path = location.pathname;
+                server.createNewProject(connectionId, path, projectName, obj, function () {
                 var args = [].slice.call(arguments);
                 callController('createNewProject', args);
             });
@@ -157,9 +166,8 @@ var trade = (function () {
          * pass a project name or nothing
          * @param projectName
          */
-        getJSON : function (projectName) {
-            console.log('getJSON: ask for project file');
-            server.jsonFileManager.getJSON(projectName, function (error) {
+        getJSON : function (path, projectName, cb) {
+            server.jsonFileManager.getJSON(path, projectName, function (error) {
                 if (error !== false) {
                     var args = [].slice.call(arguments);
                     callController('getJSON', args);

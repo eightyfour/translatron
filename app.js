@@ -24,22 +24,22 @@ app.use('/bower_components',  express.static(__dirname + '/bower_components'));
  * If the URL has a dot inside it expect to send a files. Otherwise it sends the index.
  */
 app.get(/^((?!(\/dist|\/bower_components)).)*$/,  function (req, res) {
-    if (/\./.test(req.originalUrl)) {
-        // contains a . - looks like a file request so check the files system
-        fs.exists(__dirname + '/files' + req.originalUrl, function (exists) {
-            if (exists) {
-                res.sendFile(__dirname + '/files' + req.originalUrl);
-            } else {
-                // no file found - send 404 file
-//                res.sendFile(__dirname + '/dist/404.html');
-                res.send('404');
-            }
-        });
-
-    } else {
+//    if (/\./.test(req.originalUrl)) {
+//        // contains a . - looks like a file request so check the files system
+//        fs.exists(__dirname + '/static' + req.originalUrl, function (exists) {
+//            if (exists) {
+//                res.sendFile(__dirname + '/files' + req.originalUrl);
+//            } else {
+//                // no file found - send 404 file
+////                res.sendFile(__dirname + '/dist/404.html');
+//                res.send('404');
+//            }
+//        });
+//
+//    } else {
         // send index
         res.sendFile(__dirname + '/dist/index.html');
-    }
+    //}
 });
 
 
@@ -53,10 +53,10 @@ function getDefaultProjectJson(projectName, obj) {
         cb({
             "project" : projectName,
             "description" : obj.description || "",
-            "images" : [],
             "defaultLanguage" : data.defaultLanguage || "en",
             "numberOfKeys" : "0",
             "languages" : {},
+            "keyDescriptions" : {},
             "keys" : {}
         });
     });
@@ -92,6 +92,11 @@ var server = app.listen(serverPort);
 //});
 //dnodeCon.install(server, '/dnode');
 
+/**
+ * calculates the number of translated keys
+ * @param filesAndFolders
+ * @returns {{}}
+ */
 function getMessageBundleLanguages(filesAndFolders) {
     var availableLanguages = {},
         reg = new RegExp('messages_(.*)\.properties'),
@@ -117,10 +122,10 @@ var conTrade,
              * @param projectPath
              * @param cb
              */
-            getMessageBundle : function (projectPath, cb) {
+            getMessageBundle : function (path, projectName, cb) {
                 // read the project JSON and format the data into the old format {data:{}, language:""}
                 // TODO format can be changed later on if we want
-                dto.getProjectTranslation(projectPath, cb);
+                dto.getProjectTranslation(path, projectName, cb);
             },
             sendResource : function (id, bundleObj, data, cb) {
                 // dto.sendResource.apply(null, [].slice.call(arguments));
@@ -131,16 +136,14 @@ var conTrade,
             removeKey : function () {
                 // dto.removeKey.apply(null, [].slice.call(arguments));
             },
-            createNewProject : function (id, projectName, obj, cb) {
+            createNewProject : function (id, path, projectName, obj, cb) {
                 // TODO instead of read save the project here
                 // Add project.json template in main project.json
-                //getDefaultProjectJson(projectName, obj)(function (json) {
-                //    // send back
-                //    cb(json);
-                //    dto.createNewProject(id, projectName);
-                //    // and save config
-                //    jsonFileManager.saveJSON(projectName + '/project.json', json);
-                //});
+                getDefaultProjectJson(projectName, obj)(function (json) {
+                    // send back
+                    cb(json);
+                    dto.createNewProject(id, path, projectName);
+                });
             },
             /**
              * initial call - all client methods are saved here.
@@ -155,12 +158,13 @@ var conTrade,
              *  Rename init in getPathList
              */
             init : function (clientEvents) {
-                bash.exec({
-                    comand : C.BASH.LS,
-                    path : '.'
-                }, function (obj) {
-                    clientEvents.sendPathList(obj);
-                });
+                //bash.exec({
+                //    comand : C.BASH.LS,
+                //    path : '.'
+                //}, function (obj) {
+                //    console.log('app:sendPathList', obj);
+                //    clientEvents.sendPathList(obj);
+                //});
             },
             /**
              * TODO remove bash
@@ -201,10 +205,10 @@ var conTrade,
                 /**
                  * param: projectName(optional - otherwise take main project.json), callback
                  */
-                ret.getJSON = function (projectName, p1) {
+                ret.getJSON = function (path, projectName, p1) {
                     // only a callback is passed
-                    var cb = p1 || projectName;
-                    if (typeof projectName === 'function') {
+                    var cb = p1 || path;
+                    if (typeof path === 'function') {
                         // first bring project JSON up to date
                         fileManager.readDir('', function (filesAndFolders) {
                             var folders = [];
@@ -219,31 +223,24 @@ var conTrade,
                             });
                         })
 
-                    } else {
-                        // first bring project JSON up to date
-                        fileManager.readDir(projectName, function (filesAndFolders) {
-                            var availableLanguages;
-                            if (filesAndFolders === false) {
-                                console.log('app:getJSON The project does not exists', projectName);
-                                cb(false);
-                            } else {
-                                availableLanguages = getMessageBundleLanguages(filesAndFolders.value);
-                                jsonFileManager.getJSON(projectName + '/project.json', function (data) {
-                                    if (data) {
-                                        Object.keys(availableLanguages).forEach(function (key) {
-                                            if (!data.languages.hasOwnProperty(key)) {
-                                                data.languages[key] = availableLanguages[key];
-                                            }
-                                        });
-                                        cb(data);
-                                    } else {
-                                        console.log('app:getJSON the project specific project.json is missing for project', projectName);
-                                        cb(false);
-                                    }
-                                });
-                            }
+                    } else if (/\.prj/.test(projectName)) {
+                        // ask for a project JSON
+                        (function loadProjectJSON() {
+                            var prjName = projectName.split('.')[0];
 
-                        });
+                            jsonFileManager.getJSON(path + prjName + '.json', function (data) {
+                                if (data) {
+                                    // initialize all languages with default -1
+                                    Object.keys(data.keys).forEach(function (lang) {
+                                        data.languages[lang] = {translated : -1};
+                                    });
+                                    cb(data);
+                                } else {
+                                    console.log('app:getJSON the project specific project.json is missing for project', projectName);
+                                    cb(false);
+                                }
+                            });
+                        }());
                     }
                 };
                 return ret;

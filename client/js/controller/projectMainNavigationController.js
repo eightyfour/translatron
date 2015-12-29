@@ -112,8 +112,18 @@ uiEvents.addUiEventListener({
     },
     projectSelected : function (projectName) {
         console.log('projectMainNavigationController:projectSelected Click on project', projectName);
-        trade.getJSON(projectName, function (data) {
-            console.log('Get project json:', data);
+        var path = (function () {
+            var split = location.pathname.split('/'),
+                path = location.pathname;
+            if (/\.prj/.test(split[split.length - 1])) {
+                path = '/' + split.slice(0, split.length - 1).join('/');
+            }
+
+            return path;
+        }());
+
+        trade.getJSON(path, projectName, function (data) {
+            console.log('Get project JSON:', data);
         });
     },
     activateLanguage : function (lang) {
