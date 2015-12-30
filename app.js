@@ -134,18 +134,19 @@ var conTrade,
                  * @param cb
                  */
                 ret.saveJSON = function (projectName, data, merge, cb) {
-                    if (merge) {
-                        jsonFileManager.getJSON(projectName + '/project.json', function (oldData) {
-                            Object.keys(data).forEach(function (key) {
-                                oldData[key] = data[key];
-                            });
-                            jsonFileManager.saveJSON(projectName + '/project.json', oldData, cb);
-                            console.log('app:saveJSON', projectName, oldData);
-                        });
-                    } else {
-                        jsonFileManager.saveJSON(projectName + '/project.json', oldData, cb);
-                        console.log('app:saveJSON', projectName, data);
-                    }
+                    // TODO save this in the description field from the [project name].json
+                    //if (merge) {
+                    //    jsonFileManager.getJSON('/' + projectName + '/project.json', function (oldData) {
+                    //        Object.keys(data).forEach(function (key) {
+                    //            oldData[key] = data[key];
+                    //        });
+                    //        jsonFileManager.saveJSON(projectName + '/project', oldData, cb);
+                    //        console.log('app:saveJSON', projectName, oldData);
+                    //    });
+                    //} else {
+                    //    jsonFileManager.saveJSON(projectName + '/project', oldData, cb);
+                    //    console.log('app:saveJSON', projectName, data);
+                    //}
                 };
 
                 /**
@@ -170,7 +171,7 @@ var conTrade,
                                 });
                             }
                             // load the default root project.json
-                            jsonFileManager.getJSON('project.json', function (data) {
+                            jsonFileManager.getJSON('/project.json', function (data) {
                                 data.projects = folders;
                                 cb(data);
                             });
@@ -181,7 +182,7 @@ var conTrade,
                         (function loadProjectJSON() {
                             var prjName = projectName.split('.')[0];
 
-                            jsonFileManager.getJSON(path + '/' + prjName + '.json', function (data) {
+                            jsonFileManager.getJSON('/' + path + '/' + prjName + '.json', function (data) {
                                 if (data) {
                                     // initialize all languages with default -1
                                     Object.keys(data.keys).forEach(function (lang) {
