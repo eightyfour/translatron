@@ -78,7 +78,7 @@ describe('Check that the dto.js do the job correctly', () => {
 
     });
 
-    describe("the createNewProject method", () => {
+    describe("and", () => {
         var project,
             folder = '/dummy';
 
@@ -90,38 +90,67 @@ describe('Check that the dto.js do the job correctly', () => {
             });
         });
 
-        it("should return the JSON", () => {
-            expect(project).toBeDefined();
-        });
+        describe("create a project", () => {
 
-        it("should have the correct default values", () => {
-            expect(project.description).toEqual('');
-            expect(project.languages).toEqual({});
-            expect(project.keyDescriptions).toEqual({});
-            expect(project.numberOfKeys).toEqual(0);
-            expect(project.keys).toEqual({});
-            expect(project.project).toEqual('test');
-            expect(project.projectId).toEqual('/dummy/test');
-        });
 
-        it("should accept a default description", (done) => {
-            // id, path, projectName, obj, cb
-            dto.createNewProject('id_0', folder, 'test2', {description : 'My default description!'}, (data) => {
-                expect(data.description).toEqual('My default description!');
-                done();
+            it("should return the JSON", () => {
+                expect(project).toBeDefined();
+            });
+
+            it("should have the correct default values", () => {
+                expect(project.description).toEqual('');
+                expect(project.languages).toEqual({});
+                expect(project.keyDescriptions).toEqual({});
+                expect(project.numberOfKeys).toEqual(0);
+                expect(project.keys).toEqual({});
+                expect(project.project).toEqual('test');
+                expect(project.projectId).toEqual('/dummy/test');
+            });
+
+            it("should accept a default description", (done) => {
+                // id, path, projectName, obj, cb
+                dto.createNewProject('id_0', folder, 'test2', {description : 'My default description!'}, (data) => {
+                    expect(data.description).toEqual('My default description!');
+                    done();
+                });
+            });
+
+            it("should save the json to the file system", (done) => {
+                dto.getProjectTranslation(folder, 'test', (data) => {
+                    // check if false is ok... the project exists but contains no keys for translation
+                    expect(data).toEqual(false);
+                    done();
+                });
             });
         });
 
-        it("should save the json to the file system", (done) => {
-            dto.getProjectTranslation(folder, 'test', (data) => {
-                // check if false is ok... the project exists but contains no keys for translation
-                expect(data).toEqual(false);
-                done();
+        describe("and update the resources", () => {
+
+            var key_1;
+
+            beforeAll((done) => {
+                dto.sendResource("xx", {projectId : project.projectId, locale : 'de'}, {key: "key_1", value : "test text DE"}, (key) => {
+                    key_1 = key;
+                    done();
+                });
             });
+
+            it("should return the updated key", () => {
+                expect(key_1).toEqual('key_1');
+            });
+
+            it("should have persist it", (done) => {
+                dto.getProjectTranslation(folder, 'test', (data) => {
+                    expect(data.data).toEqual({'key_1': 'test text DE'});
+                    expect(data.language).toEqual('de');
+                    done();
+                });
+            });
+
         });
 
+        // delete the created files
         afterAll((done) => {
-            // delete the created files
             Promise.resolve()
                 .then(() => new Promise((fulFill, reject) =>
                     fs.unlink(projectFolder + folder + "/test.json", fulFill)
