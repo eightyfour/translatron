@@ -4,14 +4,7 @@
   "description": "This is only for testing the test application. Use it for free",
   "defaultLanguage": "en",
   "numberOfKeys": "10",
-  "languages": {
-    "de": {
-      "translated": "4"
-    },
-    "en": {
-      "translated": "10"
-    }
-  },
+  "languages": {},
   "keyDescriptions": {
     "first": {
       "__description": "Description for the category",

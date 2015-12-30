@@ -1,4 +1,17 @@
 {
-    "defaultLanguage" : "en",
-    "languages" : ["en","de","fr","es","nl","da","sv","en_GB"]
+  "defaultLanguage": "en",
+  "numberOfKeys": 0,
+  "description": "",
+  "languages": [
+    "en",
+    "de",
+    "fr",
+    "es",
+    "nl",
+    "da",
+    "sv",
+    "en_GB"
+  ],
+  "keyDescriptions": {},
+  "keys": {}
 }

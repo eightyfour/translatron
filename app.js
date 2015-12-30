@@ -52,23 +52,6 @@ app.get(/^((?!(\/dist|\/bower_components)).)*$/,  function (req, res) {
     //}
 });
 
-
-// TODO move the create project in a separate file
-function getDefaultProjectJson(projectName, obj, cb) {
-    jsonFileManager.getJSON('project.json', function (data) {
-        cb({
-            "project" : projectName,
-            "description" : obj.description || "",
-            "defaultLanguage" : data.defaultLanguage || "en",
-            "numberOfKeys" : "0",
-            "languages" : {},
-            "keyDescriptions" : {},
-            "keys" : {}
-        });
-    });
-}
-
-
 /**
  * If no project exists I ignore the bundle attribute and open the project create view with the bundle name as default...
  * Only if the create project is triggered only than create a new project.
@@ -106,15 +89,7 @@ var conTrade,
                 // dto.removeKey.apply(null, [].slice.call(arguments));
             },
             createNewProject : function (id, path, projectName, obj, cb) {
-                // TODO instead of read save the project here
-                // Add project.json template in main project.json
-                var nPath = sm.addFirstAndLastSlash(path);
-                getDefaultProjectJson(projectName, obj, function (json) {
-                    // send back
-                    json.projectId = nPath + projectName;
-                    cb(json);
-                    dto.createNewProject(id, nPath, projectName, json);
-                });
+                dto.createNewProject(id, path, projectName, obj, cb);
             },
             /**
              * initial call - all client methods are saved here.
