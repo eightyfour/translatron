@@ -158,6 +158,9 @@ describe('Check that the dto.js do the job correctly', () => {
                 .then(() => new Promise((fulFill, reject) =>
                     fs.unlink(projectFolder + folder + "/test2.json", fulFill)
                 ))
+                .then(() => new Promise((fulFill, reject) =>
+                    fs.rmdir(projectFolder + folder, fulFill)
+                ))
                 .then(done)
                 .catch((err) => console.log('dtoSpec:err', err));
         });
