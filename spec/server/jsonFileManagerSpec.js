@@ -31,14 +31,14 @@ describe('Check that the jsonFileManager works', () => {
     });
 
     afterAll((done) => {
-        Promise.resolve()
-            .then(() => new Promise((fulFill, reject) =>
+        Promise.all([
+            new Promise((fulFill, reject) =>
                 fs.unlink(projectFolder + "/jsonFileManager/test.json", fulFill)
-            ))
-            .then(() => new Promise((fulFill, reject) =>
+            ),
+            new Promise((fulFill, reject) =>
                 fs.rmdir(projectFolder + "/jsonFileManager", fulFill)
-            ))
-            .then(done)
+            )
+        ]).then(done)
             .catch((err) => console.log('jsonFileManagerSpec:err', err));
     });
 });

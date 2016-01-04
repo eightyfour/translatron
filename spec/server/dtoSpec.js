@@ -151,13 +151,15 @@ describe('Check that the dto.js do the job correctly', () => {
 
         // delete the created files
         afterAll((done) => {
-            Promise.resolve()
-                .then(() => new Promise((fulFill, reject) =>
+
+            Promise.all([
+                new Promise((fulFill, reject) =>
                     fs.unlink(projectFolder + folder + "/test.json", fulFill)
-                ))
-                .then(() => new Promise((fulFill, reject) =>
+                ),
+                new Promise((fulFill, reject) =>
                     fs.unlink(projectFolder + folder + "/test2.json", fulFill)
-                ))
+                )
+            ])
                 .then(() => new Promise((fulFill, reject) =>
                     fs.rmdir(projectFolder + folder, fulFill)
                 ))
