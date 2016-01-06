@@ -62,17 +62,21 @@ describe('Check that the dto.js do the job correctly', () => {
         //});
 
         it("should get the data correct formatted", (done) => {
-
+            var testBoth = 0;
             dto.getProjectTranslation('/', 'project1', (data) => {
 
                 expect(data.data).toBeDefined();
 
                 if (data.language === 'de') {
+                    testBoth++;
                     testDE(data.data);
                 } else {
+                    testBoth++;
                     testEN(data.data);
                 }
-                done();
+                if (testBoth === 2) {
+                    done();
+                }
             });
         });
 
@@ -129,9 +133,13 @@ describe('Check that the dto.js do the job correctly', () => {
             var key_1;
 
             beforeAll((done) => {
+                // create DE key
                 dto.sendResource("xx", {projectId : project.projectId, locale : 'de'}, {key: "key_1", value : "test text DE"}, (key) => {
                     key_1 = key;
-                    done();
+                    // create EN key
+                    dto.sendResource("xx", {projectId : project.projectId, locale : 'en'}, {key: "key_1", value : "test text EN"}, (key) => {
+                        done();
+                    });
                 });
             });
 
@@ -140,18 +148,87 @@ describe('Check that the dto.js do the job correctly', () => {
             });
 
             it("should have persist it", (done) => {
+                var testBoth = 0;
                 dto.getProjectTranslation(folder, 'test', (data) => {
-                    expect(data.data).toEqual({'key_1': 'test text DE'});
-                    expect(data.language).toEqual('de');
+
+                    expect(data.data).toBeDefined();
                     done();
+                    if (data.language === 'de') {
+                        expect(data.data.key_1).toEqual('test text DE');
+                        testBoth++;
+                    } else {
+                        expect(data.data.key_1).toEqual('test text EN');
+                        expect(data.language).toEqual('en');
+                        testBoth++;
+
+                    }
+                    if (testBoth === 2) {
+                        done();
+                    }
                 });
             });
 
         });
 
+        describe("and rename a key", () => {
+
+            var returnOldKey, returnNewKey;
+
+            beforeAll((done) => {
+                dto.renameKey("xx", project.projectId, {newKey: "key_1_new", oldKey : "key_1"}, (oldKey, newKey) => {
+                    returnOldKey = oldKey;
+                    returnNewKey = newKey;
+                    done();
+                });
+            });
+
+            it("should call the callback with the old and new key", () => {
+                expect(returnOldKey).toEqual('key_1');
+                expect(returnNewKey).toEqual('key_1_new');
+            });
+
+            it("should have deleted the old key", (done) => {
+                dto.getProjectTranslation(folder, 'test', (data) => {
+                    expect(data.data.key_1).toBeUndefined();
+                    done();
+                });
+            });
+
+            it("should have created a new key", (done) => {
+                dto.getProjectTranslation(folder, 'test', (data) => {
+                    expect(data.data.key_1_new).toBeDefined();
+                    done();
+                });
+            });
+
+            it("should have updated all existing languages", (done) => {
+                var testBoth = 0;
+                dto.getProjectTranslation(folder, 'test', (data) => {
+                    if (data.language === 'de') {
+                        expect(data.data.key_1_new).toEqual('test text DE');
+                        testBoth++;
+                    } else {
+                        expect(data.data.key_1_new).toEqual('test text EN');
+                        testBoth++;
+                    }
+                    if (testBoth === 2) {
+                        done();
+                    }
+                });
+            });
+
+            afterAll((done) => {
+                // rename the key_1_new back to key_1
+                dto.renameKey("xx", project.projectId, {newKey: "key_1", oldKey : "key_1_new"}, (oldKey, newKey) => {
+                    done();
+                });
+            });
+        });
+
         // delete the created files
         afterAll((done) => {
-
+            //done();
+            //return;
             Promise.all([
                 new Promise((fulFill, reject) =>
                     fs.unlink(projectFolder + folder + "/test.json", fulFill)
