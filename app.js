@@ -84,7 +84,7 @@ var conTrade,
                 dto.renameKey.apply(null, [].slice.call(arguments));
             },
             removeKey : function () {
-                // dto.removeKey.apply(null, [].slice.call(arguments));
+                dto.removeKey.apply(null, [].slice.call(arguments));
             },
             createNewProject : function (id, path, projectName, obj, cb) {
                 dto.createNewProject(id, path, projectName, obj, cb);

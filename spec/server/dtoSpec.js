@@ -3,6 +3,9 @@ var dto = require('../../lib/server/dto')(__dirname + '/spec/server/fixtures/'),
 
 global.projectFolder = __dirname + '/fixtures';
 
+/**
+ * TODO add the whole description tests for dto - if a key was renamed or deleted the description needs also to be updated
+ */
 describe('Check that the dto.js do the job correctly', () => {
 
     it('should have a dto instance', () => expect(dto).toBeDefined());
@@ -170,6 +173,9 @@ describe('Check that the dto.js do the job correctly', () => {
 
         });
 
+        /**
+         * TODO The rename key needs also to rename the key in the description section.
+         */
         describe("and rename a key", () => {
 
             var returnOldKey, returnNewKey;
@@ -221,6 +227,52 @@ describe('Check that the dto.js do the job correctly', () => {
                 // rename the key_1_new back to key_1
                 dto.renameKey("xx", project.projectId, {newKey: "key_1", oldKey : "key_1_new"}, (oldKey, newKey) => {
                     done();
+                });
+            });
+        });
+
+
+        /**
+         * TODO The removeKey needs also to remove the key in the description section.
+         */
+        describe("and remove a key", () => {
+
+            var returnKey;
+
+            beforeAll((done) => {
+                dto.removeKey("xx", project.projectId, "key_1", (keyName) => {
+                    returnKey = keyName;
+                    done();
+                });
+            });
+
+            it("should call the callback with the removed key", () => {
+                expect(returnKey).toEqual('key_1');
+            });
+
+            it("should have removed all keys from all existing languages", (done) => {
+                var testBoth = 0;
+                dto.getProjectTranslation(folder, 'test', (data) => {
+                    if (data.language === 'de') {
+                        expect(data.data.key_1).toBeUndefined();
+                        testBoth++;
+                    } else {
+                        expect(data.data.key_1).toBeUndefined();
+                        testBoth++;
+                    }
+                    if (testBoth === 2) {
+                        done();
+                    }
+                });
+            });
+
+            afterAll((done) => {
+                // restore the removed keys
+                dto.sendResource("xx", {projectId : project.projectId, locale : 'de'}, {key: "key_1", value : "test text DE"}, () => {
+                    // create EN key
+                    dto.sendResource("xx", {projectId : project.projectId, locale : 'en'}, {key: "key_1", value : "test text EN"}, () => {
+                        done();
+                    });
                 });
             });
         });
