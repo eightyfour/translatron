@@ -37,3 +37,4 @@ Or run both with:
 npm test
 ```
 All test files are in the spec folder separated by client and server folder.
+
