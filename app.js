@@ -43,7 +43,7 @@ app.get(/^((?!(\/dist|\/bower_components)).)*$/,  function (req, res) {
         res.sendFile(__dirname + '/dist/index.html');
     } else {
         // else if there is no extension just show the project overview page
-        // send index
+        // for the first send index so far we have nothing else
         res.sendFile(__dirname + '/dist/index.html');
     }
 
@@ -81,7 +81,7 @@ var conTrade,
                 dto.sendResource.apply(null, [].slice.call(arguments));
             },
             renameKey : function () {
-                // dto.renameKey.apply(null, [].slice.call(arguments));
+                dto.renameKey.apply(null, [].slice.call(arguments));
             },
             removeKey : function () {
                 // dto.removeKey.apply(null, [].slice.call(arguments));
