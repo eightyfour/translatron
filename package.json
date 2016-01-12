@@ -22,11 +22,13 @@
     "port": "3000"
   },
   "scripts": {
+    "postinstall" : "bower install",
     "test": "jasmine && karma start karma.conf.js",
     "prestart": "browserify lib/client/js/main.js -o dist/js/translatron.js && lessc lib/client/less/main.less dist/css/translatron.css",
-    "start": "forever -w start app.js && watchify lib/client/js/main.js -o dist/js/translatron.js -v"
+    "start": "node app.js"
   },
   "devDependencies": {
+    "bower": "^1.7.2",
     "jasmine": "^2.3.2",
     "jasmine-core": "^2.3.4",
     "karma": "^0.13.9",
