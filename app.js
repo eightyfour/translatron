@@ -97,13 +97,6 @@ var conTrade,
                 // TODO draft: authenticate the client - and pass the name to the setupClient
                 dao.setupClient.apply(null, [].slice.call(arguments));
             },
-            /**
-             *  TODO refactor - do it only if the client ask for - methods are saved in client
-             *  Rename init in getPathList
-             */
-            init : function (clientEvents) {
-               console.log('app:NOT NEEDED ANYMORE');
-            },
             fileManager : fileManager,
             jsonFileManager : (function () {
                 var ret = {};
