@@ -1,7 +1,6 @@
-var dao = require('../../lib/server/dao')(__dirname + '/spec/server/fixtures/'),
+var projectFolder = __dirname + '/fixtures/',
+    dao = require('../../lib/server/dao')(projectFolder),
     fs = require('fs');
-
-global.projectFolder = __dirname + '/fixtures';
 
 /**
  * TODO add the whole description tests for dao - if a key was renamed or deleted the description needs also to be updated

@@ -18,9 +18,9 @@
       "first_key_2": "test Schluessel Nummer Zwei"
     },
     "en": {
+      "first_key_3": "test key number three 3",
       "first_key_1": "test key number one 1",
-      "first_key_2": "test key number two 2",
-      "first_key_3": "test key number three 3"
+      "first_key_2": "test key number two 2"
     }
   }
 }

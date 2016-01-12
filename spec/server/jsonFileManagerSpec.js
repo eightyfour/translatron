@@ -1,7 +1,6 @@
-var fileMgr = require('../../lib/server/legacy/jsonFileManager'),
+var projectFolder = __dirname + '/fixtures/',
+    fileMgr = require('../../lib/server/legacy/jsonFileManager')(projectFolder),
     fs = require('fs');
-
-global.projectFolder = __dirname + '/fixtures';
 
 describe('Check that the jsonFileManager works', () => {
 
