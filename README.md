@@ -17,7 +17,7 @@ All required modules will be installed.
 #start
 To start the application just execute the app.js with node.
 ```sh
-node app.js
+npm start
 ```
 
 ##test setup
