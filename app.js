@@ -1,18 +1,17 @@
 /*global console */
 /*jslint node: true */
-var express = require('express'),
+var projectFolder = __dirname + '/static',
+    express = require('express'),
     fs = require('fs'),
     shoe = require('shoe'),
     dnode = require('dnode'),
-    dao = require('./lib/server/dao.js')(__dirname + '/static/'),
-    fileManager = require('./lib/server/legacy/fileManager.js'),
+    dao = require('./lib/server/dao.js')(projectFolder),
+    fileManager = require('./lib/server/legacy/fileManager.js')(projectFolder),
     bash = require('./lib/server/legacy/bash.js'),
     serverPort = process.env.npm_package_config_port || 3000,
-    jsonFileManager = require('./lib/server/legacy/jsonFileManager');
+    jsonFileManager = require('./lib/server/legacy/jsonFileManager')(projectFolder);
 
 var app = express();
-// TODO avoid global scope definements
-global.projectFolder = __dirname + '/static';
 
 app.use('/dist',express.static(__dirname + '/dist'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
