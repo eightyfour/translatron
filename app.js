@@ -12,7 +12,9 @@ var projectFolder = __dirname + '/static',
 
 var app = express();
 
+// configure static URL's for static:
 app.use('/dist',express.static(__dirname + '/dist'));
+// and bower files:
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
 /**
