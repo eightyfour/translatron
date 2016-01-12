@@ -7,7 +7,6 @@ var projectFolder = __dirname + '/static',
     dnode = require('dnode'),
     dao = require('./lib/server/dao.js')(projectFolder),
     fileManager = require('./lib/server/legacy/fileManager.js')(projectFolder),
-    bash = require('./lib/server/legacy/bash.js'),
     serverPort = process.env.npm_package_config_port || 3000,
     jsonFileManager = require('./lib/server/legacy/jsonFileManager')(projectFolder);
 
@@ -101,18 +100,8 @@ var conTrade,
              *  Rename init in getPathList
              */
             init : function (clientEvents) {
-                //bash.exec({
-                //    comand : C.BASH.LS,
-                //    path : '.'
-                //}, function (obj) {
-                //    console.log('app:sendPathList', obj);
-                //    clientEvents.sendPathList(obj);
-                //});
+               console.log('app:NOT NEEDED ANYMORE');
             },
-            /**
-             * TODO remove bash
-             */
-            bash : bash,
             fileManager : fileManager,
             jsonFileManager : (function () {
                 var ret = {};
