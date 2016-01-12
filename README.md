@@ -14,6 +14,12 @@ npm install
 ```
 All required modules will be installed.
 
+#start
+To start the application just execute the app.js with node.
+```sh
+node app.js
+```
+
 ##test setup
 There are two types of test:
  
