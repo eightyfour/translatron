@@ -1,14 +1,14 @@
-var dto = require('../../lib/server/dto')(__dirname + '/spec/server/fixtures/'),
+var dao = require('../../lib/server/dao')(__dirname + '/spec/server/fixtures/'),
     fs = require('fs');
 
 global.projectFolder = __dirname + '/fixtures';
 
 /**
- * TODO add the whole description tests for dto - if a key was renamed or deleted the description needs also to be updated
+ * TODO add the whole description tests for dao - if a key was renamed or deleted the description needs also to be updated
  */
-describe('Check that the dto.js do the job correctly', () => {
+describe('Check that the dao.js do the job correctly', () => {
 
-    it('should have a dto instance', () => expect(dto).toBeDefined());
+    it('should have a dao instance', () => expect(dao).toBeDefined());
 
     describe("the getProjectTranslation method", () => {
 
@@ -23,42 +23,42 @@ describe('Check that the dto.js do the job correctly', () => {
         }
 
         it("should load a project from root with /", (done) => {
-            dto.getProjectTranslation('/', 'project1', (data) => {
+            dao.getProjectTranslation('/', 'project1', (data) => {
                 expect(data.data).toBeDefined();
                 done();
             });
         });
 
         it("should load a project from root without /", (done) => {
-            dto.getProjectTranslation('', 'project1', (data) => {
+            dao.getProjectTranslation('', 'project1', (data) => {
                 expect(data.data).toBeDefined();
                 done();
             });
         });
 
         it("should load a project from subFolder with first and last /", (done) => {
-            dto.getProjectTranslation('/subFolder/', 'project2', (data) => {
+            dao.getProjectTranslation('/subFolder/', 'project2', (data) => {
                 expect(data.data).toBeDefined();
                 done();
             });
         });
 
         it("should load a project from subFolder without front /", (done) => {
-            dto.getProjectTranslation('subFolder/', 'project2', (data) => {
+            dao.getProjectTranslation('subFolder/', 'project2', (data) => {
                 expect(data.data).toBeDefined();
                 done();
             });
         });
 
         //it("should load a project from subFolder without last /", function (fc) {
-        //    dto.getProjectTranslation('/subFolder', 'project2', function (data) {
+        //    dao.getProjectTranslation('/subFolder', 'project2', function (data) {
         //        expect(data.data).toBeDefined();
         //        fc();
         //    });
         //});
         //
         //it("should load a project from subFolder without any /", function (fc) {
-        //    dto.getProjectTranslation('/subFolder', 'project2', function (data) {
+        //    dao.getProjectTranslation('/subFolder', 'project2', function (data) {
         //        expect(data.data).toBeDefined();
         //        fc();
         //    });
@@ -66,7 +66,7 @@ describe('Check that the dto.js do the job correctly', () => {
 
         it("should get the data correct formatted", (done) => {
             var testBoth = 0;
-            dto.getProjectTranslation('/', 'project1', (data) => {
+            dao.getProjectTranslation('/', 'project1', (data) => {
 
                 expect(data.data).toBeDefined();
 
@@ -91,7 +91,7 @@ describe('Check that the dto.js do the job correctly', () => {
 
         beforeAll((done) => {
             // id, path, projectName, obj, cb
-            dto.createNewProject('id_0', folder, 'test', {}, (data) => {
+            dao.createNewProject('id_0', folder, 'test', {}, (data) => {
                 project = data;
                 done();
             });
@@ -116,14 +116,14 @@ describe('Check that the dto.js do the job correctly', () => {
 
             it("should accept a default description", (done) => {
                 // id, path, projectName, obj, cb
-                dto.createNewProject('id_0', folder, 'test2', {description : 'My default description!'}, (data) => {
+                dao.createNewProject('id_0', folder, 'test2', {description : 'My default description!'}, (data) => {
                     expect(data.description).toEqual('My default description!');
                     done();
                 });
             });
 
             it("should save the json to the file system", (done) => {
-                dto.getProjectTranslation(folder, 'test', (data) => {
+                dao.getProjectTranslation(folder, 'test', (data) => {
                     // check if false is ok... the project exists but contains no keys for translation
                     expect(data).toEqual(false);
                     done();
@@ -137,10 +137,10 @@ describe('Check that the dto.js do the job correctly', () => {
 
             beforeAll((done) => {
                 // create DE key
-                dto.sendResource("xx", {projectId : project.projectId, locale : 'de'}, {key: "key_1", value : "test text DE"}, (key) => {
+                dao.sendResource("xx", {projectId : project.projectId, locale : 'de'}, {key: "key_1", value : "test text DE"}, (key) => {
                     key_1 = key;
                     // create EN key
-                    dto.sendResource("xx", {projectId : project.projectId, locale : 'en'}, {key: "key_1", value : "test text EN"}, (key) => {
+                    dao.sendResource("xx", {projectId : project.projectId, locale : 'en'}, {key: "key_1", value : "test text EN"}, (key) => {
                         done();
                     });
                 });
@@ -152,7 +152,7 @@ describe('Check that the dto.js do the job correctly', () => {
 
             it("should have persist it", (done) => {
                 var testBoth = 0;
-                dto.getProjectTranslation(folder, 'test', (data) => {
+                dao.getProjectTranslation(folder, 'test', (data) => {
 
                     expect(data.data).toBeDefined();
                     done();
@@ -181,7 +181,7 @@ describe('Check that the dto.js do the job correctly', () => {
             var returnOldKey, returnNewKey;
 
             beforeAll((done) => {
-                dto.renameKey("xx", project.projectId, {newKey: "key_1_new", oldKey : "key_1"}, (oldKey, newKey) => {
+                dao.renameKey("xx", project.projectId, {newKey: "key_1_new", oldKey : "key_1"}, (oldKey, newKey) => {
                     returnOldKey = oldKey;
                     returnNewKey = newKey;
                     done();
@@ -194,14 +194,14 @@ describe('Check that the dto.js do the job correctly', () => {
             });
 
             it("should have deleted the old key", (done) => {
-                dto.getProjectTranslation(folder, 'test', (data) => {
+                dao.getProjectTranslation(folder, 'test', (data) => {
                     expect(data.data.key_1).toBeUndefined();
                     done();
                 });
             });
 
             it("should have created a new key", (done) => {
-                dto.getProjectTranslation(folder, 'test', (data) => {
+                dao.getProjectTranslation(folder, 'test', (data) => {
                     expect(data.data.key_1_new).toBeDefined();
                     done();
                 });
@@ -209,7 +209,7 @@ describe('Check that the dto.js do the job correctly', () => {
 
             it("should have updated all existing languages", (done) => {
                 var testBoth = 0;
-                dto.getProjectTranslation(folder, 'test', (data) => {
+                dao.getProjectTranslation(folder, 'test', (data) => {
                     if (data.language === 'de') {
                         expect(data.data.key_1_new).toEqual('test text DE');
                         testBoth++;
@@ -225,7 +225,7 @@ describe('Check that the dto.js do the job correctly', () => {
 
             afterAll((done) => {
                 // rename the key_1_new back to key_1
-                dto.renameKey("xx", project.projectId, {newKey: "key_1", oldKey : "key_1_new"}, (oldKey, newKey) => {
+                dao.renameKey("xx", project.projectId, {newKey: "key_1", oldKey : "key_1_new"}, (oldKey, newKey) => {
                     done();
                 });
             });
@@ -240,7 +240,7 @@ describe('Check that the dto.js do the job correctly', () => {
             var returnKey;
 
             beforeAll((done) => {
-                dto.removeKey("xx", project.projectId, "key_1", (keyName) => {
+                dao.removeKey("xx", project.projectId, "key_1", (keyName) => {
                     returnKey = keyName;
                     done();
                 });
@@ -252,7 +252,7 @@ describe('Check that the dto.js do the job correctly', () => {
 
             it("should have removed all keys from all existing languages", (done) => {
                 var testBoth = 0;
-                dto.getProjectTranslation(folder, 'test', (data) => {
+                dao.getProjectTranslation(folder, 'test', (data) => {
                     if (data.language === 'de') {
                         expect(data.data.key_1).toBeUndefined();
                         testBoth++;
@@ -268,9 +268,9 @@ describe('Check that the dto.js do the job correctly', () => {
 
             afterAll((done) => {
                 // restore the removed keys
-                dto.sendResource("xx", {projectId : project.projectId, locale : 'de'}, {key: "key_1", value : "test text DE"}, () => {
+                dao.sendResource("xx", {projectId : project.projectId, locale : 'de'}, {key: "key_1", value : "test text DE"}, () => {
                     // create EN key
-                    dto.sendResource("xx", {projectId : project.projectId, locale : 'en'}, {key: "key_1", value : "test text EN"}, () => {
+                    dao.sendResource("xx", {projectId : project.projectId, locale : 'en'}, {key: "key_1", value : "test text EN"}, () => {
                         done();
                     });
                 });

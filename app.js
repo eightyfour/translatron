@@ -4,7 +4,7 @@ var express = require('express'),
     fs = require('fs'),
     shoe = require('shoe'),
     dnode = require('dnode'),
-    dto = require('./lib/server/dto.js')(__dirname + '/static/'),
+    dao = require('./lib/server/dao.js')(__dirname + '/static/'),
     fileManager = require('./lib/server/legacy/fileManager.js'),
     bash = require('./lib/server/legacy/bash.js'),
     serverPort = process.env.npm_package_config_port || 3000,
@@ -75,19 +75,19 @@ var conTrade,
             getMessageBundle : function (path, projectName, cb) {
                 // read the project JSON and format the data into the old format {data:{}, language:""}
                 // TODO format can be changed later if we want
-                dto.getProjectTranslation(path, projectName, cb);
+                dao.getProjectTranslation(path, projectName, cb);
             },
             sendResource : function (id, bundleObj, data, cb) {
-                dto.sendResource.apply(null, [].slice.call(arguments));
+                dao.sendResource.apply(null, [].slice.call(arguments));
             },
             renameKey : function () {
-                dto.renameKey.apply(null, [].slice.call(arguments));
+                dao.renameKey.apply(null, [].slice.call(arguments));
             },
             removeKey : function () {
-                dto.removeKey.apply(null, [].slice.call(arguments));
+                dao.removeKey.apply(null, [].slice.call(arguments));
             },
             createNewProject : function (id, path, projectName, obj, cb) {
-                dto.createNewProject(id, path, projectName, obj, cb);
+                dao.createNewProject(id, path, projectName, obj, cb);
             },
             /**
              * initial call - all client methods are saved here.
@@ -95,7 +95,7 @@ var conTrade,
              */
             setupClient : function () {
                 // TODO draft: authenticate the client - and pass the name to the setupClient
-                dto.setupClient.apply(null, [].slice.call(arguments));
+                dao.setupClient.apply(null, [].slice.call(arguments));
             },
             /**
              *  TODO refactor - do it only if the client ask for - methods are saved in client
