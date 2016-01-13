@@ -66,16 +66,20 @@ body.invert ::-webkit-scrollbar-thumb {background-color: #131313;}
 
 @octicons-font-path: '../octicons';
 
-header.header {
+.fullWidthDarkBar {
   height: @header-height;
   padding-left: @header-height;
   width: 100%;
   position: fixed;
-  top: 0;
   left: 0;
   background-color: #303030;
   z-index: 20;
   color:white;
+}
+
+header.header {
+  &:extend(.fullWidthDarkBar);
+  top: 0;
 
   .beforeText{
     margin: .5em 1em 0 1em;
@@ -90,6 +94,11 @@ header.header {
       font-size: 4.2em;
     }
   }
+}
+
+footer.footer {
+  &:extend(.fullWidthDarkBar);
+  bottom: 0;
 }
 
 #fileManager .switchLink{display: block;}
