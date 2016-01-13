@@ -8,7 +8,8 @@ var projectFolder = __dirname + '/static',
     dao = require('./lib/server/dao.js')(projectFolder),
     fileManager = require('./lib/server/legacy/fileManager.js')(projectFolder),
     serverPort = process.env.npm_package_config_port || 3000,
-    jsonFileManager = require('./lib/server/legacy/jsonFileManager')(projectFolder);
+    jsonFileManager = require('./lib/server/legacy/jsonFileManager')(projectFolder),
+    jade = require('jade');
 
 var app = express();
 
@@ -17,37 +18,14 @@ app.use('/dist',express.static(__dirname + '/dist'));
 // and bower files:
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
+var indexPage = jade.compileFile('./lib/client/jade/index.jade')();
 /**
  * match except for folder dist and bower_components
  *
  * If the URL has a dot inside it expect to send a files. Otherwise it sends the index.
  */
 app.get(/^((?!(\/dist|\/bower_components)).)*$/,  function (req, res) {
-//    if (/\./.test(req.originalUrl)) {
-//        // contains a . - looks like a file request so check the files system
-//        fs.exists(__dirname + '/static' + req.originalUrl, function (exists) {
-//            if (exists) {
-//                res.sendFile(__dirname + '/files' + req.originalUrl);
-//            } else {
-//                // no file found - send 404 file
-////                res.sendFile(__dirname + '/dist/404.html');
-//                res.send('404');
-//            }
-//        });
-//
-//    } else {
-    // TODO check the extension
-
-    // if the extension is .prj it is a project file
-    if (/\.prj/.test(req.originalUrl)) {
-        res.sendFile(__dirname + '/dist/index.html');
-    } else {
-        // else if there is no extension just show the project overview page
-        // for the first send index so far we have nothing else
-        res.sendFile(__dirname + '/dist/index.html');
-    }
-
-    //}
+    res.send(indexPage);
 });
 
 /**

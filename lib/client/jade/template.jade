@@ -1,0 +1,16 @@
+doctype html
+html
+  head
+    title Resource bundle manager
+    link(rel='stylesheet', type='text/css', href='/dist/css/translatron.css')
+    link(rel='stylesheet', href='/bower_components/octicons/octicons/octicons.css')
+    script(type='text/javascript', src='/dist/js/translatron.js')
+    script(type='text/javascript', src='/dist/animatedSVG/js/snap.svg-min.js')
+    script(type='text/javascript', src='/dist/animatedSVG/js/svgicons.js')
+  body(canny-mod='whisker', canny-var='canny.texts.getTexts')
+    header.header
+      block breadcrumbTrail
+        span.beforeText project name:
+        span.projectName
+          span {{projectName}}
+    block pageContent
