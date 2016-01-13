@@ -8,7 +8,8 @@ var projectFolder = __dirname + '/static',
     dao = require('./lib/server/dao.js')(projectFolder),
     fileManager = require('./lib/server/legacy/fileManager.js')(projectFolder),
     serverPort = process.env.npm_package_config_port || 3000,
-    jsonFileManager = require('./lib/server/legacy/jsonFileManager')(projectFolder);
+    jsonFileManager = require('./lib/server/legacy/jsonFileManager')(projectFolder),
+    jade = require('jade');
 
 var app = express();
 
@@ -41,6 +42,10 @@ app.get(/^((?!(\/dist|\/bower_components)).)*$/,  function (req, res) {
     // if the extension is .prj it is a project file
     if (/\.prj/.test(req.originalUrl)) {
         res.sendFile(__dirname + '/dist/index.html');
+    } else if (/\.jade/.test(req.originalUrl)) {
+        console.log('requested jade file');
+        var jadeFunc = jade.compileFile('lib/client/jade/sample.jade');
+        res.send(jadeFunc());
     } else {
         // else if there is no extension just show the project overview page
         // for the first send index so far we have nothing else
