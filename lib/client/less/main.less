@@ -101,6 +101,28 @@ footer.footer {
   bottom: 0;
 }
 
+.footerLinksContainer {
+  width: 10%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 1.6em;
+
+  .aboutLink {
+    float: left;
+    margin-right: 2em;
+  }
+
+  .githubLink {
+    float: right;
+    margin-left: 2em;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+}
+
 #fileManager .switchLink{display: block;}
 
 .floatL {float: left;}
@@ -121,6 +143,7 @@ footer.footer {
 @import "button";
 @import "inputField";
 @import "overlayWindow";
+@import "projectOverview";
 
 @import "../../../dist/flags/less/flag-icon";
 @import "../../../bower_components/octicons/octicons/octicons";
