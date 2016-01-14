@@ -11,7 +11,7 @@
   "dependencies": {
     "brace": "x",
     "browserify": "^8.1.3",
-    "canny": "0.0.x",
+    "canny": "0.1.x",
     "dnode": "x",
     "dom-opts": "git://github.com/eightyfour/dom-opts.git",
     "express": "x",

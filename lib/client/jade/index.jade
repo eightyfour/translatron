@@ -10,7 +10,7 @@ block pageContent
             textAre or something like that)
             If this is implemented I need a separate controller which update all texts (also from other users) if
             a texts has been changed...
-          p.octicon.octicon-light-bulb.projectDescription(canny-mod='textEditor', canny-var='changeProjectDescription') {{projectDescription}}
+          p.octicon.octicon-light-bulb.projectDescription(canny-mod='textEditor', canny-var='changeProjectDescription') {{msg.projectDescription}}
           .row(canny-mod='translationViewHeader', canny-var='main')
             #titleKey.data.key
               | Identifier
@@ -25,7 +25,7 @@ block pageContent
     #fixedNavigation.projectMainNavigation(canny-mod='projectMainNavigation', canny-var='main')
       .menuToggleButton.si-icon.si-icon-hamburger-cross(data-icon-name='hamburgerCross', canny-mod='projectMainNavigation', canny-var='menuToggleButton')
       .projectMainNavigation--header
-        span {{projectName}}
+        span {{msg.projectName}}
       .page-scroll
         .page-scroll--content
           #menuNavigationFrom.menuNavigation.language(canny-mod='projectMainNavigation', canny-var='from')
