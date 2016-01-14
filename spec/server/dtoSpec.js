@@ -72,7 +72,7 @@ describe('Check that the dao.js do the job correctly', () => {
                 if (data.language === 'de') {
                     testBoth++;
                     testDE(data.data);
-                } else {
+                } else if (data.language === 'en') {
                     testBoth++;
                     testEN(data.data);
                 }
@@ -158,7 +158,7 @@ describe('Check that the dao.js do the job correctly', () => {
                     if (data.language === 'de') {
                         expect(data.data.key_1).toEqual('test text DE');
                         testBoth++;
-                    } else {
+                    } else if (data.language === 'en') {
                         expect(data.data.key_1).toEqual('test text EN');
                         expect(data.language).toEqual('en');
                         testBoth++;
@@ -212,7 +212,7 @@ describe('Check that the dao.js do the job correctly', () => {
                     if (data.language === 'de') {
                         expect(data.data.key_1_new).toEqual('test text DE');
                         testBoth++;
-                    } else {
+                    } else if (data.language === 'en') {
                         expect(data.data.key_1_new).toEqual('test text EN');
                         testBoth++;
                     }
@@ -255,7 +255,7 @@ describe('Check that the dao.js do the job correctly', () => {
                     if (data.language === 'de') {
                         expect(data.data.key_1).toBeUndefined();
                         testBoth++;
-                    } else {
+                    } else if (data.language === 'en') {
                         expect(data.data.key_1).toBeUndefined();
                         testBoth++;
                     }
