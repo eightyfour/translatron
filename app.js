@@ -67,6 +67,9 @@ var conTrade,
             createNewProject : function (id, path, projectName, obj, cb) {
                 dao.createNewProject(id, path, projectName, obj, cb);
             },
+            receivedProjectsAndDirectories : function (dir, cb) {
+                dao.receivedProjectsAndDirectories(dir, cb);
+            },
             /**
              * initial call - all client methods are saved here.
              * returns a id as callback. The client needs this as identifier.
