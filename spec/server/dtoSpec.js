@@ -298,21 +298,28 @@ describe('Check that the dao.js do the job correctly', () => {
 
     describe("the receivedProjectsAndDirectories method ", () => {
 
-        var retValue;
-
-        beforeAll((done) => {
+        it("should return the sub projects from /", (done) => {
             dao.receivedProjectsAndDirectories("/", (obj) => {
-                retValue = obj;
+                expect(obj.projects).toEqual(['project1']);
+                expect(obj.dirs).toEqual(['subFolder']);
                 done();
             });
         });
 
-        it("should return the sub projects", () => {
-            expect(retValue.projects).toEqual(['project1'])
+        it("should return the sub directories from sub folder", (done) => {
+            dao.receivedProjectsAndDirectories("/subFolder", (obj) => {
+                expect(obj.projects).toEqual(['project2']);
+                expect(obj.dirs).toEqual([]);
+                done();
+            });
         });
 
-        it("should return the sub directories", () => {
-            expect(retValue.dirs).toEqual(['subFolder'])
+        it("should return false if path does not exists", (done) => {
+            dao.receivedProjectsAndDirectories("/noneExistingPath", (obj) => {
+                expect(obj).toBeFalsy();
+                done();
+            });
         });
+
     });
 });
