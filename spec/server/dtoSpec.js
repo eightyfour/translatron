@@ -295,4 +295,24 @@ describe('Check that the dao.js do the job correctly', () => {
                 .catch((err) => console.log('dtoSpec:err', err));
         });
     });
+
+    describe("the receivedProjectsAndDirectories method ", () => {
+
+        var retValue;
+
+        beforeAll((done) => {
+            dao.receivedProjectsAndDirectories("/", (obj) => {
+                retValue = obj;
+                done();
+            });
+        });
+
+        it("should return the sub projects", () => {
+            expect(retValue.projects).toEqual(['project1'])
+        });
+
+        it("should return the sub directories", () => {
+            expect(retValue.dirs).toEqual(['subFolder'])
+        });
+    });
 });
