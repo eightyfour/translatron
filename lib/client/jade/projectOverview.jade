@@ -3,17 +3,12 @@
 
 extends ./template.jade
 
-link(rel='stylesheet', type='text/css', href='/dist/css/translatron.css')
 block pageContent
-  div.projectOverviewContainer
-    h1
-      | Create & find a project
-    div.projectsList
-    div.projectsListButtons
-      div
-        span.projectsListActionButton
-          | Create project
-        span.projectsListActionButton
-          | Create folder
+  .projectOverviewContainer
+    h1 Create & find a project
+    .projectsList
+    .projectsListButtons
+        button.projectsListActionButton Create project
+        button.projectsListActionButton Create folder
 
 
