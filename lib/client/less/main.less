@@ -96,32 +96,7 @@ header.header {
   }
 }
 
-footer.footer {
-  &:extend(.fullWidthDarkBar);
-  bottom: 0;
-}
-
-.footerLinksContainer {
-  width: 10%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 1.6em;
-
-  .aboutLink {
-    float: left;
-    margin-right: 2em;
-  }
-
-  .githubLink {
-    float: right;
-    margin-left: 2em;
-  }
-
-  a {
-    color: white;
-    text-decoration: none;
-  }
-}
+@import "footer";
 
 #fileManager .switchLink{display: block;}
 

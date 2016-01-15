@@ -1,0 +1,22 @@
+footer.footer {
+    &:extend(.fullWidthDarkBar);
+    line-height: @header-height;
+    padding: 0 @header-height;
+    box-sizing: border-box;
+    bottom: 0;
+}
+
+.footerLinks-container {
+    text-align: center;
+    a {
+        &:after{
+            margin: 0 2em;
+            content: '|';
+        }
+        &:last-child:after{
+            display: none;
+        }
+        color: white;
+        text-decoration: none;
+    }
+}
