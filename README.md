@@ -57,7 +57,7 @@ browserify lib/client/js/main.js -o dist/js/translatron.js
 ### trade.js
 
 All "web socket" interactions from client to server are managed in here. All controller needs to be registered on trade
-to be notified about changes (see [events>callbacks](#trade-callbacks)).
+to be notified about changes (see [trade callbacks](#trade-callbacks)).
 
 ### events
 
