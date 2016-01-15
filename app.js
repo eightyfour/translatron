@@ -18,13 +18,17 @@ app.use('/dist',express.static(__dirname + '/dist'));
 // and bower files:
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
-var indexPage = jade.compileFile('./lib/client/jade/index.jade')();
+// jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
+// of the returned function pointer (with optional passing of locals) will do the actual compilation.
+var indexPage = jade.compileFile('./lib/client/jade/index.jade')(),
+    projectOverviewPage = jade.compileFile('./lib/client/jade/projectOverview.jade');
 /**
  * match except for folder dist and bower_components
  *
  * If the URL has a dot inside it expect to send a files. Otherwise it sends the index.
  */
 app.get(/^((?!(\/dist|\/bower_components)).)*$/,  function (req, res) {
+    //res.send(jade.compileFile('./lib/client/jade/projectOverview.jade')());
     res.send(indexPage);
 });
 
