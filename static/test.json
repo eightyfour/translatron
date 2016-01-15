@@ -14,13 +14,29 @@
   },
   "keys": {
     "de": {
-      "first_key_1": "test Schluessel Nummer Eins",
-      "first_key_2": "test Schluessel Nummer Zwei"
+      "first_key_2": "test Schluessel Nummer Zwei",
+      "first_key_1": "test Schluessel Nummer Eins"
     },
     "en": {
       "first_key_3": "test key number three 3",
-      "first_key_1": "test key number one 1",
-      "first_key_2": "test key number two 2"
+      "first_key_2": "test key number two 2",
+      "first_key_1": "test key number one 1 s",
+      "second_key_1": "",
+      "third_key_1": "",
+      "fourth_key_1": "",
+      "fifth_key_1": "",
+      "third_key_2": "",
+      "third_key_3": "",
+      "sixth_key_1": "",
+      "nu_na": "",
+      "third_key_4": "",
+      "third_key_5": "",
+      "third_key_6": "",
+      "third_k": "",
+      "third_l": "",
+      "third_p": "",
+      "third_q": "",
+      "seventh_key_1": "Yes yes jo"
     }
   }
 }
