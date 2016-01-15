@@ -295,4 +295,31 @@ describe('Check that the dao.js do the job correctly', () => {
                 .catch((err) => console.log('dtoSpec:err', err));
         });
     });
+
+    describe("the receivedProjectsAndDirectories method ", () => {
+
+        it("should return the sub projects from /", (done) => {
+            dao.receivedProjectsAndDirectories("/", (obj) => {
+                expect(obj.projects).toEqual(['project1']);
+                expect(obj.dirs).toEqual(['subFolder']);
+                done();
+            });
+        });
+
+        it("should return the sub directories from sub folder", (done) => {
+            dao.receivedProjectsAndDirectories("/subFolder", (obj) => {
+                expect(obj.projects).toEqual(['project2']);
+                expect(obj.dirs).toEqual([]);
+                done();
+            });
+        });
+
+        it("should return false if path does not exists", (done) => {
+            dao.receivedProjectsAndDirectories("/noneExistingPath", (obj) => {
+                expect(obj).toBeFalsy();
+                done();
+            });
+        });
+
+    });
 });
