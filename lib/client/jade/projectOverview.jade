@@ -4,13 +4,13 @@
 extends ./template.jade
 
 block pageContent
-  .projectOverviewContainer
+  .projectOverviewContainer(canny-mod="projectOverview")
     h1 Create & find a project
-    .projectsList(canny-mod="projectOverview")
+    .projectsList
       ul(canny-mod="repeat" canny-var="{'for':'item','in':'canny.projectOverview.setRenderProjectsAndDirectoriesListFunction'}")
         li [{{item.type}}] {{item.name}}
     .projectsListButtons
-        button.projectsListActionButton Create project
-        button.projectsListActionButton Create folder
+        button.projectsListActionButton.createProjectButton Create project
+        button.projectsListActionButton.createFolderButton Create folder
 
 
