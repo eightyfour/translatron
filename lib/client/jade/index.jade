@@ -16,11 +16,8 @@ block pageContent
               | Identifier
               em (must be unique)
         #tableBody.content(canny-mod='translationView', canny-translationview='main')
-      #initialView.initialView(style='display: block', canny-mod='flowControl', canny-flowcontrol="{'view':'initialView'}")
-        .sun
-          .wrap(canny-mod='initialView', canny-var='root')
-            .projectName.ownProject(canny-mod='projectMainNavigation', canny-var='createNewProject')
-              span Or create here your own project
+    div(canny-mod="flowControl", canny-flowcontrol="{'view':'initialView'}")
+      include ./projectOverview.jade
     #debugIncomming
     #fixedNavigation.projectMainNavigation(canny-mod='projectMainNavigation', canny-var='main')
       .menuToggleButton.si-icon.si-icon-hamburger-cross(data-icon-name='hamburgerCross', canny-mod='projectMainNavigation', canny-var='menuToggleButton')
