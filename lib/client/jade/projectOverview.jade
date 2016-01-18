@@ -8,7 +8,7 @@ block pageContent
     h1 Create & find a project
     .projectsList
       ul(canny-mod="repeat" canny-var="{'for':'item','in':'canny.projectOverview.setRenderProjectsAndDirectoriesListFunction'}")
-        li [{{item.type}}] {{item.name}}
+        li(on-click="item.openProjectListItem") [{{item.type}}] {{item.name}}
     .projectsListButtons
         button.projectsListActionButton.createProjectButton Create project
         button.projectsListActionButton.createFolderButton Create folder
