@@ -29,7 +29,7 @@ var indexPage = jade.compileFile('./lib/client/jade/index.jade')(),
  */
 app.get(/^((?!(\/dist|\/bower_components)).)*$/,  function (req, res) {
     //res.send(jade.compileFile('./lib/client/jade/projectOverview.jade')());
-    res.send(indexPage);
+    res.send(jade.compileFile('./lib/client/jade/index.jade')());
 });
 
 /**
