@@ -321,5 +321,19 @@ describe('Check that the dao.js do the job correctly', () => {
             });
         });
 
+        it('should return itself as the parent directory if already at top level', (done) => {
+           dao.receivedProjectsAndDirectories("/", (obj) => {
+                expect(obj.parentDirectory).toEqual('/');
+                done();
+           });
+        });
+
+        it('should return the correct parent directory if there is a parent', (done) => {
+            dao.receivedProjectsAndDirectories("/subFolder", (obj) => {
+                expect(obj.parentDirectory).toEqual('/');
+                done();
+            });
+        });
+
     });
 });

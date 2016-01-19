@@ -5,6 +5,7 @@ block pageContent
   .projectOverviewContainer(canny-mod="projectOverview")
     h1 Create & find a project
     .projectsList
+      button.selectParentDirectoryButton Back
       ul(canny-mod="repeat" canny-var="{'for':'item','in':'canny.projectOverview.setRenderProjectsAndDirectoriesListFunction'}")
         li(on-click="item.openProjectListItem") [{{item.type}}] {{item.name}}
     .projectsListButtons

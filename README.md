@@ -93,4 +93,28 @@ be notified about this changes.
 
 UI only events are events which are triggered if the user do anything without a server interaction. Like selecting a language 
 or open a project.
+
+### Components
+
+#### UI Modules
+
+An UI module contains the logic for a HTML component. A module's public API has functions for
+* trigger actions in the UI as response to events arriving at the controller (e.g. _renderXYZList_)
+* functions for registering event listeners for events originating in the HTML component (e.g. _onParentDirectorySelected_).
+
+UI modules are registered with _canny_ (in _main.js_). In the implementation for _canny_'s _ready_ callback, UI modules will add event
+listeners which in turn execute the callback.
+
+#### UI controllers
+
+A controller is the bridge between an UI module and other components (e.g. _trade_). 
+
+Functions in a controller's public API:
+* under normal circumstances, a controller's public functions are only callbacks for events coming from _trade_.
+
+A controller will already register itself at construction time at the corresponding UI module's _onXYZTriggered_ functions. 
+ The callback functions passed to these UI module functions will call _trade_ to do the actual work (e.g. calling the 
+ server).
+ server).
+
  
