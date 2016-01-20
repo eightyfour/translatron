@@ -75,7 +75,6 @@ var conTrade,
                 // TODO draft: authenticate the client - and pass the name to the setupClient
                 dao.setupClient.apply(null, [].slice.call(arguments));
             },
-            fileManager : fileManager,
             jsonFileManager : (function () {
                 var ret = {};
                 // lo0ks like a listener :-)
