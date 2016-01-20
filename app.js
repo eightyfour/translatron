@@ -136,23 +136,7 @@ var conTrade,
                         })
 
                     } else if (/\.prj/.test(projectName)) {
-                        // ask for a project JSON
-                        (function loadProjectJSON() {
-                            var prjName = projectName.split('.')[0];
-
-                            jsonFileManager.getJSON('/' + path + '/' + prjName + '.json', function (data) {
-                                if (data) {
-                                    // initialize all languages with default -1
-                                    Object.keys(data.keys).forEach(function (lang) {
-                                        data.languages[lang] = {translated : -1};
-                                    });
-                                    cb(data);
-                                } else {
-                                    console.log('app:getJSON the project specific project.json is missing for project', projectName);
-                                    cb(false);
-                                }
-                            });
-                        }());
+                        console.log('app:does not support prj files for getJSON calls');
                     }
                 };
                 return ret;
