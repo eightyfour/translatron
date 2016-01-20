@@ -9,81 +9,6 @@ describe('Check that the dao.js do the job correctly', () => {
 
     it('should have a dao instance', () => expect(dao).toBeDefined());
 
-    describe("the getProjectTranslation method", () => {
-
-        function testDE(data) {
-            expect(data.first_key_1).toEqual('test Schluessel Nummer Eins');
-            expect(data.first_key_2).toEqual('test Schluessel Nummer Zwei');
-        }
-        function testEN(data) {
-            expect(data.first_key_1).toEqual('test key number one');
-            expect(data.first_key_2).toEqual('test key number two');
-            expect(data.first_key_3).toEqual('test key number three');
-        }
-
-        it("should load a project from root with /", (done) => {
-            dao.getProjectTranslation('/', 'project1', (data) => {
-                expect(data.data).toBeDefined();
-                done();
-            });
-        });
-
-        it("should load a project from root without /", (done) => {
-            dao.getProjectTranslation('', 'project1', (data) => {
-                expect(data.data).toBeDefined();
-                done();
-            });
-        });
-
-        it("should load a project from subFolder with first and last /", (done) => {
-            dao.getProjectTranslation('/subFolder/', 'project2', (data) => {
-                expect(data.data).toBeDefined();
-                done();
-            });
-        });
-
-        it("should load a project from subFolder without front /", (done) => {
-            dao.getProjectTranslation('subFolder/', 'project2', (data) => {
-                expect(data.data).toBeDefined();
-                done();
-            });
-        });
-
-        //it("should load a project from subFolder without last /", function (fc) {
-        //    dao.getProjectTranslation('/subFolder', 'project2', function (data) {
-        //        expect(data.data).toBeDefined();
-        //        fc();
-        //    });
-        //});
-        //
-        //it("should load a project from subFolder without any /", function (fc) {
-        //    dao.getProjectTranslation('/subFolder', 'project2', function (data) {
-        //        expect(data.data).toBeDefined();
-        //        fc();
-        //    });
-        //});
-
-        it("should get the data correct formatted", (done) => {
-            var testBoth = 0;
-            dao.getProjectTranslation('/', 'project1', (data) => {
-
-                expect(data.data).toBeDefined();
-
-                if (data.language === 'de') {
-                    testBoth++;
-                    testDE(data.data);
-                } else if (data.language === 'en') {
-                    testBoth++;
-                    testEN(data.data);
-                }
-                if (testBoth === 2) {
-                    done();
-                }
-            });
-        });
-
-    });
-
     describe("the loadProject method", () => {
 
         var project1;
@@ -180,9 +105,9 @@ describe('Check that the dao.js do the job correctly', () => {
             });
 
             it("should save the json to the file system", (done) => {
-                dao.getProjectTranslation(folder, 'test', (data) => {
+                dao.loadProject(folder + '/test', (data) => {
                     // check if false is ok... the project exists but contains no keys for translation
-                    expect(data).toEqual(false);
+                    expect(data.keys).toEqual({});
                     done();
                 });
             });
@@ -208,23 +133,12 @@ describe('Check that the dao.js do the job correctly', () => {
             });
 
             it("should have persist it", (done) => {
-                var testBoth = 0;
-                dao.getProjectTranslation(folder, 'test', (data) => {
-
-                    expect(data.data).toBeDefined();
+                dao.loadProject(folder + '/test', (data) => {
+                    expect(data.keys).toBeDefined();
+                    expect(data.keys.de.key_1).toEqual('test text DE');
+                    expect(data.keys.en.key_1).toEqual('test text EN');
+                    expect(data.defaultLanguage).toEqual('en');
                     done();
-                    if (data.language === 'de') {
-                        expect(data.data.key_1).toEqual('test text DE');
-                        testBoth++;
-                    } else if (data.language === 'en') {
-                        expect(data.data.key_1).toEqual('test text EN');
-                        expect(data.language).toEqual('en');
-                        testBoth++;
-
-                    }
-                    if (testBoth === 2) {
-                        done();
-                    }
                 });
             });
 
@@ -251,32 +165,24 @@ describe('Check that the dao.js do the job correctly', () => {
             });
 
             it("should have deleted the old key", (done) => {
-                dao.getProjectTranslation(folder, 'test', (data) => {
-                    expect(data.data.key_1).toBeUndefined();
+                dao.loadProject(folder + '/test', (data) => {
+                    expect(data.keys.en.key_1).toBeUndefined();
                     done();
                 });
             });
 
             it("should have created a new key", (done) => {
-                dao.getProjectTranslation(folder, 'test', (data) => {
-                    expect(data.data.key_1_new).toBeDefined();
+                dao.loadProject(folder + '/test', (data) => {
+                    expect(data.keys.en.key_1_new).toBeDefined();
                     done();
                 });
             });
 
             it("should have updated all existing languages", (done) => {
-                var testBoth = 0;
-                dao.getProjectTranslation(folder, 'test', (data) => {
-                    if (data.language === 'de') {
-                        expect(data.data.key_1_new).toEqual('test text DE');
-                        testBoth++;
-                    } else if (data.language === 'en') {
-                        expect(data.data.key_1_new).toEqual('test text EN');
-                        testBoth++;
-                    }
-                    if (testBoth === 2) {
-                        done();
-                    }
+                dao.loadProject(folder + '/test', (data) => {
+                    expect(data.keys.de.key_1_new).toEqual('test text DE');
+                    expect(data.keys.en.key_1_new).toEqual('test text EN');
+                    done()
                 });
             });
 
@@ -308,18 +214,10 @@ describe('Check that the dao.js do the job correctly', () => {
             });
 
             it("should have removed all keys from all existing languages", (done) => {
-                var testBoth = 0;
-                dao.getProjectTranslation(folder, 'test', (data) => {
-                    if (data.language === 'de') {
-                        expect(data.data.key_1).toBeUndefined();
-                        testBoth++;
-                    } else if (data.language === 'en') {
-                        expect(data.data.key_1).toBeUndefined();
-                        testBoth++;
-                    }
-                    if (testBoth === 2) {
-                        done();
-                    }
+                dao.loadProject(folder + '/test', (data) => {
+                    expect(data.keys.de.key_1).toBeUndefined();
+                    expect(data.keys.en.key_1).toBeUndefined();
+                    done();
                 });
             });
 
