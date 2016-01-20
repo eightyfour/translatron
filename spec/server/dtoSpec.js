@@ -84,6 +84,64 @@ describe('Check that the dao.js do the job correctly', () => {
 
     });
 
+    describe("the loadProject method", () => {
+
+        var project1;
+
+        beforeAll((done) => {
+            dao.loadProject('/project1', (data) => {
+                project1 = data;
+                done();
+            });
+        });
+
+        it("should fail if the project is not exists", (done) => {
+            dao.loadProject('/noneExistingProject', (data) => {
+                expect(data).toBeFalsy();
+                done();
+            });
+        });
+
+        it("should load a project from a sub directory", (done) => {
+            dao.loadProject('/subFolder/project2', (data) => {
+                expect(data.keys).toBeDefined();
+                done();
+            });
+        });
+
+        it("should load a project from root with /", () => {
+            expect(project1).toBeDefined();
+        });
+
+        it("should get the data DE correct formatted", () => {
+            expect(project1.keys.de.first_key_1).toEqual('test Schluessel Nummer Eins');
+            expect(project1.keys.de.first_key_2).toEqual('test Schluessel Nummer Zwei');
+        });
+
+        it("should get the data EN correct formatted", () => {
+            expect(project1.keys.en.first_key_1).toEqual('test key number one');
+            expect(project1.keys.en.first_key_2).toEqual('test key number two');
+            expect(project1.keys.en.first_key_3).toEqual('test key number three');
+        });
+
+        it("should have a project name", () => {
+            expect(project1.project).toEqual('project1');
+        });
+
+        it("should have a projectId", () => {
+            expect(project1.projectId).toEqual('/project1');
+        });
+
+        it("should have a keyDescriptions field", () => {
+            expect(project1.keyDescriptions).toBeDefined();
+        });
+
+        it("should have a defaultLanguage field", () => {
+            expect(project1.defaultLanguage).toEqual('en');
+        });
+
+    });
+
     describe("and", () => {
         var project,
             folder = '/dummy';

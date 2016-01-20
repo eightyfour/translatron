@@ -49,6 +49,9 @@ var conTrade,
         "use strict";
 
         var d = dnode({
+            loadProject : function (projectId, cb) {
+                dao.loadProject(projectId, cb);
+            },
             /**
              * TODO rename method to something common (the client side needs also to be refactored (controller methods and so on))
              * @param projectPath
