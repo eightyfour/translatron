@@ -52,16 +52,6 @@ var conTrade,
             loadProject : function (projectId, cb) {
                 dao.loadProject(projectId, cb);
             },
-            /**
-             * TODO rename method to something common (the client side needs also to be refactored (controller methods and so on))
-             * @param projectPath
-             * @param cb
-             */
-            getMessageBundle : function (path, projectName, cb) {
-                // read the project JSON and format the data into the old format {data:{}, language:""}
-                // TODO format can be changed later if we want
-                dao.getProjectTranslation(path, projectName, cb);
-            },
             sendResource : function (id, bundleObj, data, cb) {
                 dao.sendResource.apply(null, [].slice.call(arguments));
             },
