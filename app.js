@@ -74,6 +74,9 @@ var conTrade,
             receivedProjectsAndDirectories : function (dir, cb) {
                 dao.receivedProjectsAndDirectories(dir, cb);
             },
+            getDirectory : function(dir, cb) {
+                dao.getDirectory(dir, cb);
+            },
             /**
              * initial call - all client methods are saved here.
              * returns a id as callback. The client needs this as identifier.
