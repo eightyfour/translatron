@@ -135,7 +135,9 @@ describe('Check that the dao.js do the job correctly', () => {
             it("should have persist it", (done) => {
                 dao.loadProject(folder + '/test', (data) => {
                     expect(data.keys).toBeDefined();
+                    expect(data.keys.de).toBeDefined();
                     expect(data.keys.de.key_1).toEqual('test text DE');
+                    expect(data.keys.en).toBeDefined();
                     expect(data.keys.en.key_1).toEqual('test text EN');
                     expect(data.defaultLanguage).toEqual('en');
                     done();
