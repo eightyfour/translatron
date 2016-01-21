@@ -335,5 +335,13 @@ describe('Check that the dao.js do the job correctly', () => {
             });
         });
 
+        it('should have expected IDs', (done) => {
+            dao.getDirectory('/', (obj) => {
+                expect(obj.projects.length).toEqual(1);
+                expect(obj.projects[0].id).toEqual('/project1.json');
+                done();
+            });
+        });
+
     });
 });
