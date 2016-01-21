@@ -21,10 +21,10 @@
   },
   "keys": {
     "de" : {
-      "first_key_1" : "test Schluessel Nummer Eins",
+      "first_key_1" : "test Schluessel Nummer Eins"
     },
     "en": {
-      "first_key_1" : "test key number one 1",
+      "first_key_1" : "test key number one 1"
     }
   }
 }

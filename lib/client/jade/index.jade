@@ -34,12 +34,12 @@ block pageContent
                 span Create new category
                 span.icon.octicon.octicon-tag
               li
-                a(canny-mod='projectMainNavigation', canny-var='showFileEditor')
-                  span Show in editor mode
+                a(canny-mod='projectMainNavigation', canny-var='showMessageBundleFormat')
+                  span Show as message bundles
                   span.icon.octicon.octicon-squirrel
               li
                 a(canny-mod='projectMainNavigation', canny-var='showJSONBundle')
-                  span View as JSON
+                  span Show as JSON
                   span.icon.octicon.octicon-eye
           label Project overview
           .menuNavigation.projects(canny-mod='projectMainNavigation', canny-var='projects')
@@ -81,16 +81,3 @@ block pageContent
         p
           | A project name could be a translation task number. Or ask your developer
           | for a technical specific name.
-    div(canny-mod='layoutManager', canny-var="{'overlay':'messagesExportOverlay'}")
-      #messagesExportOverlay.overlayDark.overlayWindow
-        .codeContainer-wrap
-          pre#messagesExportOverlay_code.codeContainer(canny-mod='messagesExportOverlay', canny-var='codeContent').
-        button.button(canny-mod='messagesExportOverlay', canny-var='closeButton') Close
-    div(canny-mod='layoutManager', canny-var="{'overlay':'editorModeView'}")
-      #editorModeView.overlayDark.overlayWindow
-        .codeContainer-wrap
-          #pathMenu.menu-wrapper
-            div(canny-mod='pathNavigation')
-          div(canny-mod='tabManager')
-          .editor-wrapper
-            #fileEditor(canny-mod='fileEditor')

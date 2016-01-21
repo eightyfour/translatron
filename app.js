@@ -49,15 +49,8 @@ var conTrade,
         "use strict";
 
         var d = dnode({
-            /**
-             * TODO rename method to something common (the client side needs also to be refactored (controller methods and so on))
-             * @param projectPath
-             * @param cb
-             */
-            getMessageBundle : function (path, projectName, cb) {
-                // read the project JSON and format the data into the old format {data:{}, language:""}
-                // TODO format can be changed later if we want
-                dao.getProjectTranslation(path, projectName, cb);
+            loadProject : function (projectId, cb) {
+                dao.loadProject(projectId, cb);
             },
             sendResource : function (id, bundleObj, data, cb) {
                 dao.sendResource.apply(null, [].slice.call(arguments));
@@ -85,7 +78,6 @@ var conTrade,
                 // TODO draft: authenticate the client - and pass the name to the setupClient
                 dao.setupClient.apply(null, [].slice.call(arguments));
             },
-            fileManager : fileManager,
             jsonFileManager : (function () {
                 var ret = {};
                 // lo0ks like a listener :-)
@@ -147,23 +139,7 @@ var conTrade,
                         })
 
                     } else if (/\.prj/.test(projectName)) {
-                        // ask for a project JSON
-                        (function loadProjectJSON() {
-                            var prjName = projectName.split('.')[0];
-
-                            jsonFileManager.getJSON('/' + path + '/' + prjName + '.json', function (data) {
-                                if (data) {
-                                    // initialize all languages with default -1
-                                    Object.keys(data.keys).forEach(function (lang) {
-                                        data.languages[lang] = {translated : -1};
-                                    });
-                                    cb(data);
-                                } else {
-                                    console.log('app:getJSON the project specific project.json is missing for project', projectName);
-                                    cb(false);
-                                }
-                            });
-                        }());
+                        console.log('app:does not support prj files for getJSON calls');
                     }
                 };
                 return ret;

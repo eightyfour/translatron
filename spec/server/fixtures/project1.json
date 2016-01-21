@@ -1,5 +1,6 @@
 {
-  "project": "test",
+  "project": "project1",
+  "projectId": "/project1",
   "description": "This is only for testing the test application. Use it for free",
   "images": [
     "/path/to/my/main_1.png",
