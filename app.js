@@ -44,7 +44,9 @@ app.get(/^((?!(\/dist|\/bower_components)).)*$/,  function (req, res) {
 
 var server = app.listen(serverPort);
 
+// QUESTION: what is conTrade?
 var conTrade,
+    // QUESTION why do we instantiate a "trade" component on the server side? what is shoe?
     trade = shoe(function (stream) {
         "use strict";
 
@@ -63,9 +65,6 @@ var conTrade,
             },
             createNewProject : function (id, path, projectName, obj, cb) {
                 dao.createNewProject(id, path, projectName, obj, cb);
-            },
-            receivedProjectsAndDirectories : function (dir, cb) {
-                dao.receivedProjectsAndDirectories(dir, cb);
             },
             getDirectory : function(dir, cb) {
                 dao.getDirectory(dir, cb);

@@ -254,40 +254,58 @@ describe('Check that the dao.js do the job correctly', () => {
         });
     });
 
-    describe("the receivedProjectsAndDirectories method ", () => {
+    describe("the getDirectory method ", () => {
 
         it("should return the sub projects from /", (done) => {
-            dao.receivedProjectsAndDirectories("/", (obj) => {
-                expect(obj.projects).toEqual(['project1']);
-                expect(obj.dirs).toEqual(['subFolder']);
+            dao.getDirectory("/", (obj) => {
+                expect(obj.projects.length).toEqual(1);
+                expect(obj.projects).toEqual([{
+                    name : 'project1',
+                    id : '/project1.json'
+                }]);
                 done();
             });
         });
 
-        it("should return the sub directories from sub folder", (done) => {
-            dao.receivedProjectsAndDirectories("/subFolder", (obj) => {
-                expect(obj.projects).toEqual(['project2']);
+        it("should return the sub directories from /", (done) => {
+            dao.getDirectory("/", (obj) => {
+                expect(obj.dirs.length).toEqual(1);
+                expect(obj.dirs).toEqual([{
+                    name : 'subFolder',
+                    id : '/subFolder'
+                }]);
+                done();
+            });
+        });
+
+        it("should return the contents from sub folder", (done) => {
+            dao.getDirectory("/subFolder", (obj) => {
+                expect(obj.projects.length).toEqual(1);
+                expect(obj.projects).toEqual([{
+                    name : 'project2',
+                    id : 'subFolder/project2.json'
+                }]);
                 expect(obj.dirs).toEqual([]);
                 done();
             });
         });
 
         it("should return false if path does not exists", (done) => {
-            dao.receivedProjectsAndDirectories("/noneExistingPath", (obj) => {
+            dao.getDirectory("/noneExistingPath", (obj) => {
                 expect(obj).toBeFalsy();
                 done();
             });
         });
 
         it('should return itself as the parent directory if already at top level', (done) => {
-           dao.receivedProjectsAndDirectories("/", (obj) => {
+           dao.getDirectory("/", (obj) => {
                 expect(obj.parentDirectory).toEqual('/');
                 done();
            });
         });
 
         it('should return the correct parent directory if there is a parent', (done) => {
-            dao.receivedProjectsAndDirectories("/subFolder", (obj) => {
+            dao.getDirectory("/subFolder", (obj) => {
                 expect(obj.parentDirectory).toEqual('/');
                 done();
             });
