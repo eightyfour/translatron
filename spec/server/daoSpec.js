@@ -256,6 +256,15 @@ describe('Check that the dao.js do the job correctly', () => {
 
     describe("the getDirectory method ", () => {
 
+        // create an empty folder
+        beforeAll((done) => {
+            fs.mkdir(projectFolder + 'subFolder/emptySubFolder', done);
+        });
+
+        afterAll((done) => {
+            fs.rmdir(projectFolder + 'subFolder/emptySubFolder', done);
+        });
+
         it("should return the sub projects from /", (done) => {
             dao.getDirectory("/", (obj) => {
                 expect(obj.projects.length).toEqual(1);
@@ -337,12 +346,12 @@ describe('Check that the dao.js do the job correctly', () => {
             });
         });
 
-        //it('should return empty object if directory has no items', (done) => {
-        //    dao.getDirectory('/', (obj) => {
-        //        expect(obj.projects.length).toEqual(0);
-        //        expect(obj.dirs.length).toEqual(0);
-        //        done();
-        //    });
-        //});
+        it('should return empty lists if a directory has no items', (done) => {
+            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
+                expect(obj.projects.length).toEqual(0);
+                expect(obj.dirs.length).toEqual(0);
+                done();
+            });
+        });
     });
 });
