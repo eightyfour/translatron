@@ -20,11 +20,11 @@
     "en": {
       "first_key_3": "test key number three 3",
       "first_key_2": "test key number two 2",
-      "first_key_1": "test key number one 1 s",
+      "first_key_1": "test key number one 1",
       "second_key_1": "",
       "third_key_1": "",
       "fourth_key_1": "",
-      "fifth_key_1": "",
+      "fifth_key_1": "add lang",
       "third_key_2": "",
       "third_key_3": "",
       "sixth_key_1": "",
