@@ -1,6 +1,15 @@
 extend ./template.jade
 
 block pageContent
+  // TBD how can we use jade in an efficient way? Do we want to use it just to have easier to read/write syntax? Or
+      do we want to reach some form of nice templating structure?
+      As of now, our template does *not* give us any advantages: we have a single page application so there is actually
+      no need for a template.
+      If we want to cut down the size of this file with jade (i.e. each component is only a jade include) we should have a
+      structure here where there is one div for each component (and this page already defines the general layout among these
+      components and flow control stuff) and every component div's body is only a jade include of the actual component content.
+      Canny wiring for components should probably only be done inside the included components because it is up to them
+      how they are wired with the application (i.e. using canny or something different)
   #resourceEditor.translationView
       #resourceBundleTable(style='display: none', canny-mod='flowControl', canny-flowcontrol="{'view':'resourceBundle'}")
         .header.translationViewHeader
