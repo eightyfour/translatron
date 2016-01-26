@@ -1,6 +1,6 @@
 {
-  "project": "project2",
-  "projectId": "/subFolder/project2",
+  "project": "subproject1",
+  "projectId": "/subFolder/subSubFolder/subproject1",
   "description": "This is only for testing the test application. Use it for free",
   "images": [
     "/path/to/my/main_1.png",
