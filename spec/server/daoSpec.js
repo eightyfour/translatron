@@ -119,10 +119,10 @@ describe('Check that the dao.js do the job correctly', () => {
 
             beforeAll((done) => {
                 // create DE key
-                dao.sendResource("xx", {projectId : project.projectId, locale : 'de'}, {key: "key_1", value : "test text DE"}, (key) => {
+                dao.saveKey("xx", project.projectId, 'de', {key: "key_1", value : "test text DE"}, (key) => {
                     key_1 = key;
                     // create EN key
-                    dao.sendResource("xx", {projectId : project.projectId, locale : 'en'}, {key: "key_1", value : "test text EN"}, (key) => {
+                    dao.saveKey("xx", project.projectId, 'en', {key: "key_1", value : "test text EN"}, (key) => {
                         done();
                     });
                 });
@@ -225,9 +225,9 @@ describe('Check that the dao.js do the job correctly', () => {
 
             afterAll((done) => {
                 // restore the removed keys
-                dao.sendResource("xx", {projectId : project.projectId, locale : 'de'}, {key: "key_1", value : "test text DE"}, () => {
+                dao.saveKey("xx", project.projectId, 'de', {key: "key_1", value : "test text DE"}, () => {
                     // create EN key
-                    dao.sendResource("xx", {projectId : project.projectId, locale : 'en'}, {key: "key_1", value : "test text EN"}, () => {
+                    dao.saveKey("xx", project.projectId, 'en', {key: "key_1", value : "test text EN"}, () => {
                         done();
                     });
                 });

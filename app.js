@@ -54,23 +54,8 @@ var conTrade,
             loadProject : function (projectId, cb) {
                 dao.loadProject(projectId, cb);
             },
-            /**
-             *
-             * @param id
-             * @param bundleObj
-             * @param data
-             * @param cb
-             * @deprecated use saveKey
-             */
-            sendResource : function (id, bundleObj, data, cb) {
-                dao.sendResource.apply(null, [].slice.call(arguments));
-            },
             saveKey : function(id, projectId, language, keyAndValue, cb) {
-                dao.sendResource(id,
-                    {
-                        projectId : projectId,
-                        locale : language
-                    }, keyAndValue, cb);
+                dao.saveKey(id, projectId, language, keyAndValue, cb);
             },
             renameKey : function () {
                 dao.renameKey.apply(null, [].slice.call(arguments));
