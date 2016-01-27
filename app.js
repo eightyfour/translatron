@@ -69,6 +69,9 @@ var conTrade,
             getDirectory : function(dir, cb) {
                 dao.getDirectory(dir, cb);
             },
+            createNewDirectory : function(id, directoryName, path, cb) {
+                dao.createNewDirectory(id, directoryName, path, cb);
+            },
             /**
              * initial call - all client methods are saved here.
              * returns a id as callback. The client needs this as identifier.
