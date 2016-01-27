@@ -116,5 +116,20 @@ A controller will already register itself at construction time at the correspond
  The callback functions passed to these UI module functions will call _trade_ to do the actual work (e.g. calling the 
  server).
  server).
+ 
+#### trade
+ 
+_trade_ is the name of the component which handles all calls going to the server, incl. execution of the callback to the
+server call which notifies interested components about the outcome. 
+ 
+Components register themselves at _trade_ using _addController_. _trade_ assumes that all public functions of registered
+components are potential callbacks.
+  
+##### _trade_ callback events
+  
+_trade_ supports the following events:
+* **onNewProjectCreated**: informs about creation of a new project, payload is the project object.
+* **onDirectoryChanged**: **Not implemented yet**, informs about a change of the current directory, payload is the path/id of
+    the new current directory (replaces **getDirectory** event)
 
  
