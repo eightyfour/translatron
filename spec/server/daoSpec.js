@@ -1,6 +1,9 @@
 var projectFolder = __dirname + '/fixtures/',
     dao = require('../../lib/server/dao')(projectFolder),
-    fs = require('fs');
+    fs = require('fs'),
+    path = require('path');
+
+var MOCK_CONNECTION_ID = 'xx';
 
 /**
  * TODO add the whole description tests for dao - if a key was renamed or deleted the description needs also to be updated
@@ -251,6 +254,40 @@ describe('Check that the dao.js do the job correctly', () => {
                 ))
                 .then(done)
                 .catch((err) => console.log('dtoSpec:err', err));
+        });
+    });
+
+    describe('the createNewDirectoy method ', () => {
+
+        it('should fail if the parent directory does not exist', (done) => {
+            // TODO how to add an assert that the parent really does not exist?
+            dao.createNewDirectory(MOCK_CONNECTION_ID,
+                'newDirectory', 'nonexistingDirectory', (obj) => {
+                    expect(obj).toEqual(false);
+                    done();
+            });
+        });
+
+        it('should fail if the directory to create exists already ', (done) => {
+            dao.createNewDirectory(MOCK_CONNECTION_ID,
+                'subFolder', '/', (obj) => {
+                    expect(obj).toEqual(false);
+                    done();
+            });
+        });
+
+        it('should create the new directory if all preconditions are met ', (done) => {
+            dao.createNewDirectory(MOCK_CONNECTION_ID,
+                'newDirectory', '/', (obj) => {
+                    expect(obj).toEqual('/' + 'newDirectory');
+                    expect(fs.existsSync(path.normalize(projectFolder + '/' + obj))).toEqual(true);
+                    done();
+            });
+        });
+
+        afterAll((done) => {
+            fs.rmdir(projectFolder + '/' + 'newDirectory');
+            done();
         });
     });
 
