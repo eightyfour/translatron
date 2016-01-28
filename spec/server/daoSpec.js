@@ -279,8 +279,9 @@ describe('Check that the dao.js do the job correctly', () => {
         it('should create the new directory if all preconditions are met ', (done) => {
             dao.createNewDirectory(MOCK_CONNECTION_ID,
                 'newDirectory', '/', (obj) => {
-                    expect(obj).toEqual('/' + 'newDirectory');
-                    expect(fs.existsSync(path.normalize(projectFolder + '/' + obj))).toEqual(true);
+                    expect(obj.directoryId).toEqual('/' + 'newDirectory');
+                    expect(obj.parentDirectoryId).toEqual('/');
+                    expect(fs.existsSync(path.normalize(projectFolder + '/' + obj.directoryId))).toEqual(true);
                     done();
             });
         });
