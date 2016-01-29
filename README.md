@@ -131,5 +131,6 @@ _trade_ supports the following events:
 * **onNewProjectCreated**: informs about creation of a new project, payload is the project object.
 * **onDirectoryChanged**: **Not implemented yet**, informs about a change of the current directory, payload is the path/id of
     the new current directory (replaces **getDirectory** event)
+* **onNewDirectoryCreated**: a new directory has been created. Payload is _projectId_ and _parentProjectId_
 
  
