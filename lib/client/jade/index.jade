@@ -1,16 +1,19 @@
-extend ./template.jade
-
-block pageContent
-  // TBD how can we use jade in an efficient way? Do we want to use it just to have easier to read/write syntax? Or
-      do we want to reach some form of nice templating structure?
-      As of now, our template does *not* give us any advantages: we have a single page application so there is actually
-      no need for a template.
-      If we want to cut down the size of this file with jade (i.e. each component is only a jade include) we should have a
-      structure here where there is one div for each component (and this page already defines the general layout among these
-      components and flow control stuff) and every component div's body is only a jade include of the actual component content.
-      Canny wiring for components should probably only be done inside the included components because it is up to them
-      how they are wired with the application (i.e. using canny or something different)
-  #resourceEditor.translationView
+doctype html
+html
+  head
+    title Resource bundle manager
+    link(rel='stylesheet', type='text/css', href='/dist/css/translatron.css')
+    link(rel='stylesheet', href='/bower_components/octicons/octicons/octicons.css')
+    script(type='text/javascript', src='/dist/js/translatron.js')
+    script(type='text/javascript', src='/dist/animatedSVG/js/snap.svg-min.js')
+    script(type='text/javascript', src='/dist/animatedSVG/js/svgicons.js')
+  body(canny-mod='whisker', canny-var='canny.texts.getTexts')
+    header.header
+      block breadcrumbTrail
+        span.beforeText project name:
+        span.projectName
+          span {{msg.projectName}}
+    #resourceEditor.translationView
       #resourceBundleTable(style='display: none', canny-mod='flowControl', canny-flowcontrol="{'view':'resourceBundle'}")
         include projectView
     div(canny-mod="flowControl", canny-flowcontrol="{'view':'projectsOverview'}")
@@ -27,3 +30,7 @@ block pageContent
       include createNewProject
     div(canny-mod='layoutManager', canny-var="{'overlay':'createNewDirectoryView'}")
       include createNewDirectory
+    footer.footer
+      a(href='https://confluence.gameduell.de/display/DEV/Translation+Tool', target='_blank') About
+      a(href='https://github.com/gameduell/translatron', target='_blank') Github
+
