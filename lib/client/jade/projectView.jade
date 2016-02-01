@@ -1,0 +1,14 @@
+.header.translationViewHeader
+  //
+    TODO make this configurable: add module which supports 'projectConfigUpdate'. Than I can easier
+    made this kind of configuration configurable (if click on 'edit' just replace the current view with an
+    textAre or something like that)
+    If this is implemented I need a separate controller which update all texts (also from other users) if
+    a texts has been changed...
+  p.octicon.octicon-light-bulb.projectDescription(canny-mod='textEditor', canny-var='changeProjectDescription') {{msg.projectDescription}}
+    .row(canny-mod='translationViewHeader', canny-var='main')
+      #titleKey.data.key
+        | Identifier
+        em (must be unique)
+    #tableBody.content(canny-mod='translationView', canny-translationview='main')
+

@@ -12,88 +12,18 @@ block pageContent
       how they are wired with the application (i.e. using canny or something different)
   #resourceEditor.translationView
       #resourceBundleTable(style='display: none', canny-mod='flowControl', canny-flowcontrol="{'view':'resourceBundle'}")
-        .header.translationViewHeader
-          //
-            TODO make this configurable: add module which supports 'projectConfigUpdate'. Than I can easier
-            made this kind of configuration configurable (if click on 'edit' just replace the current view with an
-            textAre or something like that)
-            If this is implemented I need a separate controller which update all texts (also from other users) if
-            a texts has been changed...
-          p.octicon.octicon-light-bulb.projectDescription(canny-mod='textEditor', canny-var='changeProjectDescription') {{msg.projectDescription}}
-          .row(canny-mod='translationViewHeader', canny-var='main')
-            #titleKey.data.key
-              | Identifier
-              em (must be unique)
-        #tableBody.content(canny-mod='translationView', canny-translationview='main')
+        include projectView
     div(canny-mod="flowControl", canny-flowcontrol="{'view':'projectsOverview'}")
-      include ./projectOverview.jade
+      include projectOverview
     #debugIncomming
     #fixedNavigation.projectMainNavigation(canny-mod='projectMainNavigation', canny-var='main')
       .menuToggleButton.si-icon.si-icon-hamburger-cross(data-icon-name='hamburgerCross', canny-mod='projectMainNavigation', canny-var='menuToggleButton')
       .projectMainNavigation--header
         span {{msg.projectName}}
-      .page-scroll
-        .page-scroll--content
-          #menuNavigationFrom.menuNavigation.language(canny-mod='projectMainNavigation', canny-var='from')
-            // place holder for the menu navigation
-          label Project manager
-          .menuNavigation.manager
-            ul.navigationMenu.manager
-              li(canny-mod='translationView', canny-var='projectShow')
-                span Create new category
-                span.icon.octicon.octicon-tag
-              li
-                a(canny-mod='projectMainNavigation', canny-var='showMessageBundleFormat')
-                  span Show as message bundles
-                  span.icon.octicon.octicon-squirrel
-              li
-                a(canny-mod='projectMainNavigation', canny-var='showJSONBundle')
-                  span Show as JSON
-                  span.icon.octicon.octicon-eye
-          label Project overview
-          .menuNavigation.projects(canny-mod='projectMainNavigation', canny-var='projects')
-            ul.navigationMenu
-              li(canny-mod='projectMainNavigation', canny-var='createNewProject')
-                span Create new project
-                span.icon.octicon.octicon-plus
-          label Info and help
-          .menuNavigation.infoHelp
-            ul.navigationMenu.infoHelp
-              li
-                a(href='https://confluence.gameduell.de/display/MOBS/Language+properties+tool', target='_blank')
-                  span about translation tool
-                  span.icon.octicon.octicon-light-bulb
-              li
-                a(href='https://github.com/eightyfour/resourceMessagesLiveEditor', target='_blank')
-                  span.icon.octicon.octicon-octoface
-          div(style='clear: both;')
+      include menuBar
     div(canny-mod='layoutManager', canny-var="{'overlay':'translationViewProjectCategoryKey'}")
-      .translationView-projectCategory.overlayWindow
-        h2 Create a new category
-        // <label class="octicon octicon-key">Which name has the category</label>
-        .inputWrap.octicon.octicon-puzzle
-          input.inputField.category(canny-mod='translationView', canny-var='projectInputCategory', placeholder='enter category name')
-        // <label>Enter a key name</label>
-        .inputWrap.octicon.octicon-key
-          input.inputField.key(canny-mod='translationView', canny-var='projectInputKey', placeholder='enter a key')
-        .button(canny-mod='translationView', canny-var='projectSubmit') Create category
-        p Please add also a key. Categories can't exists without keys!
+      include createNewCategory
     div(canny-mod='layoutManager', canny-var="{'overlay':'createNewProjectView'}")
-      .createNewProjectView.overlayWindow
-        h2 Create a new project
-        // <label class="octicon octicon-puzzle">Which name has the category</label>
-        .inputWrap.octicon.octicon-bug
-          input.inputField.category(canny-mod='createNewProject', canny-var='createNewProjectInputProject', placeholder='enter the project name')
-        .button(canny-mod='createNewProject', canny-var='createNewProjectSubmit') Create project
-        p
-          | A project name could be a translation task number. Or ask your developer
-          | for a technical specific name.
-  div(canny-mod='layoutManager', canny-var="{'overlay':'createNewDirectoryView'}")
-    .createNewProjectView.overlayWindow
-      h2 Create a new directory
-      // <label class="octicon octicon-puzzle">Which name has the category</label>
-      .inputWrap.octicon.octicon-bug
-        input.inputField.category(canny-mod='createNewProject', canny-var='newDirectoryNameInput', placeholder='enter the directory name')
-      .button(canny-mod='createNewProject', canny-var='createNewDirectorySubmit') Create directory
-      p
-        | A new directory can hold other subdirectories or projects.
+      include createNewProject
+    div(canny-mod='layoutManager', canny-var="{'overlay':'createNewDirectoryView'}")
+      include createNewDirectory

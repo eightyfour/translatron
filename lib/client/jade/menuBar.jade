@@ -1,0 +1,35 @@
+.page-scroll
+  .page-scroll--content
+    #menuNavigationFrom.menuNavigation.language(canny-mod='projectMainNavigation', canny-var='from')
+      // place holder for the menu navigation
+    label Project manager
+    .menuNavigation.manager
+      ul.navigationMenu.manager
+        li(canny-mod='translationView', canny-var='projectShow')
+          span Create new category
+          span.icon.octicon.octicon-tag
+        li
+          a(canny-mod='projectMainNavigation', canny-var='showMessageBundleFormat')
+            span Show as message bundles
+            span.icon.octicon.octicon-squirrel
+        li
+          a(canny-mod='projectMainNavigation', canny-var='showJSONBundle')
+            span Show as JSON
+            span.icon.octicon.octicon-eye
+    label Project overview
+    .menuNavigation.projects(canny-mod='projectMainNavigation', canny-var='projects')
+      ul.navigationMenu
+        li(canny-mod='projectMainNavigation', canny-var='createNewProject')
+          span Create new project
+          span.icon.octicon.octicon-plus
+    label Info and help
+    .menuNavigation.infoHelp
+      ul.navigationMenu.infoHelp
+        li
+          a(href='https://confluence.gameduell.de/display/MOBS/Language+properties+tool', target='_blank')
+            span about translation tool
+            span.icon.octicon.octicon-light-bulb
+        li
+          a(href='https://github.com/eightyfour/resourceMessagesLiveEditor', target='_blank')
+            span.icon.octicon.octicon-octoface
+    div(style='clear: both;')
