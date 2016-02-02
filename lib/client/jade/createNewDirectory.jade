@@ -1,10 +1,9 @@
 .createNewProjectView.overlayWindow
-  h2 Create a new project
+  h2 Create a new directory
   // <label class="octicon octicon-puzzle">Which name has the category</label>
-  .inputWrap.octicon.octicon-bug
-    input.inputField.category(canny-mod='createNewProject', canny-var='createNewProjectInputProject', placeholder='enter the project name')
-    button.button(canny-mod='createNewProject', canny-var='createNewProjectSubmit') Create project
+  .inputWrap.octicon.octicon-file-directory
+    input.inputField.category(canny-mod='createNewProject', canny-var='newDirectoryNameInput', placeholder='enter the directory name')
+    button.button(canny-mod='createNewProject', canny-var='createNewDirectorySubmit') Create directory
   p
-    | A project name could be a translation task number. Or ask your developer
-    | for a technical specific name.
+    | A new directory can hold other subdirectories or projects.
 

@@ -6,7 +6,5 @@
       li.octicon.octicon-file-directory(if="item.dir", on-click="item.openProjectListItem", title="Open directory") {{item.name}}
       li.octicon.octicon-file-code(if-not="item.dir", on-click="item.openProjectListItem", title="Open '{{item.name}}' project") {{item.name}}
   .projectOverview-buttons
-      button.button.js-createProjectButton.octicon.octicon-file-code Create project
       button.button.js-createFolderButton.octicon.octicon-file-directory Create folder
-
-
+      button.button.js-createProjectButton.octicon.octicon-file-code Create project
