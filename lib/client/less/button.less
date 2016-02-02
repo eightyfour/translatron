@@ -21,13 +21,18 @@
   -webkit-text-shadow: 0 1px 1px #464d52;
   text-shadow: 0 1px 1px #464d52;
   background: #a2a8ad;
-  background: -webkit-gradient(linear, 0 0, 0 bottom, from(#a2a8ad), to(#82888d));
-  background: -webkit-linear-gradient(#a2a8ad, #82888d);
-  background: -moz-linear-gradient(#a2a8ad, #82888d);
-  background: -ms-linear-gradient(#a2a8ad, #82888d);
-  background: -o-linear-gradient(#a2a8ad, #82888d);
   background: linear-gradient(#a2a8ad, #82888d);
   -webkit-box-shadow: 0px -2px 0px 0px #636a70 inset;
   -moz-box-shadow: 0px -2px 0px 0px #636a70 inset;
   box-shadow: 0px -2px 0px 0px #636a70 inset;
+
+  &:hover{
+    background: linear-gradient(#b7bdc2, #9ca2a7);
+  }
+  &:active{
+    background: #636a70;
+  }
+  &:before{
+    padding-right: .3em;
+  }
 }
