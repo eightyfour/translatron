@@ -68,7 +68,7 @@ body.invert ::-webkit-scrollbar-thumb {background-color: #131313;}
 
 .fullWidthDarkBar {
   height: @header-height;
-  padding-left: @header-height;
+  padding-left: @header-height + 1em;
   width: 100%;
   position: fixed;
   left: 0;
@@ -114,6 +114,7 @@ header.header {
 @import "inputField";
 @import "overlayWindow";
 @import "projectOverview";
+@import "breadcrumb";
 
 @import "../../../dist/flags/less/flag-icon";
 @import "../../../bower_components/octicons/octicons/octicons";
