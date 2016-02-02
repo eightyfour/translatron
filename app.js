@@ -56,9 +56,7 @@ app.get(/^((?!(\/dist|\/bower_components|favicon.ico)).)*$/,  function (req, res
 
 var server = app.listen(serverPort);
 
-// QUESTION: what is conTrade?
 var conTrade,
-    // QUESTION why do we instantiate a "trade" component on the server side? what is shoe?
     trade = shoe(function (stream) {
         "use strict";
 
