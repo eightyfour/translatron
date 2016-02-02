@@ -10,16 +10,17 @@ html
   body(canny-mod='whisker', canny-var='canny.texts.getTexts')
     header.header
       block breadcrumbTrail
-        span.beforeText project name:
-        span.projectName
-          span {{msg.projectName}}
+        div(style='display: none', canny-mod='flowControl', canny-flowcontrol="{'view':'resourceBundle'}")
+          span.beforeText project name:
+          span.projectName
+            span {{msg.projectName}}
     #resourceEditor.translationView
       #resourceBundleTable(style='display: none', canny-mod='flowControl', canny-flowcontrol="{'view':'resourceBundle'}")
         include projectView
     div(canny-mod="flowControl", canny-flowcontrol="{'view':'projectsOverview'}")
       include projectOverview
     #debugIncomming
-    #fixedNavigation.projectMainNavigation(canny-mod='projectMainNavigation', canny-var='main')
+    #fixedNavigation.projectMainNavigation(style='display: none',canny-mod='projectMainNavigation flowControl', canny-var='main', canny-flowcontrol="{'view':'resourceBundle'}")
       .menuToggleButton.si-icon.si-icon-hamburger-cross(data-icon-name='hamburgerCross', canny-mod='projectMainNavigation', canny-var='menuToggleButton')
       .projectMainNavigation--header
         span {{msg.projectName}}
