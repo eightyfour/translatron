@@ -391,5 +391,24 @@ describe('Check that the dao.js do the job correctly', () => {
                 done();
             });
         });
+
+        it('should have parent directories wit correct name', (done) => {
+            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
+                expect(obj.parentDirectories[0].name).toEqual('');
+                expect(obj.parentDirectories[1].name).toEqual('subFolder');
+                expect(obj.parentDirectories[2].name).toEqual('emptySubFolder');
+                done();
+            });
+        });
+
+        it('should have parent directories wit correct id', (done) => {
+            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
+                expect(obj.parentDirectories[0].id).toEqual('/');
+                expect(obj.parentDirectories[1].id).toEqual('/subFolder');
+                expect(obj.parentDirectories[2].id).toEqual('/subFolder/emptySubFolder');
+                done();
+            });
+        });
+
     });
 });
