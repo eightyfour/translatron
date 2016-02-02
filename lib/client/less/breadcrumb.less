@@ -1,0 +1,23 @@
+.breadcrumb{
+    li {
+        cursor: pointer;
+        font-size: 1.5em;
+        line-height: 2em;
+        float: left;
+        &:hover{
+            color: lightgrey;
+        }
+        &:active{
+            color: darkgrey;
+        }
+        &:before{
+            padding-right:.3em;
+        }
+        &:after{
+            float: right;
+            display: block;
+            content: '/';
+            padding: 0 0.5em 0 0;
+        }
+    }
+}
