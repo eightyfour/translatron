@@ -2,7 +2,6 @@
 /*jslint node: true */
 var projectFolder = __dirname + '/static',
     express = require('express'),
-    fs = require('fs'),
     shoe = require('shoe'),
     dnode = require('dnode'),
     dao = require('./lib/server/dao.js')(projectFolder),
@@ -10,33 +9,8 @@ var projectFolder = __dirname + '/static',
     serverPort = process.env.npm_package_config_port || 3000,
     jsonFileManager = require('./lib/server/legacy/jsonFileManager')(projectFolder),
     jade = require('jade'),
-    bodyParser = require('body-parser'),
-    passport = require('passport'),
-    LdapStrategy = require('passport-ldapauth').Strategy,
-    cookieParser = require('cookie-parser');
-
-passport.use(new LdapStrategy({
-    server: {
-        url: 'ldaps://gdoffice.gameduell.de:3269',
-        bindDn: 'CN=trac-bind-user,CN=Users,DC=gdoffice,DC=gameduell,DC=de',
-        bindCredentials: 'rGt2EJuY',
-        searchBase: 'ou=people,DC=gdoffice,DC=gameduell,DC=de',
-        searchFilter: '(sAMAccountName={{username}})',
-        tlsOptions: {
-            ca: [
-                fs.readFileSync('gameduellCA.crt')
-            ]
-        }
-    }
-}));
-// we need the next 2 functions if we want to use passport sessions
-// what is passed to done as the 2nd parameter gets serialized
-passport.serializeUser(function(user, done) {
-    done(null, user);
-});
-passport.deserializeUser(function(user, done) {
-    done(null, user);
-});
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser');
 
 var app = express();
 
@@ -44,13 +18,14 @@ var app = express();
 app.use('/dist',express.static(__dirname + '/dist'));
 // and bower files:
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+
 // bodyParser must be registered with express app - otherwise no body parsing
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(cookieParser());
-app.use(passport.initialize());
-app.use(passport.session());
+
+// activate the LDAP auth
+app.use(require('./lib/server/auth')(app));
 
 // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
 // of the returned function pointer (with optional passing of locals) will do the actual compilation.
@@ -67,18 +42,6 @@ app.get(/^((?!(\/dist|\/bower_components|favicon.ico)).)*$/,  function (req, res
     } else {
         res.send(jade.compileFile('./lib/client/jade/index.jade')());
     }
-});
-// The route below will redirect to "/" on successful login. For a failure, it will simply display "Unauthorized". Now
-// there seems to be a way to already pass the correct redirect targets to authenticate: http://passportjs.org/docs/authenticate#redirects
-// But this does not seem to work: if we add the redirects to the options object and omit the route callback (because
-// we don't need this now, right?), then a login success will bring us back to the login page! The problem seems to be
-// that request.user is not set - no idea why. Maybe the ldapauth module does not support this?
-app.post('/login', passport.authenticate('ldapauth', {session: true}), function(req, res) {
-    console.log('Successful login for user', req.user);
-    // TODO this (i.e. the redirect) will be not so practical once we start using "entry urls" for the applications, i.e.
-    // a query param points to a project and calling the url will take you directly to the project. But when doing the
-    // redirect, we would loose that parameter.
-    res.redirect('/');
 });
 
 /**
