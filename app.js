@@ -12,7 +12,8 @@ var projectFolder = __dirname + '/static',
     jade = require('jade'),
     bodyParser = require('body-parser'),
     passport = require('passport'),
-    LdapStrategy = require('passport-ldapauth');
+    LdapStrategy = require('passport-ldapauth').Strategy,
+    cookieParser = require('cookie-parser');
 
 passport.use(new LdapStrategy({
     server: {
@@ -29,11 +30,12 @@ passport.use(new LdapStrategy({
     }
 }));
 // we need the next 2 functions if we want to use passport sessions
+// what is passed to done as the 2nd parameter gets serialized
 passport.serializeUser(function(user, done) {
-  done(null, user);
+    done(null, user);
 });
 passport.deserializeUser(function(user, done) {
-  done(null, user);
+    done(null, user);
 });
 
 var app = express();
@@ -44,8 +46,11 @@ app.use('/dist',express.static(__dirname + '/dist'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 // bodyParser must be registered with express app - otherwise no body parsing
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(cookieParser());
 app.use(passport.initialize());
+app.use(passport.session());
 
 // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
 // of the returned function pointer (with optional passing of locals) will do the actual compilation.
@@ -56,17 +61,23 @@ var indexPage = jade.compileFile('./lib/client/jade/index.jade')(),
  *
  * If the URL has a dot inside it expect to send a files. Otherwise it sends the index.
  */
-var loggedInUsers = {};
 app.get(/^((?!(\/dist|\/bower_components|favicon.ico)).)*$/,  function (req, res) {
-    if (!loggedInUsers.hasOwnProperty(req.ip)) {
+    if (!req.user) {
         res.send(jade.compileFile('./lib/client/jade/login.jade')());
     } else {
         res.send(jade.compileFile('./lib/client/jade/index.jade')());
     }
 });
+// The route below will redirect to "/" on successful login. For a failure, it will simply display "Unauthorized". Now
+// there seems to be a way to already pass the correct redirect targets to authenticate: http://passportjs.org/docs/authenticate#redirects
+// But this does not seem to work: if we add the redirects to the options object and omit the route callback (because
+// we don't need this now, right?), then a login success will bring us back to the login page! The problem seems to be
+// that request.user is not set - no idea why. Maybe the ldapauth module does not support this?
 app.post('/login', passport.authenticate('ldapauth', {session: true}), function(req, res) {
-    console.log('Successful login for user ' + req.body.username);
-    loggedInUsers[req.ip] = req.body.username;
+    console.log('Successful login for user', req.user);
+    // TODO this (i.e. the redirect) will be not so practical once we start using "entry urls" for the applications, i.e.
+    // a query param points to a project and calling the url will take you directly to the project. But when doing the
+    // redirect, we would loose that parameter.
     res.redirect('/');
 });
 
