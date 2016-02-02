@@ -1,4 +1,4 @@
-@header-height: 4.2em;
+@header-height: 3em;
 @navigation-left-space: 4em;
 html{
   background: #dce4ea;
@@ -68,7 +68,7 @@ body.invert ::-webkit-scrollbar-thumb {background-color: #131313;}
 
 .fullWidthDarkBar {
   height: @header-height;
-  padding-left: @header-height + 1em;
+  padding-left: @navigation-left-space + 1em;
   width: 100%;
   position: fixed;
   left: 0;
@@ -88,10 +88,11 @@ header.header {
     float: left;
   }
   .projectName {
-    line-height: @header-height;
-    font-weight: bold;
-    > span {
-      font-size: 4.2em;
+    font-size: 1.5em;
+    line-height: 2em;
+    color: darkorange;
+    &:before{
+      margin-right: .3em;
     }
   }
 }

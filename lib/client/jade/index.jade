@@ -12,26 +12,32 @@ html
       block breadcrumbTrail
         include breadcrumb
         div(style='display: none', canny-mod='flowControl', canny-flowcontrol="{'view':'resourceBundle'}")
-          span.beforeText project name:
-          span.projectName
-            span {{msg.projectName}}
+          span.projectName.octicon.octicon-file-code {{msg.projectName}}
+
     #resourceEditor.translationView
       #resourceBundleTable(style='display: none', canny-mod='flowControl', canny-flowcontrol="{'view':'resourceBundle'}")
         include projectView
+
     div(canny-mod="flowControl", canny-flowcontrol="{'view':'projectsOverview'}")
       include projectOverview
+
     #debugIncomming
+
     #fixedNavigation.projectMainNavigation(style='display: none',canny-mod='projectMainNavigation flowControl', canny-var='main', canny-flowcontrol="{'view':'resourceBundle'}")
       .menuToggleButton.si-icon.si-icon-hamburger-cross(data-icon-name='hamburgerCross', canny-mod='projectMainNavigation', canny-var='menuToggleButton')
       .projectMainNavigation--header
         span {{msg.projectName}}
       include menuBar
+
     div(canny-mod='layoutManager', canny-var="{'overlay':'translationViewProjectCategoryKey'}")
       include createNewCategory
+
     div(canny-mod='layoutManager', canny-var="{'overlay':'createNewProjectView'}")
       include createNewProject
+
     div(canny-mod='layoutManager', canny-var="{'overlay':'createNewDirectoryView'}")
       include createNewDirectory
+
     footer.footer
       a(href='https://confluence.gameduell.de/display/DEV/Translation+Tool', target='_blank') About
       a(href='https://github.com/gameduell/translatron', target='_blank') Github

@@ -38,7 +38,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    margin-right: -(-@header-height + @navigation-left-space);
+    margin-right: 0;
     background-color: #303030;
     transition: opacity 1s 600ms;
     opacity: 0.5;
@@ -66,12 +66,13 @@
   &--header{
     width: 100%;
     height: @header-height;
+    line-height: @header-height;
     > span{
       // header in menu - font style
       font-weight: bold;
-      padding: 0.7em;
+      padding:  0 0 0 .7em;
       display: block;
-      font-size: 1.7em;
+      font-size: 1.5em;
     }
   }
 
