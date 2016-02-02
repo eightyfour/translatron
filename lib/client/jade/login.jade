@@ -1,0 +1,28 @@
+doctype html
+html
+  head
+    title Translatron login
+    link(rel='stylesheet', type='text/css', href='/dist/css/translatron.css')
+    link(rel='stylesheet', href='/bower_components/octicons/octicons/octicons.css')
+    script(type='text/javascript', src='/dist/js/translatron.js')
+    script(type='text/javascript', src='/dist/animatedSVG/js/snap.svg-min.js')
+    script(type='text/javascript', src='/dist/animatedSVG/js/svgicons.js')
+  body
+    header.header
+      h1 Login
+      form(name='login', action='/login', method='POST')
+        div(style='width:20%;margin:auto')
+          label(style='float:left;color:black') Username
+          input(type='text', name='username', style='float:right')
+        div(style='clear:both')
+        div(style='width:20%;margin:auto')
+          label(style='float:left;color:black') Password
+          input(type='password', name='password', style='float:right')
+        div(style='clear:both')
+        div(style='width:20%;margin:auto')
+          input(type='submit', style='float:right')
+
+    footer.footer
+      a(href='https://confluence.gameduell.de/display/DEV/Translation+Tool', target='_blank') About
+      a(href='https://github.com/gameduell/translatron', target='_blank') Github
+
