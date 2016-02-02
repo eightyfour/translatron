@@ -9,7 +9,32 @@ var projectFolder = __dirname + '/static',
     fileManager = require('./lib/server/legacy/fileManager.js')(projectFolder),
     serverPort = process.env.npm_package_config_port || 3000,
     jsonFileManager = require('./lib/server/legacy/jsonFileManager')(projectFolder),
-    jade = require('jade');
+    jade = require('jade'),
+    bodyParser = require('body-parser'),
+    passport = require('passport'),
+    LdapStrategy = require('passport-ldapauth');
+
+passport.use(new LdapStrategy({
+    server: {
+        url: 'ldaps://gdoffice.gameduell.de:3269',
+        bindDn: 'CN=trac-bind-user,CN=Users,DC=gdoffice,DC=gameduell,DC=de',
+        bindCredentials: 'rGt2EJuY',
+        searchBase: 'ou=people,DC=gdoffice,DC=gameduell,DC=de',
+        searchFilter: '(sAMAccountName={{username}})',
+        tlsOptions: {
+            ca: [
+                fs.readFileSync('gameduellCA.crt')
+            ]
+        }
+    }
+}));
+// we need the next 2 functions if we want to use passport sessions
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
 
 var app = express();
 
@@ -17,6 +42,10 @@ var app = express();
 app.use('/dist',express.static(__dirname + '/dist'));
 // and bower files:
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+// bodyParser must be registered with express app - otherwise no body parsing
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(passport.initialize());
 
 // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
 // of the returned function pointer (with optional passing of locals) will do the actual compilation.
@@ -27,9 +56,18 @@ var indexPage = jade.compileFile('./lib/client/jade/index.jade')(),
  *
  * If the URL has a dot inside it expect to send a files. Otherwise it sends the index.
  */
-app.get(/^((?!(\/dist|\/bower_components)).)*$/,  function (req, res) {
-    //res.send(jade.compileFile('./lib/client/jade/projectOverview.jade')());
-    res.send(jade.compileFile('./lib/client/jade/index.jade')());
+var loggedInUsers = {};
+app.get(/^((?!(\/dist|\/bower_components|favicon.ico)).)*$/,  function (req, res) {
+    if (!loggedInUsers.hasOwnProperty(req.ip)) {
+        res.send(jade.compileFile('./lib/client/jade/login.jade')());
+    } else {
+        res.send(jade.compileFile('./lib/client/jade/index.jade')());
+    }
+});
+app.post('/login', passport.authenticate('ldapauth', {session: true}), function(req, res) {
+    console.log('Successful login for user ' + req.body.username);
+    loggedInUsers[req.ip] = req.body.username;
+    res.redirect('/');
 });
 
 /**
