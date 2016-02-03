@@ -1,0 +1,85 @@
+.overlayWindow {
+  font-size: 150%;
+  width: 100%;
+  max-width: 22em;
+  padding: 1em 2em;
+  background-color: rgba(203, 203, 205, 1);
+  border-radius: 4px;
+  box-shadow: 0 0.5em 3em rgba(0, 0, 0, 0.5), 0 0 4px 2px rgba(255, 255, 255, 0.6) inset;
+  position: relative;
+
+  &.overlayDark {
+    margin-left: 3em;
+    border-radius: 1.5em 1.5em;
+    padding: 3em 3em 7em;
+    width: 70%;
+    min-width: 320px;
+    max-width: 1280px;
+    background-color: #2d2d2d;
+    font-size: 100%;
+    height: 80%;
+    box-sizing: border-box;
+
+    > * {
+      box-sizing: border-box;
+    }
+
+    .codeContainer-wrap {
+      margin: 0 0 1em 0;
+      border-radius: 5px;
+      color: #c7c7c7;
+      overflow: auto;
+      height: 100%;
+    }
+    .codeContainer {
+      height: 100%;
+    }
+
+    .button {
+      display: block;
+      margin: 0 auto 0;
+      width: 100%;
+    }
+  }
+
+  .inputWrap {
+    width: 70%;
+    position: relative;
+    padding-left: 1.4em;
+    box-sizing: border-box;
+    font-size: 1em;
+    margin: auto;
+    display: table;
+
+    &:before{
+      position: absolute;
+      top: 0.3em;
+      left: 0;
+    }
+  }
+  h2{
+    width:100%;
+    left:0;
+    font-size:1.5em;
+    font-weight: bold;
+    margin: 0 0 1em 0;
+    color: white;
+    text-shadow: 0 0 5px #000;
+  }
+  p {
+    padding: 2em 0 0 0;
+    font-style: italic;
+    color: #666;
+  }
+  label {
+    margin: 0 0 0.4em 0;
+    display: block;
+  }
+  input{
+    margin: 0 0 1em auto;
+  }
+  .button {
+    width: 100%;
+    margin: 0.3em auto 0;
+  }
+}

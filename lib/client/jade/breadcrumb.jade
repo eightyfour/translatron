@@ -1,0 +1,4 @@
+ul.breadcrumb(canny-mod="repeat", canny-var="{'for':'item', 'in':'canny.breadcrumb.registerCannyRepeat'}")
+  li.octicon.octicon-home(if-not="item.name", on-click="item.onClick")
+  li.octicon.octicon-file-directory(if="item.name", on-click="item.onClick") {{item.name}}
+

@@ -1,0 +1,12 @@
+{
+    "author": {
+        "name": "eightyfour"
+    },
+    "name": "mkdir-p.js",
+    "description": "Creates subfolder if not exists. TODO create a separate module and optimize the performance.",
+    "version": "0.0.1",
+    "main": "mkdir-p.js",
+    "engines": {
+        "node": ">= v0.4.0"
+    }
+}

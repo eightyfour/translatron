@@ -1,0 +1,62 @@
+.icon-btn-effect{
+  cursor: pointer;
+  &:hover{
+    color: #7b7b7b;
+  }
+  &:active{
+    color: darkslategray;
+  }
+}
+
+.projectOverview {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10em;
+
+  h1 {
+    margin-bottom: 1em;
+  }
+
+  &-back-btn{
+    .icon-btn-effect();
+    &:after{
+      padding-left:0.3em;
+      display: inline-block;
+      content: "..." ;
+    }
+  }
+
+  &-list {
+    min-height: 300px;
+    padding: 1em;
+  }
+  ul {
+    padding-top: .5em;
+    li {
+      .icon-btn-effect();
+      margin: 0.3em 1em .6em 0;
+      display: block;
+      &:before{
+        padding-right:0.3em;
+      }
+    }
+  }
+
+  &-buttons {
+    text-align: center;
+    margin-top: 2em;
+
+    // TODO introduce common mixing for buttons
+    button {
+      margin-right: 2em;
+    }
+  }
+}
+
+
+
+
+
+
+

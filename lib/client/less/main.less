@@ -1,0 +1,127 @@
+@header-height: 3em;
+@navigation-left-space: 4em;
+
+@import "mixins";
+
+html{
+  background: #dce4ea;
+}
+body{
+  font-family: sans-serif;
+  font-size: 80%;
+  padding-top: @header-height;
+  padding-left: @navigation-left-space;
+  overflow-x: hidden; // needed for the overlay
+}
+// Reset
+div, span, applet, object, iframe,
+p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: inherit; // todo inherit or 100% ??
+  vertical-align: baseline;
+  font-weight: inherit;
+}
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+a {
+  text-decoration: underline;
+  color: blue;
+}
+
+body ::-webkit-scrollbar {width: 7px;}
+body ::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(100,100,100,0.3);
+  border-radius: 0px;
+  background-color: #131313;
+}
+body ::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+  background-color: #424242;
+}
+body.invert ::-webkit-scrollbar-track {background-color: #424242;}
+body.invert ::-webkit-scrollbar-thumb {background-color: #131313;}
+
+
+.fullWidthDarkBar {
+  height: @header-height;
+  padding-left: @navigation-left-space + 1em;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  background-color: #303030;
+  z-index: 20;
+  color:white;
+}
+
+header.header {
+  &:extend(.fullWidthDarkBar);
+  top: 0;
+
+  .beforeText{
+    margin: .5em 1em 0 1em;
+    position: relative;
+    display: block;
+    float: left;
+  }
+  .projectName {
+    font-size: 1.5em;
+    line-height: 2em;
+    color: darkorange;
+    &:before{
+      margin-right: .3em;
+    }
+  }
+}
+
+@import "footer";
+
+#fileManager .switchLink{display: block;}
+
+.floatL {float: left;}
+
+@import "projectMainNavigation";
+@import "layoutManager";
+@import "initialView";
+@import "translationView";
+@import "inputEditManager";
+@import "imageViewer";
+@import "translationViewHeader";
+@import "textEditor";
+@import "button";
+@import "inputField";
+@import "overlayWindow";
+@import "projectOverview";
+@import "breadcrumb";
+@import "auth";
+@import "login";
+
+@import "../../../dist/flags/less/flag-icon";
+@import "../../../bower_components/octicons/octicons/octicons";
+// overwrite oticons path variable
+@octicons-font-path: '/bower_components/octicons/octicons';

@@ -1,0 +1,30 @@
+{
+  "project": "sub1",
+  "projectId": "/sub/sub1",
+  "description": "This is only for testing the test application. This is part of a sub folder",
+  "defaultLanguage": "en",
+  "numberOfKeys": "10",
+  "languages": {
+    "de": {
+      "translated": "4"
+    },
+    "en": {
+      "translated": "10"
+    }
+  },
+  "keyDescriptions" : {
+    "first": {
+      "__description" : "Description for the category",
+      "__image" : [],
+      "key_1" : "That's the description for key 1"
+    }
+  },
+  "keys": {
+    "de" : {
+      "first_key_1" : "test Schluessel Nummer Eins"
+    },
+    "en": {
+      "first_key_1" : "test key number one 1"
+    }
+  }
+}

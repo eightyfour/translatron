@@ -1,0 +1,10 @@
+.projectOverview(canny-mod="projectOverview")
+  h1 Project overview
+  .projectOverview-list
+    .projectOverview-back-btn.octicon.octicon-mail-reply.js-selectParentDirectoryButton(title="show parent directory")
+    ul(canny-mod="repeat" canny-var="{'for':'item','in':'canny.projectOverview.setRenderProjectsAndDirectoriesListFunction'}")
+      li.octicon.octicon-file-directory(if="item.dir", on-click="item.openProjectListItem", title="Open directory") {{item.name}}
+      li.octicon.octicon-file-code(if-not="item.dir", on-click="item.openProjectListItem", title="Open '{{item.name}}' project") {{item.name}}
+  .projectOverview-buttons
+      button.button.js-createFolderButton.octicon.octicon-file-directory Create folder
+      button.button.js-createProjectButton.octicon.octicon-file-code Create project

@@ -1,0 +1,22 @@
+{
+  "project": "sub2",
+  "projectId": "/sub/sub2",
+  "description": "Sub2 in a sub folder",
+  "defaultLanguage": "en",
+  "languages": {},
+  "keyDescriptions" : {
+    "first": {
+      "__description" : "Description for the category",
+      "__image" : [],
+      "key_1" : "Only German translation required"
+    }
+  },
+  "keys": {
+    "de" : {
+      "first_key_1" : "Schluessel Eins"
+    },
+    "en": {
+      "first_key_1" : "key one"
+    }
+  }
+}

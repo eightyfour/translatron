@@ -1,239 +1,175 @@
 /*global console */
 /*jslint node: true */
-var express = require('express'),
-    fs = require('fs'),
+var projectFolder = __dirname + '/static',
+    express = require('express'),
     shoe = require('shoe'),
     dnode = require('dnode'),
-    client = require('./lib/client.js')(__dirname),
-    C = require('./lib/CONST.js'),
-    fileManager = require('./lib/server/fileManager.js'),
-    bash = require('./lib/server/bash.js'),
+    dao = require('./lib/server/dao.js')(projectFolder),
+    fileManager = require('./lib/server/legacy/fileManager.js')(projectFolder),
     serverPort = process.env.npm_package_config_port || 3000,
-    jsonFileManager = require('./lib/server/jsonFileManager');
+    jsonFileManager = require('./lib/server/legacy/jsonFileManager')(projectFolder),
+    jade = require('jade'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser');
 
 var app = express();
 
-global.projectFolder = __dirname + '/static';
+// use bodyParser middleware for handling request bodies (express does *not* provide that feature out-of-the-box).
+// since we only have one case of that (POST to /login where username, password are in the body) and that one is url-encoded,
+// we only need that flavor of bodyParser. about the "extended" property, see https://github.com/expressjs/body-parser#bodyparserurlencodedoptions
+app.use(bodyParser.urlencoded({ extended: false }));
+// same for parsing cookie
+app.use(cookieParser());
 
-app.use(express.static(__dirname + '/fe'));
+// activate the LDAP auth
+app.use(require('./lib/server/auth')(app));
 
-// TODO move the create project in a separate file
-function getDefaultProjectJson(projectName, obj) {
-    var cb = function () {
-        console.log('Second function param callback: DEFAULT');
-    };
+app.use(function(req, res, next) {
+    console.log(req.method, req.url, req.query, req.user ? req.user.name : '-');
+    next();
+});
 
-    jsonFileManager.getJSON('project.json', function (data) {
-        cb({
-            "project" : projectName,
-            "description" : obj.description || "",
-            "images" : [],
-            "defaultLanguage" : data.defaultLanguage || "en",
-            "numberOfKeys" : "0",
-            "languages" : {},
-            "keys" : {}
-        });
-    });
-    return function (fc) {
-        cb = fc;
-        console.log('Second function param callback: CALLED');
+// configure routes for static content
+app.use('/dist',
+    express.static(__dirname + '/dist'));
+app.use('/bower_components',
+    express.static(__dirname + '/bower_components'));
+
+// jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
+// of the returned function pointer (with optional passing of locals) will do the actual compilation.
+var indexPage = jade.compileFile('./lib/client/jade/index.jade')(),
+    projectOverviewPage = jade.compileFile('./lib/client/jade/projectOverview.jade');
+
+// configure the main route: matches all GETs for a query path which identifies either a directory or a project: for a
+// directory, the path starts with the root "/" followed by zero to N directories (each ending  on a "/"). For a project,
+// the path is like the path for a directory but with an appended project id (e.g. "project.prj")
+// we can add this route as a wildcard route because all other routes are already handled before and request processing
+// for other routes should never arrive here
+// if for any reason we can no longer use a wildcard route here, simply change to a route which uses the pattern
+// "\/(?:\w\/)*"
+app.use(
+    function (req, res) {
+        if (!req.user) {
+            res.send(jade.compileFile('./lib/client/jade/login.jade')());
+        } else {
+            res.send(jade.compileFile('./lib/client/jade/index.jade')());
+        }
     }
-}
-
-
-/**
- * If no project exists I ignore the bundle attribute and open the project create view with the bundle name as default...
- * Only if the create project is triggered only than create a new project.
- *
- * TODO
- *  * add create project server interface
- *  * and implement view handling
- * @type {http.Server}
- */
+);
 
 var server = app.listen(serverPort);
 
-//var conDnode;
-//var dnodeCon = shoe(function (stream) {
-//    "use strict";
-//    var d = dnode(client);
-//    d.pipe(stream).pipe(d);
-//    conDnode = stream;
-//
-//    conDnode.on('end', function () {
-//        console.log('end');
-//    });
-//});
-//dnodeCon.install(server, '/dnode');
+var websocketServer = shoe(function (stream) {
+    "use strict";
 
-function getMessageBundleLanguages(filesAndFolders) {
-    var availableLanguages = {},
-        reg = new RegExp('messages_(.*)\.properties'),
-        regResult;
-    filesAndFolders.forEach(function (file) {
-        if (!file.d) {
-            regResult = reg.exec(file.name);
-            if (regResult && regResult[1]) {
-                availableLanguages[regResult[1]] = {translated : -1};
-            }
-        }
-    });
-    return availableLanguages;
-}
-
-var conTrade,
-    trade = shoe(function (stream) {
-        "use strict";
-        var d = dnode({
-            getMessageBundle : function (projectName, cb) {
-                fileManager.readDir(projectName, function (filesAndFolders) {
-                    if (!filesAndFolders) {
-                        // there are no message bundles actually
-                        cb(false);
-                    } else {
-                        var availableLanguages = getMessageBundleLanguages(filesAndFolders.value);
-                        Object.keys(availableLanguages).forEach(function (lang) {
-                            client.getMessageBundle({
-                                bundle: projectName,
-                                locale: lang
-                            }, cb);
-                        })
-                    }
-                });
-            },
-            sendResource : function (id, bundleObj, data, cb) {
-                client.sendResource.apply(null, [].slice.call(arguments));
-            },
-            renameKey : function () {
-                client.renameKey.apply(null, [].slice.call(arguments));
-            },
-            removeKey : function () {
-                client.removeKey.apply(null, [].slice.call(arguments));
-            },
-            createNewProject : function (id, projectName, obj, cb) {
-                // TODO instead of read save the project here
-                // Add project.json template in main project.json
-                getDefaultProjectJson(projectName, obj)(function (json) {
-                    // send back
-                    cb(json);
-                    client.createNewProject(id, projectName);
-                    // and save config
-                    jsonFileManager.saveJSON(projectName + '/project.json', json);
-                });
-            },
-            /**
-             * initial call - all client methods are saved here.
-             * returns a id as callback. The client needs this as identifier.
-             */
-            setupClient : function () {
-                client.setupClient.apply(null, [].slice.call(arguments));
-            },
-            /**
-             *  TODO refactor - do it only if the client ask for - methods are saved in client
-             *  Rename init in getPathList
-             */
-            init : function (clientEvents) {
-                bash.exec({
-                    comand : C.BASH.LS,
-                    path : '.'
-                }, function (obj) {
-                    clientEvents.sendPathList(obj);
-                });
-            },
-            /**
-             * TODO remove bash
-             */
-            bash : bash,
-            fileManager : fileManager,
-            jsonFileManager : (function () {
-                var ret = {};
-                // lo0ks like a listener :-)
-                Object.keys(jsonFileManager).forEach(function (key) {
-                    ret[key] = function () {
-                        jsonFileManager[key].apply(null, [].slice.call(arguments));
-                    };
-                });
-                /**
-                 * currently the merge flag supports only flat merge - TODO deep merge
-                 *
-                 * @param projectName
-                 * @param data
-                 * @param merge
-                 * @param cb
-                 */
-                ret.saveJSON = function (projectName, data, merge, cb) {
-                    if (merge) {
-                        jsonFileManager.getJSON(projectName + '/project.json', function (oldData) {
-                            Object.keys(data).forEach(function (key) {
-                                oldData[key] = data[key];
-                            });
-                            jsonFileManager.saveJSON(projectName + '/project.json', oldData, cb);
-                            console.log('app:saveJSON', projectName, oldData);
-                        });
-                    } else {
-                        jsonFileManager.saveJSON(projectName + '/project.json', oldData, cb);
-                        console.log('app:saveJSON', projectName, data);
-                    }
+    var d = dnode({
+        loadProject : function (projectId, cb) {
+            dao.loadProject(projectId, cb);
+        },
+        saveKey : function(id, projectId, language, keyAndValue, cb) {
+            dao.saveKey(id, projectId, language, keyAndValue, cb);
+        },
+        renameKey : function () {
+            dao.renameKey.apply(null, [].slice.call(arguments));
+        },
+        removeKey : function () {
+            dao.removeKey.apply(null, [].slice.call(arguments));
+        },
+        createNewProject : function (id, path, projectName, obj, cb) {
+            dao.createNewProject(id, path, projectName, obj, cb);
+        },
+        getDirectory : function(dir, cb) {
+            dao.getDirectory(dir, cb);
+        },
+        createNewDirectory : function(id, directoryName, path, cb) {
+            dao.createNewDirectory(id, directoryName, path, cb);
+        },
+        /**
+         * initial call - all client methods are saved here.
+         * returns a id as callback. The client needs this as identifier.
+         */
+        setupClient : function () {
+            // TODO draft: authenticate the client - and pass the name to the setupClient
+            dao.setupClient.apply(null, [].slice.call(arguments));
+        },
+        jsonFileManager : (function () {
+            var ret = {};
+            // lo0ks like a listener :-)
+            Object.keys(jsonFileManager).forEach(function (key) {
+                ret[key] = function () {
+                    jsonFileManager[key].apply(null, [].slice.call(arguments));
                 };
+            });
+            /**
+             * currently the merge flag supports only flat merge - TODO deep merge
+             *
+             * @param projectName
+             * @param data
+             * @param merge
+             * @param cb
+             */
+            ret.saveJSON = function (projectName, data, merge, cb) {
+                // TODO save this in the description field from the [project name].json
+                //if (merge) {
+                //    jsonFileManager.getJSON('/' + projectName + '/project.json', function (oldData) {
+                //        Object.keys(data).forEach(function (key) {
+                //            oldData[key] = data[key];
+                //        });
+                //        jsonFileManager.saveJSON(projectName + '/project', oldData, cb);
+                //        console.log('app:saveJSON', projectName, oldData);
+                //    });
+                //} else {
+                //    jsonFileManager.saveJSON(projectName + '/project', oldData, cb);
+                //    console.log('app:saveJSON', projectName, data);
+                //}
+            };
 
-                /**
-                 * param: projectName(optional - otherwise take main project.json), callback
-                 */
-                ret.getJSON = function (projectName, p1) {
-                    // only a callback is passed
-                    var cb = p1 || projectName;
-                    if (typeof projectName === 'function') {
-                        // first bring project JSON up to date
-                        fileManager.readDir('', function (filesAndFolders) {
-                            var folders = [];
+            /**
+             * Refactor this function - it do multiple jobs
+             * param: projectName(optional - otherwise take main project.json), callback
+             */
+            ret.getJSON = function (path, projectName, p1) {
+                // only a callback is passed
+                var cb = p1 || projectName;
+                // if the second parameter a function the client asks for the actual projects in this path
+                // TODO change it to a separate function call or find a better solution (e.g. server pre render with JADE)
+                if (typeof projectName === 'function') {
+                    // first bring project JSON up to date
+                    fileManager.readDir(path, function (filesAndFolders) {
+                        var folders = [];
+                        // if the folder is not exists then the value is undefined
+                        if (filesAndFolders.value) {
                             filesAndFolders.value.forEach(function (folder) {
-                                if (folder.d) {
-                                    folders.push(folder.name);
+                                if (!folder.d && folder.name !== 'project.json' && /\.json/.test(folder.name)) {
+                                    folders.push(folder.name.split('.')[0]);
                                 }
                             });
-                            jsonFileManager.getJSON('project.json', function (data) {
-                                data.projects = folders;
-                                cb(data);
-                            });
-                        })
-
-                    } else {
-                        // first bring project JSON up to date
-                        fileManager.readDir(projectName, function (filesAndFolders) {
-                            var availableLanguages;
-                            if (filesAndFolders === false) {
-                                console.log('app:getJSON The project does not exists', projectName);
-                                cb(false);
-                            } else {
-                                availableLanguages = getMessageBundleLanguages(filesAndFolders.value);
-                                jsonFileManager.getJSON(projectName + '/project.json', function (data) {
-                                    if (data) {
-                                        Object.keys(availableLanguages).forEach(function (key) {
-                                            if (!data.languages.hasOwnProperty(key)) {
-                                                data.languages[key] = availableLanguages[key];
-                                            }
-                                        });
-                                        cb(data);
-                                    } else {
-                                        console.log('app:getJSON the project specific project.json is missing for project', projectName);
-                                        cb(false);
-                                    }
-                                });
-                            }
-
+                        }
+                        // load the default root project.json
+                        jsonFileManager.getJSON('/project.json', function (data) {
+                            data.projects = folders;
+                            cb(data);
                         });
-                    }
-                };
-                return ret;
-            }())
-        });
-    d.pipe(stream).pipe(d);
-    conTrade = stream;
+                    })
 
-    conTrade.on('end', function () {
-        console.log('end');
+                } else if (/\.prj/.test(projectName)) {
+                    console.log('app:does not support prj files for getJSON calls');
+                }
+            };
+            return ret;
+        }())
     });
+
+    // handle errors from processing commands from clients: at least log them
+    // if we did not have this error handler, errors would propagate up the stack and effectively close down the
+    // application
+    d.on('error', function(err) {
+       console.error(err.message, err.stack);
+    });
+
+    d.pipe(stream).pipe(d);
 });
-trade.install(server, '/trade');
+// "/trade" identifies the websocket connection
+websocketServer.install(server, '/trade');
 
 console.log("start server ", serverPort);

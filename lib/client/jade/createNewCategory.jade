@@ -1,0 +1,10 @@
+.translationView-projectCategory.overlayWindow
+  h2 Create a new category
+  // <label class="octicon octicon-key">Which name has the category</label>
+  .inputWrap.octicon.octicon-puzzle
+    input.inputField.category(canny-mod='translationView', canny-var='projectInputCategory', placeholder='enter category name')
+  // <label>Enter a key name</label>
+  .inputWrap.octicon.octicon-key
+    input.inputField.key(canny-mod='translationView', canny-var='projectInputKey', placeholder='enter a key')
+  button.button(canny-mod='translationView', canny-var='projectSubmit') Create category
+  p Please add also a key. Categories can't exists without keys!
