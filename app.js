@@ -32,25 +32,32 @@ app.use(function(req, res, next) {
 // TODO add error handler middleware
 
 // configure routes for static content
-app.use('/dist',express.static(__dirname + '/dist'));
-app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+app.use('/dist',
+    express.static(__dirname + '/dist'));
+app.use('/bower_components',
+    express.static(__dirname + '/bower_components'));
 
 // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
 // of the returned function pointer (with optional passing of locals) will do the actual compilation.
 var indexPage = jade.compileFile('./lib/client/jade/index.jade')(),
     projectOverviewPage = jade.compileFile('./lib/client/jade/projectOverview.jade');
-/**
- * match except for folder dist and bower_components
- *
- * If the URL has a dot inside it expect to send a files. Otherwise it sends the index.
- */
-app.get(/^((?!(\/dist|\/bower_components|favicon.ico)).)*$/,  function (req, res) {
-    if (!req.user) {
-        res.send(jade.compileFile('./lib/client/jade/login.jade')());
-    } else {
-        res.send(jade.compileFile('./lib/client/jade/index.jade')());
+
+// configure the main route: matches all GETs for a query path which identifies either a directory or a project: for a
+// directory, the path starts with the root "/" followed by zero to N directories (each ending  on a "/"). For a project,
+// the path is like the path for a directory but with an appended project id (e.g. "project.prj")
+// the pattern for this route does *not* include the pattern for the project and is actually not needed because it is
+// enough if the directories part of the path is matched.
+// it is important that this route is configured as the last one: all other routes which serve content that match
+// similar URLs will already handle a request and this route here will not be triggered
+app.get(/\/(?:\w\/)*/,
+    function (req, res) {
+        if (!req.user) {
+            res.send(jade.compileFile('./lib/client/jade/login.jade')());
+        } else {
+            res.send(jade.compileFile('./lib/client/jade/index.jade')());
+        }
     }
-});
+);
 
 /**
  * If no project exists I ignore the bundle attribute and open the project create view with the bundle name as default...
