@@ -1,12 +1,14 @@
 /*global console */
 /*jslint node: true */
 var projectFolder = __dirname + '/static',
+    packageJSON = require('./package.json'),
     express = require('express'),
     shoe = require('shoe'),
     dnode = require('dnode'),
     dao = require('./lib/server/dao.js')(projectFolder),
     fileManager = require('./lib/server/legacy/fileManager.js')(projectFolder),
-    serverPort = process.env.npm_package_config_port || 3000,
+    serverPort = packageJSON.config.port || 3000,
+    enableAuth = packageJSON.config.enableAuth,
     jsonFileManager = require('./lib/server/legacy/jsonFileManager')(projectFolder),
     jade = require('jade'),
     cookieParser = require('cookie-parser'),
@@ -22,7 +24,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // activate the LDAP auth
-app.use(require('./lib/server/auth')(app));
+if (enableAuth) {
+    app.use(require('./lib/server/auth')(app));
+}
 
 app.use(function(req, res, next) {
     console.log(req.method, req.url, req.query, req.user ? req.user.name : '-');
@@ -49,7 +53,7 @@ var indexPage = jade.compileFile('./lib/client/jade/index.jade')(),
 // "\/(?:\w\/)*"
 app.use(
     function (req, res) {
-        if (!req.user) {
+        if (enableAuth && !req.user) {
             res.send(jade.compileFile('./lib/client/jade/login.jade')());
         } else {
             res.send(jade.compileFile('./lib/client/jade/index.jade')());
