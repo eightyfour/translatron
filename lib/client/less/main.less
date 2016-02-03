@@ -67,7 +67,6 @@ body ::-webkit-scrollbar-thumb {
 body.invert ::-webkit-scrollbar-track {background-color: #424242;}
 body.invert ::-webkit-scrollbar-thumb {background-color: #131313;}
 
-@octicons-font-path: '../octicons';
 
 .fullWidthDarkBar {
   height: @header-height;
@@ -124,3 +123,5 @@ header.header {
 
 @import "../../../dist/flags/less/flag-icon";
 @import "../../../bower_components/octicons/octicons/octicons";
+// overwrite oticons path variable
+@octicons-font-path: '/bower_components/octicons/octicons';
