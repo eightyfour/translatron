@@ -29,8 +29,6 @@ app.use(function(req, res, next) {
     next();
 });
 
-// TODO add error handler middleware
-
 // configure routes for static content
 app.use('/dist',
     express.static(__dirname + '/dist'));
@@ -58,16 +56,6 @@ app.get(/\/(?:\w\/)*/,
         }
     }
 );
-
-/**
- * If no project exists I ignore the bundle attribute and open the project create view with the bundle name as default...
- * Only if the create project is triggered only than create a new project.
- *
- * TODO
- *  * add create project server interface
- *  * and implement view handling
- * @type {http.Server}
- */
 
 var server = app.listen(serverPort);
 
@@ -172,13 +160,18 @@ var conTrade,
                 return ret;
             }())
         });
-    d.pipe(stream).pipe(d);
-    conTrade = stream;
 
-    conTrade.on('end', function () {
-        console.log('end');
+        d.on('error', function(err) {
+           console.error(err.message, err.stack);
+        });
+
+        d.pipe(stream).pipe(d);
+        conTrade = stream;
+
+        conTrade.on('end', function () {
+            console.log('end');
+        });
     });
-});
 trade.install(server, '/trade');
 
 console.log("start server ", serverPort);
