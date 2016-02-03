@@ -43,11 +43,11 @@ var indexPage = jade.compileFile('./lib/client/jade/index.jade')(),
 // configure the main route: matches all GETs for a query path which identifies either a directory or a project: for a
 // directory, the path starts with the root "/" followed by zero to N directories (each ending  on a "/"). For a project,
 // the path is like the path for a directory but with an appended project id (e.g. "project.prj")
-// the pattern for this route does *not* include the pattern for the project and is actually not needed because it is
-// enough if the directories part of the path is matched.
-// it is important that this route is configured as the last one: all other routes which serve content that match
-// similar URLs will already handle a request and this route here will not be triggered
-app.get(/\/(?:\w\/)*/,
+// we can add this route as a wildcard route because all other routes are already handled before and request processing
+// for other routes should never arrive here
+// if for any reason we can no longer use a wildcard route here, simply change to a route which uses the pattern
+// "\/(?:\w\/)*"
+app.use(
     function (req, res) {
         if (!req.user) {
             res.send(jade.compileFile('./lib/client/jade/login.jade')());
