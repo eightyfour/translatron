@@ -66,6 +66,8 @@ var server = app.listen(serverPort);
 var websocketServer = shoe(function (stream) {
     "use strict";
 
+    // QUESTION: any reason why we have to define all the functions of the API in an object literal here? why not
+    // directly pass a dao.js instance of dnode?
     var d = dnode({
         loadProject : function (projectId, cb) {
             dao.loadProject(projectId, cb);

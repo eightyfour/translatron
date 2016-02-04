@@ -92,6 +92,7 @@ describe('Check that the dao.js do the job correctly', () => {
             it("should have the correct default values", () => {
                 expect(project.description).toEqual('');
                 expect(project.languages).toEqual({});
+                expect(project.availableLanguages.length).toEqual(8);
                 expect(project.keyDescriptions).toEqual({});
                 expect(project.numberOfKeys).toEqual(0);
                 expect(project.keys).toEqual({});
