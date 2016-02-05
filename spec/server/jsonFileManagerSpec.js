@@ -22,13 +22,6 @@ describe('Check that the jsonFileManager works', () => {
         expect(saveResult).toEqual(null);
     });
 
-    it("should read the JSON from a files", (done) => {
-        fileMgr.getJSON('/jsonFileManager/test.json', (data) => {
-            expect(data).toEqual(persistObj);
-            done();
-        });
-    });
-
     afterAll((done) => {
         Promise.all([
             new Promise((fulFill, reject) =>

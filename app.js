@@ -67,7 +67,8 @@ var websocketServer = shoe(function (stream) {
     "use strict";
 
     // QUESTION: any reason why we have to define all the functions of the API in an object literal here? why not
-    // directly pass a dao.js instance of dnode?
+    // directly pass a dao.js instance of dnode? ANSWER: no, as of now this has become unneccessary. BUT: we'll be adding
+    // authorization and the logic for broadcasting changes (refactored out of dao.js) here so we need this layer then.
     var d = dnode({
         loadProject : function (projectId, cb) {
             dao.loadProject(projectId, cb);
@@ -129,45 +130,12 @@ var websocketServer = shoe(function (stream) {
                 //    console.log('app:saveJSON', projectName, data);
                 //}
             };
-
-            /**
-             * Refactor this function - it do multiple jobs
-             * param: projectName(optional - otherwise take main project.json), callback
-             */
-            ret.getJSON = function (path, projectName, p1) {
-                // only a callback is passed
-                var cb = p1 || projectName;
-                // if the second parameter a function the client asks for the actual projects in this path
-                // TODO change it to a separate function call or find a better solution (e.g. server pre render with JADE)
-                if (typeof projectName === 'function') {
-                    // first bring project JSON up to date
-                    fileManager.readDir(path, function (filesAndFolders) {
-                        var folders = [];
-                        // if the folder is not exists then the value is undefined
-                        if (filesAndFolders.value) {
-                            filesAndFolders.value.forEach(function (folder) {
-                                if (!folder.d && folder.name !== 'project.json' && /\.json/.test(folder.name)) {
-                                    folders.push(folder.name.split('.')[0]);
-                                }
-                            });
-                        }
-                        // load the default root project.json
-                        jsonFileManager.getJSON('/project.json', function (data) {
-                            data.projects = folders;
-                            cb(data);
-                        });
-                    })
-
-                } else if (/\.prj/.test(projectName)) {
-                    console.log('app:does not support prj files for getJSON calls');
-                }
-            };
             return ret;
         }())
     });
 
     // handle errors from processing commands from clients: at least log them
-    // if we did not have this error handler, errors would propagate up the stack and effectively close down the
+    // if we didn't have this error handler, errors would propagate up the stack and effectively close down the
     // application
     d.on('error', function(err) {
        console.error(err.message, err.stack);
