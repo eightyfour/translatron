@@ -4,15 +4,12 @@ var projectFolder = __dirname + '/fixtures/',
 
 var MOCK_CONNECTION_ID = 'xx';
 
-describe('dao general tests', function() {
+describe('dao constructor', function() {
     var dao;
 
-    beforeAll((done) => {
+    it('should return a new dao instance', function(done) {
         dao = require('../../lib/server/dao')(projectFolder + 'valid_project_in_rootfolder');
-        done();
-    });
 
-    it('a dao instance can be created', function(done) {
         expect(dao).toBeDefined();
         done();
     });
@@ -94,24 +91,15 @@ describe('dao loading corner cases', () => {
     });
 });
 
-describe('dao project creation', () => {
+describe('dao.createNewProject', () => {
     var dao,
         storageFolder = projectFolder + 'empty_rootfolder/',
         directory = '/',
-        projectName = 'newProject',
-        project;
+        projectName = 'newProject';
 
     beforeAll((done) => {
         dao = require('../../lib/server/dao')(storageFolder);
         done();
-    });
-
-    beforeEach((done) => {
-        dao.createNewProject(MOCK_CONNECTION_ID, directory, projectName, {}, (data) => {
-            expect(data).toBeTruthy();
-            project = data;
-            done();
-        });
     });
 
     afterEach((done) => {
@@ -122,49 +110,38 @@ describe('dao project creation', () => {
     });
 
     it('should create a new project with expected defaults', (done) => {
-       expect(project).toBeDefined();
-       expect(project.projectId).toEqual('/' + projectName);
-       expect(project.project).toEqual(projectName);
-       expect(project.description).toEqual('');
-       expect(project.languages).toEqual({});
-       expect(project.availableLanguages.length).toEqual(8);
-       expect(project.keyDescriptions).toEqual({});
-       expect(project.numberOfKeys).toEqual(0);
-       expect(project.keys).toEqual({});
-       done();
-    });
-
-    it('should save json file for new project', (done) => {
-        dao.createNewProject(MOCK_CONNECTION_ID, directory, projectName, {}, (data) => {
-            dao.loadProject(directory + projectName, (data) => {
-                expect(data).toBeDefined();
-                expect(data.projectId).toEqual('/newProject');
-                done();
-            });
-        });
-    });
-});
-
-describe('dao can create projects where description is given', () => {
-    var dao,
-        storageFolder = projectFolder + 'empty_rootfolder/',
-        directory = '/',
-        projectName = 'newProject',
-        project;
-
-    beforeAll((done) => {
-        dao = require('../../lib/server/dao')(storageFolder);
-        done();
-    });
-
-    afterEach((done) => {
-        fs.unlink(storageFolder + projectName + '.json', (err) => {
-            expect(err).toBeFalsy();
+        dao.createNewProject(MOCK_CONNECTION_ID, directory, projectName, {}, (projectData) => {
+            expect(projectData).toBeTruthy();
+            expect(projectData).toBeDefined();
+            expect(projectData.projectId).toEqual('/' + projectName);
+            expect(projectData.project).toEqual(projectName);
+            expect(projectData.description).toEqual('');
+            expect(projectData.languages).toEqual({});
+            expect(projectData.availableLanguages.length).toEqual(8);
+            expect(projectData.keyDescriptions).toEqual({});
+            expect(projectData.numberOfKeys).toEqual(0);
+            expect(projectData.keys).toEqual({});
             done();
         });
     });
 
-    it('a description can be passed for new project', (done) => {
+    it('should save json file for new project', (done) => {
+        dao.createNewProject(MOCK_CONNECTION_ID, directory, projectName, {}, (data) => {
+            var expectedProjectPath = storageFolder + '/' + directory + '/' + projectName + '.json';
+            fs.stat(expectedProjectPath, (err, stats) => {
+                expect(err).toBeFalsy();
+                expect(stats.isFile()).toBeTruthy();
+
+                dao.loadProject(directory + projectName, (projectData) => {
+                    expect(projectData).toBeDefined();
+                    expect(projectData.projectId).toEqual('/newProject');
+                    done();
+                });
+            });
+        });
+    });
+
+    it('should include a given project description in the created config', (done) => {
         var description = "My special description";
         dao.createNewProject(MOCK_CONNECTION_ID, directory, projectName, {description : description}, (data) => {
             expect(data.description).toEqual(description);
@@ -554,126 +531,126 @@ describe('dao.getDirectory', () => {
     });
 });
 
-
 //
-
-//    describe("the getDirectory method ", () => {
+////
 //
-//        // create an empty folder
-//        beforeAll((done) => {
-//            fs.mkdir(projectFolder + 'subFolder/emptySubFolder', done);
-//        });
-//
-//        afterAll((done) => {
-//            fs.rmdir(projectFolder + 'subFolder/emptySubFolder', done);
-//        });
-//
-//        it("should return the sub projects from /", (done) => {
-//            dao.getDirectory("/", (obj) => {
-//                expect(obj.projects.length).toEqual(1);
-//                expect(obj.projects).toEqual([{
-//                    name : 'project1',
-//                    id : '/project1'
-//                }]);
-//                done();
-//            });
-//        });
-//
-//        it("should return the sub directories from /", (done) => {
-//            dao.getDirectory("/", (obj) => {
-//                expect(obj.dirs.length).toEqual(1);
-//                expect(obj.dirs).toEqual([{
-//                    name : 'subFolder',
-//                    id : '/subFolder'
-//                }]);
-//                done();
-//            });
-//        });
-//
-//        it("should return the contents from sub folder", (done) => {
-//            dao.getDirectory("/subFolder", (obj) => {
-//                expect(obj.projects.length).toEqual(1);
-//                expect(obj.projects).toEqual([{
-//                    name : 'project2',
-//                    id : '/subFolder/project2'
-//                }]);
-//                expect(obj.parentDirectory).toEqual('/');
-//                expect(obj.currentDirectory).toEqual('/subFolder');
-//                expect(obj.dirs).toEqual([{
-//                        name: 'emptySubFolder',
-//                        id: '/subFolder/emptySubFolder'
-//                    },{
-//                        name: 'subSubFolder',
-//                        id: '/subFolder/subSubFolder'
-//                    }]);
-//                done();
-//            });
-//        });
-//
-//        it("should return false if path does not exists", (done) => {
-//            dao.getDirectory("/noneExistingPath", (obj) => {
-//                expect(obj).toBeFalsy();
-//                done();
-//            });
-//        });
-//
-//        it('should return itself as the parent directory if already at top level', (done) => {
-//           dao.getDirectory("/", (obj) => {
-//                expect(obj.parentDirectory).toEqual('/');
-//               expect(obj.currentDirectory).toEqual('/');
-//               done();
-//           });
-//        });
-//
-//        it('should return the correct parent directory if there is a parent', (done) => {
-//            dao.getDirectory("/subFolder", (obj) => {
-//                expect(obj.parentDirectory).toEqual('/');
-//                expect(obj.currentDirectory).toEqual('/subFolder');
-//                done();
-//            });
-//        });
-//
-//        it('should return the correct parent directory from a sub sub directory', (done) => {
-//            dao.getDirectory("/subFolder/subSubFolder", (obj) => {
-//                expect(obj.parentDirectory).toEqual('/subFolder');
-//                expect(obj.currentDirectory).toEqual('/subFolder/subSubFolder');
-//                done();
-//            });
-//        });
-//
-//        it('should have expected IDs', (done) => {
-//            dao.getDirectory('/', (obj) => {
-//                expect(obj.projects.length).toEqual(1);
-//                expect(obj.projects[0].id).toEqual('/project1');
-//                done();
-//            });
-//        });
-//
-//        it('should return empty lists if a directory has no items', (done) => {
-//            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
-//                expect(obj.projects.length).toEqual(0);
-//                expect(obj.dirs.length).toEqual(0);
-//                done();
-//            });
-//        });
-//
-//        it('should have parent directories wit correct name', (done) => {
-//            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
-//                expect(obj.parentDirectories[0].name).toEqual('');
-//                expect(obj.parentDirectories[1].name).toEqual('subFolder');
-//                expect(obj.parentDirectories[2].name).toEqual('emptySubFolder');
-//                done();
-//            });
-//        });
-//
-//        it('should have parent directories wit correct id', (done) => {
-//            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
-//                expect(obj.parentDirectories[0].id).toEqual('/');
-//                expect(obj.parentDirectories[1].id).toEqual('/subFolder');
-//                expect(obj.parentDirectories[2].id).toEqual('/subFolder/emptySubFolder');
-//                done();
-//            });
-//        });
-//
-//    });
-//});
+////    describe("the getDirectory method ", () => {
+////
+////        // create an empty folder
+////        beforeAll((done) => {
+////            fs.mkdir(projectFolder + 'subFolder/emptySubFolder', done);
+////        });
+////
+////        afterAll((done) => {
+////            fs.rmdir(projectFolder + 'subFolder/emptySubFolder', done);
+////        });
+////
+////        it("should return the sub projects from /", (done) => {
+////            dao.getDirectory("/", (obj) => {
+////                expect(obj.projects.length).toEqual(1);
+////                expect(obj.projects).toEqual([{
+////                    name : 'project1',
+////                    id : '/project1'
+////                }]);
+////                done();
+////            });
+////        });
+////
+////        it("should return the sub directories from /", (done) => {
+////            dao.getDirectory("/", (obj) => {
+////                expect(obj.dirs.length).toEqual(1);
+////                expect(obj.dirs).toEqual([{
+////                    name : 'subFolder',
+////                    id : '/subFolder'
+////                }]);
+////                done();
+////            });
+////        });
+////
+////        it("should return the contents from sub folder", (done) => {
+////            dao.getDirectory("/subFolder", (obj) => {
+////                expect(obj.projects.length).toEqual(1);
+////                expect(obj.projects).toEqual([{
+////                    name : 'project2',
+////                    id : '/subFolder/project2'
+////                }]);
+////                expect(obj.parentDirectory).toEqual('/');
+////                expect(obj.currentDirectory).toEqual('/subFolder');
+////                expect(obj.dirs).toEqual([{
+////                        name: 'emptySubFolder',
+////                        id: '/subFolder/emptySubFolder'
+////                    },{
+////                        name: 'subSubFolder',
+////                        id: '/subFolder/subSubFolder'
+////                    }]);
+////                done();
+////            });
+////        });
+////
+////        it("should return false if path does not exists", (done) => {
+////            dao.getDirectory("/noneExistingPath", (obj) => {
+////                expect(obj).toBeFalsy();
+////                done();
+////            });
+////        });
+////
+////        it('should return itself as the parent directory if already at top level', (done) => {
+////           dao.getDirectory("/", (obj) => {
+////                expect(obj.parentDirectory).toEqual('/');
+////               expect(obj.currentDirectory).toEqual('/');
+////               done();
+////           });
+////        });
+////
+////        it('should return the correct parent directory if there is a parent', (done) => {
+////            dao.getDirectory("/subFolder", (obj) => {
+////                expect(obj.parentDirectory).toEqual('/');
+////                expect(obj.currentDirectory).toEqual('/subFolder');
+////                done();
+////            });
+////        });
+////
+////        it('should return the correct parent directory from a sub sub directory', (done) => {
+////            dao.getDirectory("/subFolder/subSubFolder", (obj) => {
+////                expect(obj.parentDirectory).toEqual('/subFolder');
+////                expect(obj.currentDirectory).toEqual('/subFolder/subSubFolder');
+////                done();
+////            });
+////        });
+////
+////        it('should have expected IDs', (done) => {
+////            dao.getDirectory('/', (obj) => {
+////                expect(obj.projects.length).toEqual(1);
+////                expect(obj.projects[0].id).toEqual('/project1');
+////                done();
+////            });
+////        });
+////
+////        it('should return empty lists if a directory has no items', (done) => {
+////            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
+////                expect(obj.projects.length).toEqual(0);
+////                expect(obj.dirs.length).toEqual(0);
+////                done();
+////            });
+////        });
+////
+////        it('should have parent directories wit correct name', (done) => {
+////            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
+////                expect(obj.parentDirectories[0].name).toEqual('');
+////                expect(obj.parentDirectories[1].name).toEqual('subFolder');
+////                expect(obj.parentDirectories[2].name).toEqual('emptySubFolder');
+////                done();
+////            });
+////        });
+////
+////        it('should have parent directories wit correct id', (done) => {
+////            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
+////                expect(obj.parentDirectories[0].id).toEqual('/');
+////                expect(obj.parentDirectories[1].id).toEqual('/subFolder');
+////                expect(obj.parentDirectories[2].id).toEqual('/subFolder/emptySubFolder');
+////                done();
+////            });
+////        });
+////
+////    });
+////});
