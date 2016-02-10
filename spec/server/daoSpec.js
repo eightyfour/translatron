@@ -1,4 +1,4 @@
-var projectFolder = __dirname + '/fixtures/',
+var fixturesDirectory = __dirname + '/fixtures/',
     fs = require('fs'),
     path = require('path');
 
@@ -8,7 +8,7 @@ describe('dao constructor', function() {
     var dao;
 
     it('should return a new dao instance', function(done) {
-        dao = require('../../lib/server/dao')(projectFolder + 'valid_project_in_rootfolder');
+        dao = require('../../lib/server/dao')(fixturesDirectory + 'valid_project_in_rootfolder');
 
         expect(dao).toBeDefined();
         done();
@@ -20,7 +20,7 @@ describe('dao general loading of project from root folder', () => {
         project;
 
     beforeAll((done) => {
-        dao = require('../../lib/server/dao')(projectFolder + 'valid_project_in_rootfolder');
+        dao = require('../../lib/server/dao')(fixturesDirectory + 'valid_project_in_rootfolder');
         dao.loadProject('/project1', (projectData) => {
             project = projectData;
             done();
@@ -63,7 +63,7 @@ describe('dao does not choke when trying to load nonexisting projects', () => {
     var dao;
 
     beforeAll((done) => {
-        dao = require('../../lib/server/dao')(projectFolder + 'valid_project_in_rootfolder');
+        dao = require('../../lib/server/dao')(fixturesDirectory + 'valid_project_in_rootfolder');
         done();
     });
 
@@ -79,7 +79,7 @@ describe('dao loading corner cases', () => {
     var dao;
 
     beforeAll((done) => {
-        dao = require('../../lib/server/dao')(projectFolder + 'invalid_project_in_rootfolder');
+        dao = require('../../lib/server/dao')(fixturesDirectory + 'invalid_project_in_rootfolder');
         done();
     });
 
@@ -93,7 +93,7 @@ describe('dao loading corner cases', () => {
 
 describe('dao.createNewProject', () => {
     var dao,
-        storageFolder = projectFolder + 'empty_rootfolder/',
+        storageFolder = fixturesDirectory + 'empty_rootfolder/',
         directory = '/',
         projectName = 'newProject';
 
@@ -151,7 +151,7 @@ describe('dao.createNewProject', () => {
 });
 
 describe('dao.saveKey for new keys', () => {
-    var storageFolder = projectFolder + 'empty_rootfolder/';
+    var storageFolder = fixturesDirectory + 'empty_rootfolder/';
     var dao;
     var projectId = '/newProject';
 
@@ -202,7 +202,7 @@ describe('dao.saveKey for new keys', () => {
 });
 
 describe('dao.saveKey for existing keys', () => {
-    var storageFolder = projectFolder + 'empty_rootfolder/';
+    var storageFolder = fixturesDirectory + 'empty_rootfolder/';
     var dao;
     var projectId = '/newProject';
     var language = 'de';
@@ -252,7 +252,7 @@ describe('dao.saveKey for existing keys', () => {
 });
 
 describe('dao.renameKey', () => {
-    var storageFolder = projectFolder + 'empty_rootfolder/';
+    var storageFolder = fixturesDirectory + 'empty_rootfolder/';
     var dao;
     var projectId = '/newProject';
     var languageDE = 'de';
@@ -320,7 +320,7 @@ describe('dao.renameKey', () => {
 });
 
 describe('dao.removeKey', () => {
-    var storageFolder = projectFolder + 'empty_rootfolder/';
+    var storageFolder = fixturesDirectory + 'empty_rootfolder/';
     var dao;
     var projectId = '/newProject';
     var languageDE = 'de';
@@ -363,7 +363,7 @@ describe('dao.removeKey', () => {
 });
 
 describe('dao.createNewDirectory', () => {
-    var storageFolder = projectFolder + 'valid_projects_in_subfolder/';
+    var storageFolder = fixturesDirectory + 'valid_projects_in_subfolder/';
     var dao;
 
     beforeAll((done) => {
@@ -405,7 +405,7 @@ describe('dao.createNewDirectory', () => {
 });
 
 describe('dao.getDirectory', () => {
-    var storageFolder = projectFolder + 'valid_projects_in_subfolder/';
+    var storageFolder = fixturesDirectory + 'valid_projects_in_subfolder/';
     var dao;
 
     beforeAll((done) => {
@@ -530,126 +530,93 @@ describe('dao.getDirectory', () => {
     });
 });
 
-//
-////
-//
-////    describe("the getDirectory method ", () => {
-////
-////        // create an empty folder
-////        beforeAll((done) => {
-////            fs.mkdir(projectFolder + 'subFolder/emptySubFolder', done);
-////        });
-////
-////        afterAll((done) => {
-////            fs.rmdir(projectFolder + 'subFolder/emptySubFolder', done);
-////        });
-////
-////        it("should return the sub projects from /", (done) => {
-////            dao.getDirectory("/", (obj) => {
-////                expect(obj.projects.length).toEqual(1);
-////                expect(obj.projects).toEqual([{
-////                    name : 'project1',
-////                    id : '/project1'
-////                }]);
-////                done();
-////            });
-////        });
-////
-////        it("should return the sub directories from /", (done) => {
-////            dao.getDirectory("/", (obj) => {
-////                expect(obj.dirs.length).toEqual(1);
-////                expect(obj.dirs).toEqual([{
-////                    name : 'subFolder',
-////                    id : '/subFolder'
-////                }]);
-////                done();
-////            });
-////        });
-////
-////        it("should return the contents from sub folder", (done) => {
-////            dao.getDirectory("/subFolder", (obj) => {
-////                expect(obj.projects.length).toEqual(1);
-////                expect(obj.projects).toEqual([{
-////                    name : 'project2',
-////                    id : '/subFolder/project2'
-////                }]);
-////                expect(obj.parentDirectory).toEqual('/');
-////                expect(obj.currentDirectory).toEqual('/subFolder');
-////                expect(obj.dirs).toEqual([{
-////                        name: 'emptySubFolder',
-////                        id: '/subFolder/emptySubFolder'
-////                    },{
-////                        name: 'subSubFolder',
-////                        id: '/subFolder/subSubFolder'
-////                    }]);
-////                done();
-////            });
-////        });
-////
-////        it("should return false if path does not exists", (done) => {
-////            dao.getDirectory("/noneExistingPath", (obj) => {
-////                expect(obj).toBeFalsy();
-////                done();
-////            });
-////        });
-////
-////        it('should return itself as the parent directory if already at top level', (done) => {
-////           dao.getDirectory("/", (obj) => {
-////                expect(obj.parentDirectory).toEqual('/');
-////               expect(obj.currentDirectory).toEqual('/');
-////               done();
-////           });
-////        });
-////
-////        it('should return the correct parent directory if there is a parent', (done) => {
-////            dao.getDirectory("/subFolder", (obj) => {
-////                expect(obj.parentDirectory).toEqual('/');
-////                expect(obj.currentDirectory).toEqual('/subFolder');
-////                done();
-////            });
-////        });
-////
-////        it('should return the correct parent directory from a sub sub directory', (done) => {
-////            dao.getDirectory("/subFolder/subSubFolder", (obj) => {
-////                expect(obj.parentDirectory).toEqual('/subFolder');
-////                expect(obj.currentDirectory).toEqual('/subFolder/subSubFolder');
-////                done();
-////            });
-////        });
-////
-////        it('should have expected IDs', (done) => {
-////            dao.getDirectory('/', (obj) => {
-////                expect(obj.projects.length).toEqual(1);
-////                expect(obj.projects[0].id).toEqual('/project1');
-////                done();
-////            });
-////        });
-////
-////        it('should return empty lists if a directory has no items', (done) => {
-////            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
-////                expect(obj.projects.length).toEqual(0);
-////                expect(obj.dirs.length).toEqual(0);
-////                done();
-////            });
-////        });
-////
-////        it('should have parent directories wit correct name', (done) => {
-////            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
-////                expect(obj.parentDirectories[0].name).toEqual('');
-////                expect(obj.parentDirectories[1].name).toEqual('subFolder');
-////                expect(obj.parentDirectories[2].name).toEqual('emptySubFolder');
-////                done();
-////            });
-////        });
-////
-////        it('should have parent directories wit correct id', (done) => {
-////            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
-////                expect(obj.parentDirectories[0].id).toEqual('/');
-////                expect(obj.parentDirectories[1].id).toEqual('/subFolder');
-////                expect(obj.parentDirectories[2].id).toEqual('/subFolder/emptySubFolder');
-////                done();
-////            });
-////        });
-////
-////    });
-////});
+describe('dao.saveDescription', () => {
+    var storageFolder = fixturesDirectory + 'empty_rootfolder';
+    var dao;
+    var projectFolder = '/';
+    var projectName = 'testProject_saveDescription';
+    var projectId;
+
+    beforeAll((done) => {
+        dao = require('../../lib/server/dao')(storageFolder);
+        done();
+    });
+
+    afterEach((done) => {
+        fs.unlink(storageFolder + projectFolder + projectName + '.json', (err) => {
+            expect(err).toBeFalsy();
+            done();
+        });
+    });
+
+    describe('with no existing description', () => {
+
+        beforeEach((done) => {
+            dao.createNewProject(MOCK_CONNECTION_ID, projectFolder, projectName, {}, (projectData) => {
+                expect(projectData).toBeDefined();
+                projectId = projectData.projectId;
+                done();
+            });
+        });
+
+        it('should save description if project had none before', (done) => {
+            var description = 'testdescription';
+            dao.saveProjectDescription(MOCK_CONNECTION_ID, projectId, description, (success) => {
+                expect(success).toBeTruthy();
+                if (success) {
+                    dao.loadProject(projectId, (projectData) => {
+                        expect(projectData.description).toEqual(description);
+                        done();
+                    });
+                } else {
+                    done();
+                }
+            });
+        });
+
+    });
+
+    describe('with existing description', () => {
+
+        var initialDescription = 'initialDescription';
+        var projectInitialValues = {
+            description : initialDescription
+        };
+
+        beforeEach((done) => {
+            dao.createNewProject(MOCK_CONNECTION_ID, projectFolder, projectName, projectInitialValues, (projectData) => {
+                expect(projectData).toBeDefined();
+                projectId = projectData.projectId;
+                done();
+            });
+        });
+
+        it('should save description if project had one before', (done) => {
+            var description = 'new_description';
+            dao.saveProjectDescription(MOCK_CONNECTION_ID, projectId, description, (success) => {
+                if (success) {
+                    dao.loadProject(projectId, (projectData) => {
+                        expect(projectData.description).toEqual(description);
+                        done();
+                    });
+                } else {
+                    done();
+                }
+            });
+        });
+
+        it('should delete description if empty string is passed', (done) => {
+            dao.saveProjectDescription(MOCK_CONNECTION_ID, projectId, '', (success) => {
+                if (success) {
+                    dao.loadProject(projectId, (projectData) => {
+                        expect(projectData.description).toBeUndefined();
+
+                        done();
+                    });
+                } else {
+                    done();
+                }
+            });
+        });
+    });
+});
