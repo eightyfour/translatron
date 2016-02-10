@@ -99,6 +99,9 @@ var websocketServer = shoe(function (stream) {
             // TODO draft: authenticate the client - and pass the name to the setupClient
             dao.setupClient.apply(null, [].slice.call(arguments));
         },
+        saveProjectDescription : function(id, projectId, description, callback) {
+            dao.saveProjectDescription(id, projectId, description, callback);
+        },
         jsonFileManager : (function () {
             var ret = {};
             // lo0ks like a listener :-)
