@@ -262,6 +262,8 @@ describe('dao.renameKey', () => {
     var keyValueDE = 'test text DE';
     var keyValueEN = 'test text EN';
 
+    var keyRename = { oldKey : keyOldName, newKey : keyNewName };
+
     beforeAll((done) => {
         dao = require('../../lib/server/dao')(storageFolder);
         done();
@@ -285,7 +287,6 @@ describe('dao.renameKey', () => {
     });
 
     it('should have removed entry with old key name', (done) => {
-        var keyRename = { oldKey : keyOldName, newKey : keyNewName };
         dao.renameKey(MOCK_CONNECTION_ID, projectId, keyRename, () => {
             dao.loadProject(projectId, (projectData) => {
                 expect(projectData.keys[languageDE][keyOldName]).toBeUndefined();
@@ -296,7 +297,6 @@ describe('dao.renameKey', () => {
     });
 
     it('should have changed occurrences of the key for all languages', (done) => {
-        var keyRename = { oldKey : keyOldName, newKey : keyNewName };
         dao.renameKey(MOCK_CONNECTION_ID, projectId, keyRename, () => {
             dao.loadProject(projectId, (projectData) => {
                 expect(projectData.keys[languageDE][keyNewName]).toBeDefined();
@@ -307,7 +307,6 @@ describe('dao.renameKey', () => {
     });
 
     it('should not have changed the key value', (done) => {
-        var keyRename = { oldKey : keyOldName, newKey : keyNewName };
         dao.renameKey(MOCK_CONNECTION_ID, projectId, keyRename, () => {
             dao.loadProject(projectId, (projectData) => {
                 expect(projectData.keys[languageDE][keyNewName]).toEqual(keyValueDE);
