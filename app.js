@@ -9,7 +9,6 @@ var projectFolder = __dirname + '/static',
     fileManager = require('./lib/server/legacy/fileManager.js')(projectFolder),
     serverPort = packageJSON.config.port || 3000,
     enableAuth = packageJSON.config.enableAuth,
-    jsonFileManager = require('./lib/server/legacy/jsonFileManager')(projectFolder),
     jade = require('jade'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser');
@@ -104,40 +103,7 @@ var websocketServer = shoe(function (stream) {
         },
         saveProjectDescription : function(id, projectId, description, callback) {
             dao.saveProjectDescription(id, projectId, description, callback);
-        },
-        jsonFileManager : (function () {
-            var ret = {};
-            // lo0ks like a listener :-)
-            Object.keys(jsonFileManager).forEach(function (key) {
-                ret[key] = function () {
-                    jsonFileManager[key].apply(null, [].slice.call(arguments));
-                };
-            });
-            /**
-             * currently the merge flag supports only flat merge - TODO deep merge
-             *
-             * @param projectName
-             * @param data
-             * @param merge
-             * @param cb
-             */
-            ret.saveJSON = function (projectName, data, merge, cb) {
-                // TODO save this in the description field from the [project name].json
-                //if (merge) {
-                //    jsonFileManager.getJSON('/' + projectName + '/project.json', function (oldData) {
-                //        Object.keys(data).forEach(function (key) {
-                //            oldData[key] = data[key];
-                //        });
-                //        jsonFileManager.saveJSON(projectName + '/project', oldData, cb);
-                //        console.log('app:saveJSON', projectName, oldData);
-                //    });
-                //} else {
-                //    jsonFileManager.saveJSON(projectName + '/project', oldData, cb);
-                //    console.log('app:saveJSON', projectName, data);
-                //}
-            };
-            return ret;
-        }())
+        }
     });
 
     // handle errors from processing commands from clients: at least log them

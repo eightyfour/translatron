@@ -604,19 +604,5 @@ describe('dao.saveDescription', () => {
                 }
             });
         });
-
-        it('should delete description if empty string is passed', (done) => {
-            dao.saveProjectDescription(MOCK_CONNECTION_ID, projectId, '', (success) => {
-                if (success) {
-                    dao.loadProject(projectId, (projectData) => {
-                        expect(projectData.description).toBeUndefined();
-
-                        done();
-                    });
-                } else {
-                    done();
-                }
-            });
-        });
     });
 });
