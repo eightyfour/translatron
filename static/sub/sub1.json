@@ -26,5 +26,15 @@
     "en": {
       "first_key_1" : "test key number one 1"
     }
-  }
+  },
+  "availableLanguages": [
+    "en",
+    "de",
+    "fr",
+    "es",
+    "nl",
+    "da",
+    "sv",
+    "en_GB"
+  ]
 }

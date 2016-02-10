@@ -6,5 +6,15 @@
   "keyDescriptions": {},
   "keys": {},
   "project": "asfdasdf",
-  "projectId": "/asfdasdf"
+  "projectId": "/asfdasdf",
+  "availableLanguages": [
+    "en",
+    "de",
+    "fr",
+    "es",
+    "nl",
+    "da",
+    "sv",
+    "en_GB"
+  ]
 }

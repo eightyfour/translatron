@@ -18,5 +18,15 @@
     "en": {
       "first_key_1" : "key one"
     }
-  }
+  },
+  "availableLanguages": [
+    "en",
+    "de",
+    "fr",
+    "es",
+    "nl",
+    "da",
+    "sv",
+    "en_GB"
+  ]
 }
