@@ -66,6 +66,9 @@ var server = app.listen(serverPort);
 var websocketServer = shoe(function (stream) {
     "use strict";
 
+    // TODO introduce clientConnectionId var - must/need not be passed from client (positive side effect: closed a
+    // security hole)
+
     // QUESTION: any reason why we have to define all the functions of the API in an object literal here? why not
     // directly pass a dao.js instance of dnode? ANSWER: no, as of now this has become unneccessary. BUT: we'll be adding
     // authorization and the logic for broadcasting changes (refactored out of dao.js) here so we need this layer then.
