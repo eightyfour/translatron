@@ -51,6 +51,8 @@ var indexPage = jade.compileFile('./lib/client/jade/index.jade')(),
 // if for any reason we can no longer use a wildcard route here, simply change to a route which uses the pattern
 // "\/(?:\w\/)*"
 
+// TODO route only for GET
+// TODO only if authenticated (return 401 if not)
 app.use(require('./lib/server/middleware-exporter/jpmbfExporter')(dao));
 
 app.use(
