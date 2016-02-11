@@ -82,7 +82,7 @@ var websocketServer = shoe(function (stream) {
         loadProject : function (projectId, cb) {
             dao.loadProject(projectId, cb);
         },
-        saveKey : function(id, projectId, language, keyAndValue, cb) {
+        saveKey : function(projectId, language, keyAndValue, cb) {
             dao.saveKey(projectId, language, keyAndValue, cb);
         },
         renameKey : function () {
@@ -91,13 +91,13 @@ var websocketServer = shoe(function (stream) {
         removeKey : function () {
             dao.removeKey.apply(null, [].slice.call(arguments));
         },
-        createNewProject : function (id, path, projectName, obj, cb) {
+        createNewProject : function (path, projectName, obj, cb) {
             dao.createNewProject(path, projectName, obj, cb);
         },
         getDirectory : function(dir, cb) {
             dao.getDirectory(dir, cb);
         },
-        createNewDirectory : function(id, directoryName, path, cb) {
+        createNewDirectory : function(directoryName, path, cb) {
             dao.createNewDirectory(directoryName, path, cb);
         },
         /**
@@ -108,7 +108,7 @@ var websocketServer = shoe(function (stream) {
             // TODO draft: authenticate the client - and pass the name to the setupClient
             dao.setupClient.apply(null, [].slice.call(arguments));
         },
-        saveProjectDescription : function(id, projectId, description, callback) {
+        saveProjectDescription : function(projectId, description, callback) {
             dao.saveProjectDescription(projectId, description, callback);
         }
     });
