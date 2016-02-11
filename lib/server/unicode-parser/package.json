@@ -1,0 +1,12 @@
+{
+    "author": {
+        "name": "han"
+    },
+    "name": "unicode-parser",
+    "description": "Parse a string and escape all special characters with unicodes.",
+    "version": "0.0.1",
+    "main": "parser.js",
+    "engines": {
+        "node": ">= v0.4.0"
+    }
+}
