@@ -50,6 +50,9 @@ var indexPage = jade.compileFile('./lib/client/jade/index.jade')(),
 // for other routes should never arrive here
 // if for any reason we can no longer use a wildcard route here, simply change to a route which uses the pattern
 // "\/(?:\w\/)*"
+
+app.use(require('./lib/server/middleware-exporter/jpmbfExporter')(dao));
+
 app.use(
     function (req, res) {
         if (enableAuth && !req.user) {
