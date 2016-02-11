@@ -52,8 +52,10 @@ var indexPage = jade.compileFile('./lib/client/jade/index.jade')(),
 // "\/(?:\w\/)*"
 
 // TODO route only for GET
-// TODO only if authenticated (return
+// TODO only if authenticated
+// RE TODO no I wouldn t
 app.use(require('./lib/server/middleware-exporter/jpmbfExporter')(dao));
+app.use(require('./lib/server/middleware-exporter/jsonExporter')(dao));
 
 app.use(
     function (req, res) {
