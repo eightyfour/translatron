@@ -2,8 +2,6 @@ var fixturesDirectory = __dirname + '/fixtures/',
     fs = require('fs'),
     path = require('path');
 
-var MOCK_CONNECTION_ID = 'xx';
-
 describe('dao constructor', function() {
     var dao;
 
@@ -110,7 +108,7 @@ describe('dao.createNewProject', () => {
     });
 
     it('should create a new project with expected defaults', (done) => {
-        dao.createNewProject(MOCK_CONNECTION_ID, directory, projectName, {}, (projectData) => {
+        dao.createNewProject(directory, projectName, {}, (projectData) => {
             expect(projectData).toBeTruthy();
             expect(projectData).toBeDefined();
             expect(projectData.projectId).toEqual('/' + projectName);
@@ -126,7 +124,7 @@ describe('dao.createNewProject', () => {
     });
 
     it('should save json file for new project', (done) => {
-        dao.createNewProject(MOCK_CONNECTION_ID, directory, projectName, {}, (data) => {
+        dao.createNewProject(directory, projectName, {}, (data) => {
             var expectedProjectPath = storageFolder + '/' + directory + '/' + projectName + '.json';
             fs.stat(expectedProjectPath, (err, stats) => {
                 expect(err).toBeFalsy();
@@ -143,7 +141,7 @@ describe('dao.createNewProject', () => {
 
     it('should include a given project description in the created config', (done) => {
         var description = "My special description";
-        dao.createNewProject(MOCK_CONNECTION_ID, directory, projectName, {description : description}, (data) => {
+        dao.createNewProject(directory, projectName, {description : description}, (data) => {
             expect(data.description).toEqual(description);
             done();
         });
@@ -161,7 +159,7 @@ describe('dao.saveKey for new keys', () => {
     });
 
     beforeEach((done) => {
-         dao.createNewProject(MOCK_CONNECTION_ID, '/', 'newProject', {}, (data) => {
+         dao.createNewProject('/', 'newProject', {}, (data) => {
              done();
          });
     });
@@ -178,7 +176,7 @@ describe('dao.saveKey for new keys', () => {
         var keyName = 'key_1';
         var keyValue = 'test text DE';
         var change = {key: keyName, value : keyValue };
-        dao.saveKey(MOCK_CONNECTION_ID, projectId, language, change, (savedKey) => {
+        dao.saveKey(projectId, language, change, (savedKey) => {
             dao.loadProject(projectId, (projectData) => {
                 expect(projectData.keys[language]).toBeDefined();
                 expect(projectData.keys[language][keyName]).toBeDefined();
@@ -193,7 +191,7 @@ describe('dao.saveKey for new keys', () => {
         var keyName = 'key_1';
         var keyValue = 'test text DE';
         var change = {key: keyName, value : keyValue };
-        dao.saveKey(MOCK_CONNECTION_ID, projectId, language, change, (savedKeyName, savedKeyValue) => {
+        dao.saveKey(projectId, language, change, (savedKeyName, savedKeyValue) => {
             expect(savedKeyName).toEqual(keyName);
             expect(savedKeyValue).toEqual(keyValue);
             done();
@@ -216,8 +214,8 @@ describe('dao.saveKey for existing keys', () => {
     });
 
     beforeEach((done) => {
-        dao.createNewProject(MOCK_CONNECTION_ID, '/', 'newProject', {}, (data) => {
-            dao.saveKey(MOCK_CONNECTION_ID, projectId, language, { key : keyName, value : keyOldValue }, (savedKeyName, savedKeyValue) => {
+        dao.createNewProject('/', 'newProject', {}, (data) => {
+            dao.saveKey(projectId, language, { key : keyName, value : keyOldValue }, (savedKeyName, savedKeyValue) => {
                 done();
             });
         });
@@ -232,7 +230,7 @@ describe('dao.saveKey for existing keys', () => {
 
     it('should still have key in project after update', (done) => {
         var change = { key : keyName, value : keyNewValue };
-        dao.saveKey(MOCK_CONNECTION_ID, projectId, language, change, (savedKeyName, savedKeyValue) => {
+        dao.saveKey(projectId, language, change, (savedKeyName, savedKeyValue) => {
             dao.loadProject(projectId, (projectData) => {
                 expect(projectData.keys[language][keyName]).toBeDefined();
                 done();
@@ -242,7 +240,7 @@ describe('dao.saveKey for existing keys', () => {
 
     it('should have changed the key to the new value', (done) => {
         var change = { key : keyName, value : keyNewValue };
-        dao.saveKey(MOCK_CONNECTION_ID, projectId, language, change, (savedKeyName, savedKeyValue) => {
+        dao.saveKey(projectId, language, change, (savedKeyName, savedKeyValue) => {
             dao.loadProject(projectId, (projectData) => {
                 expect(projectData.keys[language][keyName]).toEqual(keyNewValue);
                 done();
@@ -270,9 +268,9 @@ describe('dao.renameKey', () => {
     });
 
     beforeEach((done) => {
-        dao.createNewProject(MOCK_CONNECTION_ID, '/', 'newProject', {}, (data) => {
-            dao.saveKey(MOCK_CONNECTION_ID, projectId, languageDE, { key : keyOldName, value : keyValueDE }, () => {
-                dao.saveKey(MOCK_CONNECTION_ID, projectId, languageEN, { key : keyOldName, value : keyValueEN }, () => {
+        dao.createNewProject('/', 'newProject', {}, (data) => {
+            dao.saveKey(projectId, languageDE, { key : keyOldName, value : keyValueDE }, () => {
+                dao.saveKey(projectId, languageEN, { key : keyOldName, value : keyValueEN }, () => {
                     done();
                 })
             });
@@ -287,7 +285,7 @@ describe('dao.renameKey', () => {
     });
 
     it('should have removed entry with old key name', (done) => {
-        dao.renameKey(MOCK_CONNECTION_ID, projectId, keyRename, () => {
+        dao.renameKey(projectId, keyRename, () => {
             dao.loadProject(projectId, (projectData) => {
                 expect(projectData.keys[languageDE][keyOldName]).toBeUndefined();
                 expect(projectData.keys[languageEN][keyOldName]).toBeUndefined();
@@ -297,7 +295,7 @@ describe('dao.renameKey', () => {
     });
 
     it('should have changed occurrences of the key for all languages', (done) => {
-        dao.renameKey(MOCK_CONNECTION_ID, projectId, keyRename, () => {
+        dao.renameKey(projectId, keyRename, () => {
             dao.loadProject(projectId, (projectData) => {
                 expect(projectData.keys[languageDE][keyNewName]).toBeDefined();
                 expect(projectData.keys[languageEN][keyNewName]).toBeDefined();
@@ -307,7 +305,7 @@ describe('dao.renameKey', () => {
     });
 
     it('should not have changed the key value', (done) => {
-        dao.renameKey(MOCK_CONNECTION_ID, projectId, keyRename, () => {
+        dao.renameKey(projectId, keyRename, () => {
             dao.loadProject(projectId, (projectData) => {
                 expect(projectData.keys[languageDE][keyNewName]).toEqual(keyValueDE);
                 expect(projectData.keys[languageEN][keyNewName]).toEqual(keyValueEN);
@@ -335,9 +333,9 @@ describe('dao.removeKey', () => {
     });
 
     beforeEach((done) => {
-        dao.createNewProject(MOCK_CONNECTION_ID, '/', 'newProject', {}, (data) => {
-            dao.saveKey(MOCK_CONNECTION_ID, projectId, languageDE, { key : keyName, value : keyValueDE }, () => {
-                dao.saveKey(MOCK_CONNECTION_ID, projectId, languageEN, { key : keyName, value : keyValueEN }, () => {
+        dao.createNewProject('/', 'newProject', {}, (data) => {
+            dao.saveKey(projectId, languageDE, { key : keyName, value : keyValueDE }, () => {
+                dao.saveKey(projectId, languageEN, { key : keyName, value : keyValueEN }, () => {
                     done();
                 })
             });
@@ -352,7 +350,7 @@ describe('dao.removeKey', () => {
     });
 
     it('should have removed all entries of the key', (done) => {
-        dao.removeKey(MOCK_CONNECTION_ID, projectId, keyName, (deletedKeyName) => {
+        dao.removeKey(projectId, keyName, (deletedKeyName) => {
             dao.loadProject(projectId, (projectData) => {
                 expect(projectData.keys[languageDE][keyName]).toBeUndefined();
                 expect(projectData.keys[languageEN][keyName]).toBeUndefined();
@@ -378,24 +376,21 @@ describe('dao.createNewDirectory', () => {
 
     it('should fail if the parent directory does not exist', (done) => {
         // TODO how to add an assert that the parent really does not exist?
-        dao.createNewDirectory(MOCK_CONNECTION_ID,
-            'newDirectory', 'nonexistingDirectory', (obj) => {
+        dao.createNewDirectory('newDirectory', 'nonexistingDirectory', (obj) => {
                 expect(obj).toEqual(false);
                 done();
         });
     });
 
     it('should fail if the directory to create exists already ', (done) => {
-        dao.createNewDirectory(MOCK_CONNECTION_ID,
-            'subFolder', '/', (obj) => {
+        dao.createNewDirectory('subFolder', '/', (obj) => {
                 expect(obj).toEqual(false);
                 done();
         });
     });
 
     it('should create the new directory if all preconditions are met ', (done) => {
-        dao.createNewDirectory(MOCK_CONNECTION_ID,
-            'newDirectory', '/', (obj) => {
+        dao.createNewDirectory('newDirectory', '/', (obj) => {
                 expect(obj.directoryId).toEqual('/' + 'newDirectory');
                 expect(obj.parentDirectoryId).toEqual('/');
                 expect(fs.existsSync(path.normalize(storageFolder + '/' + obj.directoryId))).toEqual(true);
@@ -552,7 +547,7 @@ describe('dao.saveDescription', () => {
     describe('with no existing description', () => {
 
         beforeEach((done) => {
-            dao.createNewProject(MOCK_CONNECTION_ID, projectFolder, projectName, {}, (projectData) => {
+            dao.createNewProject(projectFolder, projectName, {}, (projectData) => {
                 expect(projectData).toBeDefined();
                 projectId = projectData.projectId;
                 done();
@@ -561,7 +556,7 @@ describe('dao.saveDescription', () => {
 
         it('should save description if project had none before', (done) => {
             var description = 'testdescription';
-            dao.saveProjectDescription(MOCK_CONNECTION_ID, projectId, description, (success) => {
+            dao.saveProjectDescription(projectId, description, (success) => {
                 expect(success).toBeTruthy();
                 if (success) {
                     dao.loadProject(projectId, (projectData) => {
@@ -584,7 +579,7 @@ describe('dao.saveDescription', () => {
         };
 
         beforeEach((done) => {
-            dao.createNewProject(MOCK_CONNECTION_ID, projectFolder, projectName, projectInitialValues, (projectData) => {
+            dao.createNewProject(projectFolder, projectName, projectInitialValues, (projectData) => {
                 expect(projectData).toBeDefined();
                 projectId = projectData.projectId;
                 done();
@@ -593,7 +588,7 @@ describe('dao.saveDescription', () => {
 
         it('should save description if project had one before', (done) => {
             var description = 'new_description';
-            dao.saveProjectDescription(MOCK_CONNECTION_ID, projectId, description, (success) => {
+            dao.saveProjectDescription(projectId, description, (success) => {
                 if (success) {
                     dao.loadProject(projectId, (projectData) => {
                         expect(projectData.description).toEqual(description);

@@ -52,7 +52,7 @@ var indexPage = jade.compileFile('./lib/client/jade/index.jade')(),
 // "\/(?:\w\/)*"
 
 // TODO route only for GET
-// TODO only if authenticated (return 401 if not)
+// TODO only if authenticated (return
 app.use(require('./lib/server/middleware-exporter/jpmbfExporter')(dao));
 
 app.use(
@@ -81,7 +81,7 @@ var websocketServer = shoe(function (stream) {
             dao.loadProject(projectId, cb);
         },
         saveKey : function(id, projectId, language, keyAndValue, cb) {
-            dao.saveKey(id, projectId, language, keyAndValue, cb);
+            dao.saveKey(projectId, language, keyAndValue, cb);
         },
         renameKey : function () {
             dao.renameKey.apply(null, [].slice.call(arguments));
@@ -90,13 +90,13 @@ var websocketServer = shoe(function (stream) {
             dao.removeKey.apply(null, [].slice.call(arguments));
         },
         createNewProject : function (id, path, projectName, obj, cb) {
-            dao.createNewProject(id, path, projectName, obj, cb);
+            dao.createNewProject(path, projectName, obj, cb);
         },
         getDirectory : function(dir, cb) {
             dao.getDirectory(dir, cb);
         },
         createNewDirectory : function(id, directoryName, path, cb) {
-            dao.createNewDirectory(id, directoryName, path, cb);
+            dao.createNewDirectory(directoryName, path, cb);
         },
         /**
          * initial call - all client methods are saved here.
@@ -107,7 +107,7 @@ var websocketServer = shoe(function (stream) {
             dao.setupClient.apply(null, [].slice.call(arguments));
         },
         saveProjectDescription : function(id, projectId, description, callback) {
-            dao.saveProjectDescription(id, projectId, description, callback);
+            dao.saveProjectDescription(projectId, description, callback);
         }
     });
 
