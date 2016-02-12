@@ -108,7 +108,8 @@ describe('dao.createNewProject', () => {
     });
 
     it('should create a new project with expected defaults', (done) => {
-        dao.createNewProject(directory, projectName, {}, (projectData) => {
+        dao.createNewProject(directory, projectName, {}, (success, projectData) => {
+            expect(success).toEqual(true);
             expect(projectData).toBeTruthy();
             expect(projectData).toBeDefined();
             expect(projectData.projectId).toEqual('/' + projectName);
@@ -124,7 +125,7 @@ describe('dao.createNewProject', () => {
     });
 
     it('should save json file for new project', (done) => {
-        dao.createNewProject(directory, projectName, {}, (data) => {
+        dao.createNewProject(directory, projectName, {}, (success, projectData) => {
             var expectedProjectPath = storageFolder + '/' + directory + '/' + projectName + '.json';
             fs.stat(expectedProjectPath, (err, stats) => {
                 expect(err).toBeFalsy();
@@ -141,8 +142,8 @@ describe('dao.createNewProject', () => {
 
     it('should include a given project description in the created config', (done) => {
         var description = "My special description";
-        dao.createNewProject(directory, projectName, {description : description}, (data) => {
-            expect(data.description).toEqual(description);
+        dao.createNewProject(directory, projectName, {description : description}, (success, projectData) => {
+            expect(projectData.description).toEqual(description);
             done();
         });
     });
@@ -159,7 +160,7 @@ describe('dao.saveKey for new keys', () => {
     });
 
     beforeEach((done) => {
-         dao.createNewProject('/', 'newProject', {}, (data) => {
+         dao.createNewProject('/', 'newProject', {}, (success, projectData) => {
              done();
          });
     });
@@ -214,7 +215,7 @@ describe('dao.saveKey for existing keys', () => {
     });
 
     beforeEach((done) => {
-        dao.createNewProject('/', 'newProject', {}, (data) => {
+        dao.createNewProject('/', 'newProject', {}, (sucees, projectData) => {
             dao.saveKey(projectId, language, { key : keyName, value : keyOldValue }, (savedKeyName, savedKeyValue) => {
                 done();
             });
@@ -268,7 +269,7 @@ describe('dao.renameKey', () => {
     });
 
     beforeEach((done) => {
-        dao.createNewProject('/', 'newProject', {}, (data) => {
+        dao.createNewProject('/', 'newProject', {}, (success, projectData) => {
             dao.saveKey(projectId, languageDE, { key : keyOldName, value : keyValueDE }, () => {
                 dao.saveKey(projectId, languageEN, { key : keyOldName, value : keyValueEN }, () => {
                     done();
@@ -333,7 +334,7 @@ describe('dao.removeKey', () => {
     });
 
     beforeEach((done) => {
-        dao.createNewProject('/', 'newProject', {}, (data) => {
+        dao.createNewProject('/', 'newProject', {}, (success, projectData) => {
             dao.saveKey(projectId, languageDE, { key : keyName, value : keyValueDE }, () => {
                 dao.saveKey(projectId, languageEN, { key : keyName, value : keyValueEN }, () => {
                     done();
@@ -547,7 +548,7 @@ describe('dao.saveDescription', () => {
     describe('with no existing description', () => {
 
         beforeEach((done) => {
-            dao.createNewProject(projectFolder, projectName, {}, (projectData) => {
+            dao.createNewProject(projectFolder, projectName, {}, (success, projectData) => {
                 expect(projectData).toBeDefined();
                 projectId = projectData.projectId;
                 done();
@@ -579,7 +580,7 @@ describe('dao.saveDescription', () => {
         };
 
         beforeEach((done) => {
-            dao.createNewProject(projectFolder, projectName, projectInitialValues, (projectData) => {
+            dao.createNewProject(projectFolder, projectName, projectInitialValues, (success, projectData) => {
                 expect(projectData).toBeDefined();
                 projectId = projectData.projectId;
                 done();
