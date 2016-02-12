@@ -5,7 +5,6 @@ describe('changesNotifier', () => {
             id :  Math.trunc(Math.random() * Math.pow(10, 10)),
             notificationCount : 0,
             onSomethingHappened : function() {
-                console.log('Client', this.id, 'rcvd notify');
                 this.notificationCount++;
             }
         };
@@ -101,12 +100,45 @@ describe('changesNotifier', () => {
 
             beforeEach((done) => {
                 changesNotifier.addListener(listener1.id, listener1);
+
+                spyOn(listener1, 'onSomethingHappened');
+
                 done();
             });
 
             it('single registered listener should not receive notification', (done) => {
                 changesNotifier.notify('onSomethingHappened', dummyPayload, listener1.id);
-                expect(listener1.notificationCount).toEqual(0);
+                expect(listener1.onSomethingHappened).not.toHaveBeenCalled();
+                done();
+            });
+
+        });
+
+        describe('notify with multiple listeners registered', () => {
+
+            beforeEach((done) => {
+                changesNotifier.addListener(listener1.id, listener1);
+                changesNotifier.addListener(listener2.id, listener2);
+
+                spyOn(listener1, 'onSomethingHappened');
+                spyOn(listener2, 'onSomethingHappened');
+
+                done();
+            });
+
+            it('only other listeners should receive notification', (done) => {
+                changesNotifier.notify('onSomethingHappened', dummyPayload, listener1.id);
+
+                expect(listener2.onSomethingHappened).toHaveBeenCalled();
+                expect(listener1.onSomethingHappened).not.toHaveBeenCalled();
+                done();
+            });
+
+            it('notify passes expected payload', (done) => {
+                changesNotifier.notify('onSomethingHappened', dummyPayload, listener1.id);
+
+                expect(listener2.onSomethingHappened).toHaveBeenCalledWith(dummyPayload);
+
                 done();
             });
 
