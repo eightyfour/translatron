@@ -69,7 +69,22 @@ app.use(
 );
 
 var server = app.listen(serverPort);
-var websocketServer = require('./lib/server/websocketServer')(changesNotifier);
+
+var operations = require('./server/lib/operations.js')(dao, changesNotifier);
+var websocketServer = shoe(function (stream) {
+    "use strict";
+
+    var d = dnode(operations);
+
+    // handle errors from processing commands from clients: at least log them
+    // if we didn't have this error handler, errors would propagate up the stack and effectively close down the
+    // application
+    d.on('error', function(err) {
+       console.error(err.message, err.stack);
+    });
+
+    d.pipe(stream).pipe(d);
+});
 // "/trade" identifies the websocket connection
 websocketServer.install(server, '/trade');
 

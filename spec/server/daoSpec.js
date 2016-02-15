@@ -14,8 +14,7 @@ describe('dao constructor', function() {
 });
 
 describe('dao general loading of project from root folder', () => {
-    var dao,
-        project;
+    var dao, project;
 
     beforeAll((done) => {
         dao = require('../../lib/server/dao')(fixturesDirectory + 'valid_project_in_rootfolder');
