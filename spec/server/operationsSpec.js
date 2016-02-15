@@ -1,24 +1,22 @@
-var fixturesDirectory = __dirname + '/fixtures/';
-
 describe('operations', () => {
 
-    var operations, dao, changesNotifier, clientCallbacks;
-
-    beforeAll((done) => {
-
-        dao = require('../../lib/server/dao')(fixturesDirectory + 'empty_rootfolder');
-        changesNotifier = require('../../lib/server/changesNotifier.js')();
-        operations = require('../../lib/server/operations.js')(dao, changesNotifier);
-        clientCallbacks = {
-            onSomethingHappened : function() {}
-        };
-
-        done();
-    });
+    var operations, dao, changesNotifier;
 
     describe('attachClientCallbacks', () => {
 
+        var clientCallbacks;
+
+        beforeAll((done) => {
+            clientCallbacks = {
+                onSomethingHappened : function() {}
+            };
+            done();
+        });
+
         beforeEach((done) => {
+            changesNotifier = require('../../lib/server/changesNotifier.js')();
+            // dao does nothing here
+            operations = require('../../lib/server/operations.js')({}, changesNotifier);
 
             spyOn(changesNotifier, 'addListener');
 
@@ -46,9 +44,20 @@ describe('operations', () => {
 
     describe('detachClientCallbacks', () => {
 
+        var clientCallbacks;
         var clientListenerId;
 
+        beforeAll((done) => {
+            clientCallbacks = {
+                onSomethingHappened : function() {}
+            };
+            done();
+        });
+
         beforeEach((done) => {
+            changesNotifier = require('../../lib/server/changesNotifier.js')();
+            // dao does nothing here
+            operations = require('../../lib/server/operations.js')({}, changesNotifier);
 
             clientListenerId = operations.attachClientCallbacks(clientCallbacks);
 
@@ -66,5 +75,77 @@ describe('operations', () => {
 
             done();
         })
+    });
+
+    describe('createNewProject', () => {
+
+        var projectParentDirId = '/';
+        var projectName = 'newProject';
+        var expectedProjectId = projectParentDirId + projectName;
+        var projectDefaults = {};
+
+        describe('successful cases', () => {
+
+            beforeEach((done) => {
+                dao = {
+                    createNewProject : function(projectParentDirId, projectName, projectDefaults, callback) {
+                        callback(null, {
+                            projectId : expectedProjectId
+                        });
+                    }
+                };
+
+                operations = require('../../lib/server/operations.js')(dao, changesNotifier);
+
+                spyOn(changesNotifier, 'notify');
+
+                done();
+            });
+
+            it('makes dao create new project', (done) => {
+
+                operations.createNewProject(projectParentDirId, projectName, projectDefaults, (err, projectData) => {
+                    expect(err).toBeFalsy();
+                    expect(projectData).toBeTruthy();
+                    expect(projectData.projectId).toEqual(expectedProjectId);
+                    done();
+                });
+            });
+
+            it('should trigger notifications on successful dao call', (done) => {
+
+                operations.createNewProject(projectParentDirId, projectName, projectDefaults, (err, projectData) => {
+                    expect(err).toBeFalsy();
+                    expect(projectData).toBeTruthy();
+                });
+
+                expect(changesNotifier.notify).toHaveBeenCalledWith('newProjectWasCreated', expectedProjectId, jasmine.any(Number));
+                done();
+            });
+
+        });
+
+        describe('fail cases', () => {
+            beforeEach((done) => {
+                dao = {
+                    createNewProject : function(projectParentDirId, projectName, projectDefaults, callback) {
+                        callback(new Error());
+                    }
+                };
+                operations = require('../../lib/server/operations.js')(dao, changesNotifier);
+
+                done();
+            });
+
+            it('callback returns err if dao call fails', (done) => {
+
+                operations.createNewProject(projectParentDirId, projectName, projectDefaults, (err, projectData) => {
+                    expect(err).toBeTruthy();
+                    expect(projectData).toBeFalsy();
+                    done();
+                });
+
+            });
+        });
     });
 });

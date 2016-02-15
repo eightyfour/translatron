@@ -70,7 +70,7 @@ app.use(
 
 var server = app.listen(serverPort);
 
-var operations = require('./server/lib/operations.js')(dao, changesNotifier);
+var operations = require('./lib/server/operations.js')(dao, changesNotifier);
 var websocketServer = shoe(function (stream) {
     "use strict";
 
