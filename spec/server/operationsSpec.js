@@ -16,7 +16,7 @@ describe('operations', () => {
         done();
     });
 
-    describe('setupClient', () => {
+    describe('attachClientCallbacks', () => {
 
         beforeEach((done) => {
 
@@ -25,9 +25,9 @@ describe('operations', () => {
             done();
         });
 
-        it('setupClient will add listener to changesNotifier', (done) => {
+        it('attachClientCallbacks will add listener to changesNotifier', (done) => {
 
-            operations.setupClient(clientCallbacks);
+            operations.attachClientCallbacks(clientCallbacks);
 
             // matching on the first parameter is not perfect: we're using a number here but could be any string
             expect(changesNotifier.addListener).toHaveBeenCalledWith(jasmine.any(Number), clientCallbacks);
@@ -35,8 +35,8 @@ describe('operations', () => {
             done();
         });
 
-        it('setupClient will return the assigned client listener id', (done) => {
-            var clientListenerId = operations.setupClient(clientCallbacks);
+        it('attachClientCallbacks will return the assigned client listener id', (done) => {
+            var clientListenerId = operations.attachClientCallbacks(clientCallbacks);
 
             expect(clientListenerId).toBeDefined();
 
@@ -44,22 +44,22 @@ describe('operations', () => {
         });
     });
 
-    describe('disconnectClient', () => {
+    describe('detachClientCallbacks', () => {
 
         var clientListenerId;
 
         beforeEach((done) => {
 
-            clientListenerId = operations.setupClient(clientCallbacks);
+            clientListenerId = operations.attachClientCallbacks(clientCallbacks);
 
             spyOn(changesNotifier, 'removeListener');
 
             done();
         });
 
-        it('disconnectClient will remove listener from changesNotifier', (done) => {
+        it('detachClientCallbacks will remove listener from changesNotifier', (done) => {
 
-            operations.disconnectClient(clientListenerId);
+            operations.detachClientCallbacks(clientListenerId);
 
             // matching on the first parameter is not perfect: we're using a number here but could be any string
             expect(changesNotifier.removeListener).toHaveBeenCalledWith(clientListenerId);
