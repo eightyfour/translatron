@@ -407,6 +407,46 @@ describe('dao', () => {
 
         });
     });
+
+    describe('removeKey', () => {
+        var storageFolder = fixturesDirectory + 'empty_rootfolder/';
+        var projectId = '/newProject';
+        var languageDE = 'de';
+        var languageEN = 'en';
+        var keyName = 'key_1';
+        var keyValueDE = 'test text DE';
+        var keyValueEN = 'test text EN';
+
+        beforeEach((done) => {
+            dao = require('../../lib/server/dao')(storageFolder);
+
+            dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
+                expect(err).toBeFalsy();
+                dao.saveKey(projectId, languageDE, { key : keyName, value : keyValueDE }, () => {
+                    dao.saveKey(projectId, languageEN, { key : keyName, value : keyValueEN }, () => {
+                        done();
+                    })
+                });
+            });
+        });
+
+        afterEach((done) => {
+            fs.unlink(storageFolder + 'newProject.json', (err) => {
+                expect(err).toBeFalsy();
+                done();
+            });
+        });
+
+        it('should have removed all entries of the key', (done) => {
+            dao.removeKey(projectId, keyName, (deletedKeyName) => {
+                dao.loadProject(projectId, (projectData) => {
+                    expect(projectData.keys[languageDE][keyName]).toBeUndefined();
+                    expect(projectData.keys[languageEN][keyName]).toBeUndefined();
+                    done();
+                });
+            });
+        });
+    });
 });
 
 describe('dao.renameKey', () => {
@@ -477,52 +517,6 @@ describe('dao.renameKey', () => {
 
     // TODO add missing tests for renaming key in descriptions property
 });
-
-describe('dao.removeKey', () => {
-    var storageFolder = fixturesDirectory + 'empty_rootfolder/';
-    var dao;
-    var projectId = '/newProject';
-    var languageDE = 'de';
-    var languageEN = 'en';
-    var keyName = 'key_1';
-    var keyValueDE = 'test text DE';
-    var keyValueEN = 'test text EN';
-
-    beforeAll((done) => {
-        dao = require('../../lib/server/dao')(storageFolder);
-        done();
-    });
-
-    beforeEach((done) => {
-        dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
-            expect(err).toBeFalsy();
-            dao.saveKey(projectId, languageDE, { key : keyName, value : keyValueDE }, () => {
-                dao.saveKey(projectId, languageEN, { key : keyName, value : keyValueEN }, () => {
-                    done();
-                })
-            });
-        });
-    });
-
-    afterEach((done) => {
-        fs.unlink(storageFolder + 'newProject.json', (err) => {
-            expect(err).toBeFalsy();
-            done();
-        });
-    });
-
-    it('should have removed all entries of the key', (done) => {
-        dao.removeKey(projectId, keyName, (deletedKeyName) => {
-            dao.loadProject(projectId, (projectData) => {
-                expect(projectData.keys[languageDE][keyName]).toBeUndefined();
-                expect(projectData.keys[languageEN][keyName]).toBeUndefined();
-                done();
-            });
-        });
-    });
-});
-
-
 
 describe('dao.saveDescription', () => {
     var storageFolder = fixturesDirectory + 'empty_rootfolder';
