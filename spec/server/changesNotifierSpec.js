@@ -107,7 +107,7 @@ describe('changesNotifier', () => {
             });
 
             it('single registered listener should not receive notification', (done) => {
-                changesNotifier.notify('onSomethingHappened', dummyPayload, listener1.id);
+                changesNotifier.notify('onSomethingHappened', [dummyPayload], listener1.id);
                 expect(listener1.onSomethingHappened).not.toHaveBeenCalled();
                 done();
             });
@@ -127,7 +127,7 @@ describe('changesNotifier', () => {
             });
 
             it('only other listeners should receive notification', (done) => {
-                changesNotifier.notify('onSomethingHappened', dummyPayload, listener1.id);
+                changesNotifier.notify('onSomethingHappened', [dummyPayload], listener1.id);
 
                 expect(listener2.onSomethingHappened).toHaveBeenCalled();
                 expect(listener1.onSomethingHappened).not.toHaveBeenCalled();
@@ -135,7 +135,7 @@ describe('changesNotifier', () => {
             });
 
             it('notify passes expected payload', (done) => {
-                changesNotifier.notify('onSomethingHappened', dummyPayload, listener1.id);
+                changesNotifier.notify('onSomethingHappened', [dummyPayload], listener1.id);
 
                 expect(listener2.onSomethingHappened).toHaveBeenCalledWith(dummyPayload);
 

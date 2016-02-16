@@ -323,110 +323,88 @@ describe('dao', () => {
             });
         });
     });
-});
 
-
-
-
-describe('dao.saveKey for new keys', () => {
-    var storageFolder = fixturesDirectory + 'empty_rootfolder/';
-    var dao;
-    var projectId = '/newProject';
-
-    beforeAll((done) => {
-        dao = require('../../lib/server/dao')(storageFolder);
-        done();
-    });
-
-    beforeEach((done) => {
-         dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
-             expect(err).toBeFalsy();
-             done();
-         });
-    });
-
-    afterEach((done) => {
-        fs.unlink(storageFolder + 'newProject.json', (err) => {
-            expect(err).toBeFalsy();
-            done();
-        });
-    });
-
-    it('should save new key in project file', (done) => {
+    describe('saveKey', () => {
+        var storageFolder = fixturesDirectory + 'empty_rootfolder/';
+        var projectId = '/newProject';
         var language = 'de';
         var keyName = 'key_1';
-        var keyValue = 'test text DE';
-        var change = {key: keyName, value : keyValue };
-        dao.saveKey(projectId, language, change, (savedKey) => {
-            dao.loadProject(projectId, (projectData) => {
-                expect(projectData.keys[language]).toBeDefined();
-                expect(projectData.keys[language][keyName]).toBeDefined();
-                expect(projectData.keys[language][keyName]).toEqual(keyValue);
+
+        beforeEach((done) => {
+            dao = require('../../lib/server/dao')(storageFolder);
+
+            dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
+                expect(err).toBeFalsy();
                 done();
             });
         });
-    });
 
-    it('should return saved key', (done) => {
-        var language = 'de';
-        var keyName = 'key_1';
-        var keyValue = 'test text DE';
-        var change = {key: keyName, value : keyValue };
-        dao.saveKey(projectId, language, change, (savedKeyName, savedKeyValue) => {
-            expect(savedKeyName).toEqual(keyName);
-            expect(savedKeyValue).toEqual(keyValue);
-            done();
-        });
-    });
-});
-
-describe('dao.saveKey for existing keys', () => {
-    var storageFolder = fixturesDirectory + 'empty_rootfolder/';
-    var dao;
-    var projectId = '/newProject';
-    var language = 'de';
-    var keyName = 'key_1';
-    var keyOldValue = 'test text DE';
-    var keyNewValue = 'test text DE_changed';
-
-    beforeAll((done) => {
-        dao = require('../../lib/server/dao')(storageFolder);
-        done();
-    });
-
-    beforeEach((done) => {
-        dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
-            expect(err).toBeFalsy();
-            dao.saveKey(projectId, language, { key : keyName, value : keyOldValue }, (savedKeyName, savedKeyValue) => {
+        afterEach((done) => {
+            fs.unlink(storageFolder + projectId + '.json', (err) => {
+                expect(err).toBeFalsy();
                 done();
             });
         });
-    });
 
-    afterEach((done) => {
-        fs.unlink(storageFolder + 'newProject.json', (err) => {
-            expect(err).toBeFalsy();
-            done();
-        });
-    });
+        describe('new keys', () => {
+            it('should save new key in project file', (done) => {
+                var keyValue = 'test text DE';
+                var change = {key: keyName, value : keyValue };
+                dao.saveKey(projectId, language, change, (err, savedKey, savedValue) => {
+                    expect(err).toBeFalsy();
+                    dao.loadProject(projectId, (projectData) => {
+                        expect(projectData.keys[language]).toBeDefined();
+                        expect(projectData.keys[language][keyName]).toBeDefined();
+                        expect(projectData.keys[language][keyName]).toEqual(keyValue);
+                        done();
+                    });
+                });
+            });
 
-    it('should still have key in project after update', (done) => {
-        var change = { key : keyName, value : keyNewValue };
-        dao.saveKey(projectId, language, change, (savedKeyName, savedKeyValue) => {
-            dao.loadProject(projectId, (projectData) => {
-                expect(projectData.keys[language][keyName]).toBeDefined();
-                done();
+            it('should return saved key', (done) => {
+                var keyValue = 'test text DE';
+                var change = {key: keyName, value : keyValue };
+                dao.saveKey(projectId, language, change, (err, savedKeyName, savedKeyValue) => {
+                    expect(err).toBeFalsy();
+                    expect(savedKeyName).toEqual(keyName);
+                    expect(savedKeyValue).toEqual(keyValue);
+                    done();
+                });
             });
         });
-    });
 
-    it('should have changed the key to the new value', (done) => {
-        var change = { key : keyName, value : keyNewValue };
-        dao.saveKey(projectId, language, change, (savedKeyName, savedKeyValue) => {
-            dao.loadProject(projectId, (projectData) => {
-                expect(projectData.keys[language][keyName]).toEqual(keyNewValue);
-                done();
+        describe('existing keys', () => {
+            var keyOldValue = 'test text DE';
+            var keyNewValue = 'test text DE_changed';
+
+            beforeAll((done) => {
+                dao.saveKey(projectId, language, { key : keyName, value : keyOldValue }, (savedKeyName, savedKeyValue) => {
+                    done();
+                });
             });
+
+            it('should still have key in project after update', (done) => {
+                var change = { key : keyName, value : keyNewValue };
+                dao.saveKey(projectId, language, change, (err, savedKeyName, savedKeyValue) => {
+                    expect(err).toBeFalsy();
+                    dao.loadProject(projectId, (projectData) => {
+                        expect(projectData.keys[language][keyName]).toBeDefined();
+                        done();
+                    });
+                });
+            });
+
+            it('should have changed the key to the new value', (done) => {
+                var change = { key : keyName, value : keyNewValue };
+                dao.saveKey(projectId, language, change, (err, savedKeyName, savedKeyValue) => {
+                    expect(err).toBeFalsy();
+                    dao.loadProject(projectId, (projectData) => {
+                        expect(projectData.keys[language][keyName]).toEqual(keyNewValue);
+                        done();
+                    });
+                });
+            });
+
         });
     });
 });
