@@ -70,11 +70,11 @@ app.use(
 
 var server = app.listen(serverPort);
 
-var operations = require('./lib/server/operations.js')(dao, changesNotifier);
+var operations = require('./lib/server/operations.js');
 var websocketServer = shoe(function (stream) {
     "use strict";
 
-    var d = dnode(operations);
+    var d = dnode(operations(dao, changesNotifier));
 
     // handle errors from processing commands from clients: at least log them
     // if we didn't have this error handler, errors would propagate up the stack and effectively close down the
