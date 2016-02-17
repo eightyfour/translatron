@@ -447,75 +447,82 @@ describe('dao', () => {
             });
         });
     });
-});
 
-describe('dao.renameKey', () => {
-    var storageFolder = fixturesDirectory + 'empty_rootfolder/';
-    var dao;
-    var projectId = '/newProject';
-    var languageDE = 'de';
-    var languageEN = 'en';
-    var keyOldName = 'key_1';
-    var keyNewName = 'key_1_changed';
-    var keyValueDE = 'test text DE';
-    var keyValueEN = 'test text EN';
+    describe('renameKey', () => {
+        var storageFolder = fixturesDirectory + 'empty_rootfolder/';
+        var projectId = '/newProject';
+        var languageDE = 'de';
+        var languageEN = 'en';
+        var keyOldName = 'key_1';
+        var keyNewName = 'key_1_changed';
+        var keyValueDE = 'test text DE';
+        var keyValueEN = 'test text EN';
 
-    var keyRename = { oldKey : keyOldName, newKey : keyNewName };
+        var keyRename = { oldKey : keyOldName, newKey : keyNewName };
 
-    beforeAll((done) => {
-        dao = require('../../lib/server/dao')(storageFolder);
-        done();
-    });
+        beforeEach((done) => {
+            dao = require('../../lib/server/dao')(storageFolder);
+            dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
+                expect(err).toBeFalsy();
+                dao.saveKey(projectId, languageDE, { key : keyOldName, value : keyValueDE }, () => {
+                    dao.saveKey(projectId, languageEN, { key : keyOldName, value : keyValueEN }, () => {
+                        done();
+                    })
+                });
+            });
+        });
 
-    beforeEach((done) => {
-        dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
-            expect(err).toBeFalsy();
-            dao.saveKey(projectId, languageDE, { key : keyOldName, value : keyValueDE }, () => {
-                dao.saveKey(projectId, languageEN, { key : keyOldName, value : keyValueEN }, () => {
+        afterEach((done) => {
+            fs.unlink(storageFolder + 'newProject.json', (err) => {
+                expect(err).toBeFalsy();
+                done();
+            });
+        });
+
+        it('should have removed entry with old key name', (done) => {
+            dao.renameKey(projectId, keyRename, (err, oldKeyName, newKeyName) => {
+                expect(err).toBeFalsy();
+                dao.loadProject(projectId, (projectData) => {
+                    expect(projectData.keys[languageDE][keyOldName]).toBeUndefined();
+                    expect(projectData.keys[languageEN][keyOldName]).toBeUndefined();
                     done();
-                })
+                });
             });
         });
-    });
 
-    afterEach((done) => {
-        fs.unlink(storageFolder + 'newProject.json', (err) => {
-            expect(err).toBeFalsy();
-            done();
+        it('should have changed occurrences of the key for all languages', (done) => {
+            dao.renameKey(projectId, keyRename, (err, oldKeyName, newKeyName) => {
+                expect(err).toBeFalsy();
+                dao.loadProject(projectId, (projectData) => {
+                    expect(projectData.keys[languageDE][keyNewName]).toBeDefined();
+                    expect(projectData.keys[languageEN][keyNewName]).toBeDefined();
+                    done();
+                });
+            });
         });
-    });
 
-    it('should have removed entry with old key name', (done) => {
-        dao.renameKey(projectId, keyRename, () => {
-            dao.loadProject(projectId, (projectData) => {
-                expect(projectData.keys[languageDE][keyOldName]).toBeUndefined();
-                expect(projectData.keys[languageEN][keyOldName]).toBeUndefined();
+        it('should not have changed the key value', (done) => {
+            dao.renameKey(projectId, keyRename, (err, oldKeyName, newKeyName) => {
+                expect(err).toBeFalsy();
+                dao.loadProject(projectId, (projectData) => {
+                    expect(projectData.keys[languageDE][keyNewName]).toEqual(keyValueDE);
+                    expect(projectData.keys[languageEN][keyNewName]).toEqual(keyValueEN);
+                    done();
+                });
+            });
+        });
+
+        it('should return old and new key name with callback', (done) => {
+            dao.renameKey(projectId, keyRename, (err, oldKeyName, newKeyName) => {
+                expect(err).toBeFalsy();
+                expect(oldKeyName).toEqual(keyOldName);
+                expect(newKeyName).toEqual(keyNewName);
                 done();
             });
         });
-    });
 
-    it('should have changed occurrences of the key for all languages', (done) => {
-        dao.renameKey(projectId, keyRename, () => {
-            dao.loadProject(projectId, (projectData) => {
-                expect(projectData.keys[languageDE][keyNewName]).toBeDefined();
-                expect(projectData.keys[languageEN][keyNewName]).toBeDefined();
-                done();
-            });
-        });
+        // TODO add missing tests for renaming key in descriptions property
     });
-
-    it('should not have changed the key value', (done) => {
-        dao.renameKey(projectId, keyRename, () => {
-            dao.loadProject(projectId, (projectData) => {
-                expect(projectData.keys[languageDE][keyNewName]).toEqual(keyValueDE);
-                expect(projectData.keys[languageEN][keyNewName]).toEqual(keyValueEN);
-                done();
-            });
-        });
-    });
-
-    // TODO add missing tests for renaming key in descriptions property
 });
 
 describe('dao.saveDescription', () => {
