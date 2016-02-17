@@ -523,83 +523,76 @@ describe('dao', () => {
 
         // TODO add missing tests for renaming key in descriptions property
     });
-});
 
-describe('dao.saveDescription', () => {
-    var storageFolder = fixturesDirectory + 'empty_rootfolder';
-    var dao;
-    var projectFolder = '/';
-    var projectName = 'testProject_saveDescription';
-    var projectId;
+    describe('saveDescription', () => {
+        var storageFolder = fixturesDirectory + 'empty_rootfolder';
+        var projectFolder = '/';
+        var projectName = 'testProject_saveDescription';
+        var projectId;
 
-    beforeAll((done) => {
-        dao = require('../../lib/server/dao')(storageFolder);
-        done();
-    });
-
-    afterEach((done) => {
-        fs.unlink(storageFolder + projectFolder + projectName + '.json', (err) => {
-            expect(err).toBeFalsy();
+        beforeEach((done) => {
+            dao = require('../../lib/server/dao')(storageFolder);
             done();
         });
-    });
 
-    describe('with no existing description', () => {
-
-        beforeEach((done) => {
-            dao.createNewProject(projectFolder, projectName, {}, (err, projectData) => {
+        afterEach((done) => {
+            fs.unlink(storageFolder + projectFolder + projectName + '.json', (err) => {
                 expect(err).toBeFalsy();
-                expect(projectData).toBeDefined();
-                projectId = projectData.projectId;
                 done();
             });
         });
 
-        it('should save description if project had none before', (done) => {
-            var description = 'testdescription';
-            dao.saveProjectDescription(projectId, description, (success) => {
-                expect(success).toBeTruthy();
-                if (success) {
+        describe('with no existing description', () => {
+
+            beforeEach((done) => {
+                dao.createNewProject(projectFolder, projectName, {}, (err, projectData) => {
+                    expect(err).toBeFalsy();
+                    expect(projectData).toBeDefined();
+                    projectId = projectData.projectId;
+                    done();
+                });
+            });
+
+            it('should save description if project had none before', (done) => {
+                var description = 'testdescription';
+                dao.saveProjectDescription(projectId, description, (err) => {
+                    expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
                         expect(projectData.description).toEqual(description);
                         done();
                     });
-                } else {
+                });
+            });
+
+        });
+
+        describe('with existing description', () => {
+
+            var initialDescription = 'initialDescription';
+            var projectInitialValues = {
+                description : initialDescription
+            };
+
+            beforeEach((done) => {
+                dao.createNewProject(projectFolder, projectName, projectInitialValues, (err, projectData) => {
+                    expect(err).toBeFalsy();
+                    expect(projectData).toBeDefined();
+                    projectId = projectData.projectId;
                     done();
-                }
+                });
             });
-        });
 
-    });
-
-    describe('with existing description', () => {
-
-        var initialDescription = 'initialDescription';
-        var projectInitialValues = {
-            description : initialDescription
-        };
-
-        beforeEach((done) => {
-            dao.createNewProject(projectFolder, projectName, projectInitialValues, (err, projectData) => {
-                expect(err).toBeFalsy();
-                expect(projectData).toBeDefined();
-                projectId = projectData.projectId;
-                done();
-            });
-        });
-
-        it('should save description if project had one before', (done) => {
-            var description = 'new_description';
-            dao.saveProjectDescription(projectId, description, (success) => {
-                if (success) {
+            it('should save description if project had one before', (done) => {
+                var description = 'new_description';
+                dao.saveProjectDescription(projectId, description, (err) => {
+                    expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
                         expect(projectData.description).toEqual(description);
                         done();
                     });
-                } else {
-                    done();
-                }
+                });
             });
         });
     });
 });
+

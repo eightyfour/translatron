@@ -119,7 +119,7 @@ describe('operations', () => {
                     expect(projectData).toBeTruthy();
                 });
 
-                expect(changesNotifier.notify).toHaveBeenCalledWith('newProjectWasCreated', expectedProjectId, jasmine.any(Number));
+                expect(changesNotifier.notify).toHaveBeenCalledWith('newProjectWasCreated', [ expectedProjectId ], jasmine.any(Number));
                 done();
             });
 
