@@ -44,29 +44,32 @@ app.use('/bower_components',
 var indexPage = jade.compileFile('./lib/client/jade/index.jade')(),
     projectOverviewPage = jade.compileFile('./lib/client/jade/projectOverview.jade');
 
-// configure the main route: matches all GETs for a query path which identifies either a directory or a project: for a
-// directory, the path starts with the root "/" followed by zero to N directories (each ending  on a "/"). For a project,
-// the path is like the path for a directory but with an appended project id (e.g. "project.prj")
-// we can add this route as a wildcard route because all other routes are already handled before and request processing
-// for other routes should never arrive here
-// if for any reason we can no longer use a wildcard route here, simply change to a route which uses the pattern
-// "\/(?:\w\/)*"
+/*
+    The main router handles all URLs for viewing/editing projects/directories and the export routes
+ */
+var mainRouter = express.Router();
+// TODO add middleware to mainRouter which will check if a project or directory with that id exists
+mainRouter.use(require('./lib/server/middleware-exporter/jpmbfExporter')(dao));
+mainRouter.use(require('./lib/server/middleware-exporter/jsonExporter')(dao));
+mainRouter.get('*', (req, res) => {
+    res.send(jade.compileFile('./lib/client/jade/index.jade')());
+});
 
-// TODO route only for GET
-// TODO only if authenticated
-// RE TODO no I wouldn t
-app.use(require('./lib/server/middleware-exporter/jpmbfExporter')(dao));
-app.use(require('./lib/server/middleware-exporter/jsonExporter')(dao));
-
-app.use(
-    function (req, res) {
-        if (enableAuth && !req.user) {
-            res.send(jade.compileFile('./lib/client/jade/login.jade')());
-        } else {
-            res.send(jade.compileFile('./lib/client/jade/index.jade')());
-        }
+var toLoginIfUnauthenticated = function(req, res, next) {
+    if (enableAuth && !req.user) {
+        // TODO sending the login page only makes sense for browser requests. if anybody is e.g. using curl to
+        // retrieve message bundles, we should only return a 401 but no content
+        res.send(jade.compileFile('./lib/client/jade/login.jade')());
+    } else {
+        next();
     }
-);
+};
+app.get(/\/(?:\w\/)*(?:\w+\.\w+)?/, toLoginIfUnauthenticated, mainRouter);
+
+// catch-all route + handler if no route matched, just return 404
+app.all('*', (req, res) => {
+    res.status(404).send('Not found');
+});
 
 var server = app.listen(serverPort);
 
