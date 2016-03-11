@@ -12,19 +12,36 @@
       "translated": "10"
     }
   },
-  "keyDescriptions" : {
+  "keyDescriptions": {
     "first": {
-      "__description" : "Description for the category",
-      "__image" : [],
-      "key_1" : "That's the description for key 1"
+      "__description": "Description for the category",
+      "__image": [],
+      "key_1": "That's the description for key 1"
     }
   },
   "keys": {
-    "de" : {
-      "first_key_1" : "test Schluessel Nummer Eins"
+    "de": {
+      "first_key_1": "test Schluessel Nummer Eins",
+      "first_key_2": "anderer schlüssel",
+      "first_key_3": "drei",
+      "fourth_nr_1": "eins",
+      "fourth_nr_2": "zwei",
+      "fourth_nr_3": "drei",
+      "fourth_nr_4": "vier",
+      "second_test_1": "sdsd"
     },
     "en": {
-      "first_key_1" : "test key number one 1"
+      "first_key_1": "test key number one 1",
+      "first_key_2": "another key",
+      "first_key_3": "three",
+      "second_test_1": "some text",
+      "second_test_2": "please translate this",
+      "third_test_1": "only one key for third cat?",
+      "fourth_nr_1": "one",
+      "fourth_nr_2": "two",
+      "fourth_nr_3": "three",
+      "fourth_nr_4": "four",
+      "second_test_4": "and so on"
     }
   },
   "availableLanguages": [

@@ -63,19 +63,26 @@
   #tableBody > div:nth-child(even) {
     background-color: rgba(49, 134, 0, 0.6);
   }
-  #tableBody .categoryNode:target h2 {
-    color:red;
+  #tableBody .categoryNode:target {
+    box-shadow: 0 0 2px 2px rgba(240, 102, 0, 0.99) inset;
   }
   #tableBody h2 {
     border-bottom: 1px solid #303030;
     font-size: 2em;
     padding: 0.4em 0 0.1em 1.5em;
+    cursor: pointer;
     &.icon{
       position: relative;
     }
     &:before{
       position: absolute;
       left: 0.3em;
+    }
+    &:hover {
+      text-shadow: 0 0 1px #F06600,0 0 1px #F06600,0 0 1px #F06600;
+      &:before{
+        content:'\f05c';
+      }
     }
   }
   .header .row,
