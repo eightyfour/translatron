@@ -24,11 +24,14 @@ html
 
     #debugIncomming
 
-    #fixedNavigation.projectMainNavigation(style='display: none',canny-mod='projectMainNavigation flowControl', canny-var='main', canny-flowcontrol="{'view':'resourceBundle'}")
+    .projectMainNavigation(style='display: none',canny-mod='projectMainNavigation flowControl', canny-var='main', canny-flowcontrol="{'view':'resourceBundle'}")
       .menuToggleButton.si-icon.si-icon-hamburger-cross(data-icon-name='hamburgerCross', canny-mod='projectMainNavigation', canny-var='menuToggleButton')
       .projectMainNavigation--header
         span {{msg.projectName}}
       include menuBar
+
+    .menuRight(style='display: none',canny-mod='menuRight flowControl', canny-var='main', canny-flowcontrol="{'view':'resourceBundle'}")
+      .anchorMenu(canny-mod="anchorMenu")
 
     div(canny-mod='layoutManager', canny-var="{'overlay':'translationViewProjectCategoryKey'}")
       include createNewCategory

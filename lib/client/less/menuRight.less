@@ -1,0 +1,30 @@
+.menuRight{
+  z-index: 20;
+  position: fixed;
+  top: 3em;
+  right: 0;
+  height: calc(100% - 6em);
+  width: @navigation-right-space;
+  margin-right: 0;
+  background-color: rgba(255,255,255,.6);
+  //  box-shadow: 2px 0px 3px 3px rgba(255, 255, 255, 0.7);
+  color: #333;
+  transition: margin 300ms;
+
+  ul {
+    font-size: 1.5em;
+    padding-top: 5em;
+    li{
+      cursor: pointer;
+      &.c-active{
+        color:darkorange;
+      }
+      &:hover{
+        color:darkorange;
+      }
+      ul {
+        font-size: 1em;
+      }
+    }
+  }
+}

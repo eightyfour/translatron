@@ -1,16 +1,18 @@
 @header-height: 3em;
 @navigation-left-space: 4em;
+@navigation-right-space: 8em;
 
 @import "mixins";
 
 html{
-  background: #dce4ea;
+//  background: #dce4ea;
 }
 body{
   font-family: sans-serif;
   font-size: 80%;
   padding-top: @header-height;
   padding-left: @navigation-left-space;
+  padding-right: @navigation-right-space;
   overflow-x: hidden; // needed for the overlay
 }
 // Reset
@@ -106,6 +108,7 @@ header.header {
 .floatL {float: left;}
 
 @import "projectMainNavigation";
+@import "menuRight";
 @import "layoutManager";
 @import "initialView";
 @import "translationView";
