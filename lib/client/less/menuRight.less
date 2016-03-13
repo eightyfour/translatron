@@ -12,19 +12,42 @@
   transition: margin 300ms;
 
   ul {
-    font-size: 1.5em;
-    padding-top: 5em;
+    font-size: 1.5rem;
     li{
+      -webkit-transition: height 400ms;
+      -moz-transition: height 400ms;
+      -ms-transition: height 400ms;
+      -o-transition: height 400ms;
+      transition: height 400ms;
       cursor: pointer;
-      &.c-active{
-        color:darkorange;
+      &.c-active, &:focus{
+        > span {
+          color: darkorange;
+        }
+        ul li{
+          height: 1em;
+        }
       }
       &:hover{
-        color:darkorange;
+        > span {
+          color: darkorange;
+        }
+        ul li{
+          height: 1em;
+        }
       }
       ul {
-        font-size: 1em;
+        font-size: 0.9rem;
+        overflow: hidden;
+        li {
+          padding-left: 1em;
+          height: 0;
+        }
       }
+
     }
+  }
+  > ul {
+    padding-top: 5em;
   }
 }
