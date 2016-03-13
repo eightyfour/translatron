@@ -6,48 +6,95 @@
   height: calc(100% - 6em);
   width: @navigation-right-space;
   margin-right: 0;
-  background-color: rgba(255,255,255,.6);
-  //  box-shadow: 2px 0px 3px 3px rgba(255, 255, 255, 0.7);
   color: #333;
   transition: margin 300ms;
 
-  ul {
-    font-size: 1.5rem;
-    li{
-      -webkit-transition: height 400ms;
-      -moz-transition: height 400ms;
-      -ms-transition: height 400ms;
-      -o-transition: height 400ms;
-      transition: height 400ms;
-      cursor: pointer;
-      &.c-active, &:focus{
-        > span {
-          color: darkorange;
-        }
-        ul li{
-          height: 1.1em;
-        }
-      }
-      &:hover{
-        > span {
-          color: darkorange;
-        }
-        ul li{
-          height: 1.1em;
-        }
-      }
-      ul {
-        font-size: 0.9rem;
+  .anchorMenu{
+    position: relative;
+    text-align: right;
+    ul {
+      box-sizing: border-box;
+      font-size: 1.5rem;
+      li{
+        box-sizing: border-box;
+        -webkit-transition: height 400ms;
+        -moz-transition: height 400ms;
+        -ms-transition: height 400ms;
+        -o-transition: height 400ms;
+        transition: height 400ms;
+        cursor: pointer;
+        margin-right: 0.2em;
+        padding-right: 0.3em;
+        text-overflow: ellipsis;
         overflow: hidden;
-        li {
-          padding-left: 1em;
-          height: 0;
-        }
-      }
 
+        &.c-inView{
+//          border-right: 1px solid #333;
+          box-shadow: 3px 0 #666;
+
+          ul li{
+            height: 1.1em;
+          }
+        }
+        &.c-active, &:focus{
+          > span {
+            color: darkorange;
+          }
+          ul li{
+            height: 1.1em;
+          }
+        }
+        &:hover{
+          > span {
+            color: darkorange;
+          }
+          ul li{
+            height: 1.1em;
+          }
+        }
+        ul {
+          font-size: 0.9rem;
+          overflow: hidden;
+          li {
+            padding-left: 1em;
+            height: 0;
+          }
+        }
+
+      }
     }
-  }
-  > ul {
-    padding-top: 5em;
+
+    > ul {
+      padding-top: 1em;
+      padding-bottom: 1em;
+      font-size: 1.5rem;
+      overflow-y: scroll;
+      margin-top: 1em;
+      margin-bottom: 1em;
+      width: 100%;
+      padding-right: 2em;
+      margin-left: 2em;
+    }
+    &:before, &:after{
+      -webkit-pointer-events: none;
+      -moz-pointer-events: none;
+      -ms-pointer-events: none;
+      pointer-events: none;
+      display: block;
+      width: 100%;
+      position: absolute;
+      left: 0;
+      content: ' ';
+      height: 2em;
+    }
+    &:before{
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.3) 100%);
+      top:0;
+    }
+    &:after{
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 0%,rgba(255, 255, 255, 1) 100%);
+
+      bottom: 0;
+    }
   }
 }
