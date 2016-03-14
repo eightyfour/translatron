@@ -28,6 +28,11 @@
   }
   .keyField {
     width: 100%;
+    &[disabled=true] {
+      visibility: hidden;
+    }
+    position: relative;
+    z-index: 2;
   }
   .addKeyButton{
     min-width: 4em;
@@ -36,12 +41,13 @@
     }
   }
   .header {
+    display: table;
     font-size: 14px;
     font-weight: bold;
   }
   .header,
   #tableBody > div {
-    display: table;
+//    display: table;
     width: 100%;
   }
   #tableBody > div {
@@ -95,7 +101,7 @@
   .header .row,
   .row {
     position: relative;
-    display: table-row;
+    padding: .5em;
     &.c-removed {
       background-color: red !important;
     }
@@ -110,26 +116,46 @@
       text-shadow: 0px 0px 6px #000;
       cursor: pointer;
     }
+
+    .translationContainer{
+      display: table;
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 80px;
+      .data {
+        position: relative;
+        display: table-cell;
+        padding: .5em;
+      }
+    }
   }
 
   .header .row > div,
   .row > div {
-    display: table-cell;
-    padding: .5em 0;
+//    display: table-cell;
+//    padding: .5em 0;
     vertical-align: middle;
     position: relative;
   }
-  .row .data.key:before{
-    position: absolute;
-    left: 4px;
-    top: 15px;
-    opacity: 0.4;
+  .row .data.key{
+    &::before{
+      position: absolute;
+      left: 4px;
+      top: 5px;
+      opacity: 0.4;
+    }
+    &::after{
+      position: absolute;
+      left: 24px;
+      top: 3px;
+      content: attr(data);
+    }
   }
   .row .data.key{
     padding-left: 1.5em;
   }
   .content .row > div {
-    padding: .5em;
+
     .flag-icon {
       position: absolute;
       width: 3.3em;
