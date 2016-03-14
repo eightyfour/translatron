@@ -73,7 +73,11 @@
       margin-bottom: 1em;
       width: 100%;
       padding-right: 2em;
-      margin-left: 2em;
+      margin-left: 0;
+      box-sizing: content-box;
+      > li {
+        padding-top:.3em;
+      }
     }
     &:before, &:after{
       -webkit-pointer-events: none;
