@@ -3,7 +3,6 @@
   "projectId": "/sub/sub2",
   "description": "Sub2 in a sub folder",
   "defaultLanguage": "en",
-  "languages": {},
   "keyDescriptions": {
     "first": {
       "__description": "Description for the category",
