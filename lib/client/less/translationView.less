@@ -35,10 +35,8 @@
     z-index: 2;
   }
   .addKeyButton{
-    min-width: 4em;
-    &:before{
-      font-size: 2em;
-    }
+    padding: 0.2em;
+    min-width: 3em;
   }
   .header {
     display: table;
@@ -63,8 +61,11 @@
     cursor: pointer;
   }
   #tableBody .addNewKeyrow input {
-    padding: 0 5px;
-    margin-right: 20px;
+    padding: 0 0.2em;
+    margin-right: 1em;
+    box-sizing: border-box;
+    width: 15em;
+    height: 1.6em;
   }
   #tableBody > div:nth-child(even) {
 //    background-color: rgba(49, 134, 0, 0.6);
@@ -171,6 +172,6 @@
 //    width: 300px;
   }
   .row:nth-child(odd) {
-    background-color: rgba(211, 211, 211, 0.5);
+//    background-color: rgba(211, 211, 211, 0.3);
   }
 }
