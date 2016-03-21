@@ -27,7 +27,9 @@
     top: 0;
     right: 0;
     .textEditor-button-edit{
-      display: none;
+      visibility: hidden;
+      z-index: -1;
+      position: relative;
     }
   }
 
@@ -73,6 +75,8 @@
       }
       .textEditor-button-edit{
         display: block;
+        visibility: visible;
+        z-index: 1;
       }
       .textEditor-wrap-area > * {
         display: none;

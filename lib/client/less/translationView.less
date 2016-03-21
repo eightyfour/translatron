@@ -1,5 +1,12 @@
 .translationView {
 
+  .octicon.octicon-pencil{
+    display: none;
+  }
+  &.c-enableEditorMode .octicon.octicon-pencil{
+    display: block;
+  }
+
   .data {
     display: table-cell;
   }
@@ -21,7 +28,7 @@
     position: relative;
     z-index: 1;
     background-color: rgba(255,255,255,0.8);
-    padding: 0;
+    padding: .3em;
     margin: 0;
     box-sizing: border-box;
   }
@@ -139,12 +146,12 @@
       vertical-align: middle;
       position: relative;
       margin: auto;
-      flex: 50 0 0px;
+      flex: 100 0 0px;
       .flag-icon {
         position: absolute;
         width: 3.3em;
         height: 2.1em;
-        bottom: .6em;
+        bottom: .9em;
         left: .6em;
         background-size: cover;
         background-position: 100%;
@@ -152,7 +159,7 @@
       }
     }
     .data.key{
-      flex: 20 20 0;
+      flex: 30 0 0;
       padding-right: 4.8em;
       padding-left: 1.5em;
       margin-bottom: .5em;
@@ -161,7 +168,6 @@
         position: absolute;
         left: 4px;
         top: 5px;
-        opacity: 0.4;
       }
       &::after{
         position: absolute;
@@ -182,5 +188,8 @@
     min-height: 20px;
     padding: 0.5em 0;
     margin: 0 1em 2em;
+    .js-text{
+      margin: 0.4em 0;
+    }
   }
 }
