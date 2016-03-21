@@ -8,8 +8,7 @@
     margin-bottom: 70px;
   }
   #titleText,
-  #titleTextTranslation,
-  .textField {
+  #titleTextTranslation{
     height: 40px;
   }
   .textField {
@@ -19,6 +18,8 @@
     z-index: 1;
     background-color: rgba(255,255,255,0.8);
     padding: 0;
+    margin: 0;
+    box-sizing: border-box;
   }
   .sendSuccess {
     background-color: #7cfc00;
@@ -80,6 +81,7 @@
     font-size: 2em;
     padding: 0.4em 0 0.1em 1.5em;
     cursor: pointer;
+    margin-bottom: 0.5em;
     &.icon{
       position: relative;
     }
@@ -102,7 +104,12 @@
   .header .row,
   .row {
     position: relative;
-    padding: .5em;
+
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+
     &.c-removed {
       background-color: red !important;
     }
@@ -123,55 +130,56 @@
       width: 100%;
       box-sizing: border-box;
       min-height: 80px;
+      flex: none;
       .data {
         position: relative;
         display: table-cell;
-        padding: .5em;
       }
     }
-  }
+    > div {
+      //    display: table-cell;
+      //    padding: .5em 0;
+      vertical-align: middle;
+      position: relative;
+      margin: auto;
+      flex: 50 0 0px;
+      .flag-icon {
+        position: absolute;
+        width: 3.3em;
+        height: 2.1em;
+        bottom: .6em;
+        left: .6em;
+        background-size: cover;
+        background-position: 100%;
+        opacity: 1;
+      }
+    }
+    .data.key{
+      flex: 20 20 0;
+      padding-right: 4.8em;
+      padding-left: 1.5em;
 
-  .header .row > div,
-  .row > div {
-//    display: table-cell;
-//    padding: .5em 0;
-    vertical-align: middle;
-    position: relative;
-  }
-  .row .data.key{
-    &::before{
-      position: absolute;
-      left: 4px;
-      top: 5px;
-      opacity: 0.4;
+      &::before{
+        position: absolute;
+        left: 4px;
+        top: 5px;
+        opacity: 0.4;
+      }
+      &::after{
+        position: absolute;
+        left: 24px;
+        top: 3px;
+        content: attr(data);
+      }
     }
-    &::after{
-      position: absolute;
-      left: 24px;
-      top: 3px;
-      content: attr(data);
-    }
-  }
-  .row .data.key{
-    padding-left: 1.5em;
-  }
-  .content .row > div {
 
-    .flag-icon {
-      position: absolute;
-      width: 3.3em;
-      height: 2.1em;
-      bottom: .6em;
-      left: .6em;
-      background-size: cover;
-      background-position: 100%;
-      opacity: 1;
+    .textEditor-main-wrap{
+      min-height: 20px;
+      background-color: aliceblue;
     }
   }
-  .row .data.key {
-//    width: 300px;
-  }
-  .row:nth-child(odd) {
-//    background-color: rgba(211, 211, 211, 0.3);
+  .textEditor-main-wrap{
+    min-height: 20px;
+    background-color: #ffd2cc;
   }
 }

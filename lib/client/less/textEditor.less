@@ -4,6 +4,8 @@
   &-main-wrap {
     position: relative;
     cursor: pointer;
+    padding-right: 4em;
+    box-sizing: border-box;
   }
   &-wrap-area{
     position: absolute;
@@ -15,34 +17,31 @@
     transition: opacity 100ms;
     height: 100%;
   }
+  &-buttonWrap{
+    position: relative;
+    top: 0;
+    right: 0;
+    .textEditor-button-edit{
+      display: none;
+    }
+  }
 
-  &-editButton{
-    position: absolute;
-    right: -1.2em;
-    top: -0.4em;
+  &-button{
+    position: relative;
     cursor: pointer;
+    transition: margin 200ms;
+    width: 1.5em;
+    height: 100%;
+    float: right;
+    text-align: center;
   }
 
   &-button{
     &-cancel, &-change {
-      width: 2.8em;
-      height: 2.6em;
-      position: absolute;
-      top: 0;
-      right: 0;
-      background-color: rgba(100,100,100,0.2);
-      border: none;
-      border-radius: 0.3em;
-      color: #333;
-      text-shadow: 0 1px #fff;
-      cursor: pointer;
 
-      &:before{
-        font-size:200%;
-      }
     }
     &-change{
-      right: 3.2em;
+      //right: 3.2em;
     }
   }
   &-area{
@@ -64,11 +63,16 @@
   }
 
   &-hide{
-    opacity: 0;
-    transition: opacity 100ms;
-    > [class*=textEditor] {
-      display: none;
-    }
-  }
 
+      .textEditor-button-edit{
+        display: block;
+      }
+      .textEditor-wrap-area > * {
+        display: none;
+      }
+      .textEditor-button-cancel, .textEditor-button-change{
+        display: none;
+      }
+
+  }
 }
