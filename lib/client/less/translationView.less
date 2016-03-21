@@ -1,9 +1,8 @@
-.translationView,
-.translationViewHeader.header{
-  @import "languageHideShow";
-}
 .translationView {
-
+  @import "languageHideShow";
+  .octicon:before{
+    color: rgba(117, 117, 117, 0.3);
+  }
   #resourceBundleTable {
     margin-bottom: 70px;
   }
@@ -39,44 +38,36 @@
     padding: 0.2em;
     min-width: 3em;
   }
-  .header {
-    display: table;
-    font-size: 14px;
-    font-weight: bold;
-  }
-  .header,
-  #tableBody > div {
+
+  > div {
 //    display: table;
     width: 100%;
   }
-  #tableBody > div {
+  > div {
     position: relative;
     padding-bottom: 60px;
   }
-  #tableBody .addNewKeyrow {
+  .addNewKeyrow {
     position: absolute;
     bottom: 15px;
     left: 10px;
   }
-  #tableBody .addNewKeyrow {
+  .addNewKeyrow {
     cursor: pointer;
   }
-  #tableBody .addNewKeyrow input {
+  .addNewKeyrow input {
     padding: 0 0.2em;
     margin-right: 1em;
     box-sizing: border-box;
     width: 15em;
     height: 1.6em;
   }
-  #tableBody > div:nth-child(even) {
-//    background-color: rgba(49, 134, 0, 0.6);
+
+  .c-anchorMenu-focus{
+    background-color: rgb(251, 150, 75);
   }
-  #tableBody {
-    .c-anchorMenu-focus{
-      background-color: rgb(251, 150, 75);
-    }
-  }
-  #tableBody h2 {
+
+  h2 {
     border-bottom: 1px solid #303030;
     font-size: 2em;
     padding: 0.4em 0 0.1em 1.5em;
@@ -96,15 +87,15 @@
       }
     }
   }
-  #tableBody .categoryNode.c-anchorMenu-focus h2 {
+  .categoryNode.c-anchorMenu-focus h2 {
     &:before{
       content:'\f05c';
     }
   }
-  .header .row,
   .row {
-    position: relative;
+    margin: 1em 1em 2em 1em;
 
+    position: relative;
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
@@ -120,8 +111,9 @@
       height: 1em;
       color: #fff;
       font-size: 2em;
+      font-size: 2em;
       font-weight: bold;
-      text-shadow: 0px 0px 6px #000;
+      text-shadow: 0 0 6px #000;
       cursor: pointer;
     }
 
@@ -134,6 +126,7 @@
       .data {
         position: relative;
         display: table-cell;
+        padding: 0 .5em;
       }
     }
     > div {
@@ -158,6 +151,7 @@
       flex: 20 20 0;
       padding-right: 4.8em;
       padding-left: 1.5em;
+      margin-bottom: .5em;
 
       &::before{
         position: absolute;
@@ -175,11 +169,14 @@
 
     .textEditor-main-wrap{
       min-height: 20px;
-      background-color: aliceblue;
+      margin:0;
+      padding: 0;
+
     }
   }
   .textEditor-main-wrap{
     min-height: 20px;
-    background-color: #ffd2cc;
+    padding: 0.5em 0;
+    margin: 0 1em 2em;
   }
 }

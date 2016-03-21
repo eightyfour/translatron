@@ -5,11 +5,11 @@
     textArea or something like that)
     If this is implemented I need a separate controller which update all texts (also from other users) if
     a texts has been changed...
-  p.octicon.octicon-light-bulb.projectDescription(canny-mod='textEditor')
+
+  h1 {{msg.projectName}}
+  p.projectDescription(canny-mod='textEditor')
     span.js-text {{msg.projectDescription}}
-    .row(canny-mod='translationViewHeader', canny-var='main')
-      #titleKey.data.key
-        | Identifier
-        em (must be unique)
-    #tableBody.content(canny-mod='translationView', canny-translationview='main')
+
+
+#tableBody.translationView(canny-mod='translationView', canny-translationview='main')
 

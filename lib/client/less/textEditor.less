@@ -6,9 +6,12 @@
     cursor: pointer;
     padding-right: 4em;
     box-sizing: border-box;
+    .js-text {
+      display: none;
+    }
   }
   &-wrap-area{
-    position: absolute;
+    position: relative;
     width: 100%;
     min-width: 12em;
     top: 0;
@@ -16,6 +19,8 @@
     opacity: 1;
     transition: opacity 100ms;
     height: 100%;
+    padding-right: 4em;
+    box-sizing: border-box;
   }
   &-buttonWrap{
     position: absolute;
@@ -45,15 +50,15 @@
     }
   }
   &-area{
+    font-family:inherit;
     width: 100%;
     height: auto;
     padding: 0 0;
     margin: 0;
-    border: none;
-    background-color: gainsboro;
     color: inherit;
     font-size: inherit;
     font-weight: inherit;
+    border: 1px solid gainsboro;
 
     &:focus{
       &~button{
@@ -63,7 +68,9 @@
   }
 
   &-hide{
-
+      .js-text{
+        display: block;
+      }
       .textEditor-button-edit{
         display: block;
       }
