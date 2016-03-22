@@ -13,7 +13,8 @@ var projectFolder = __dirname + '/static',
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     changesNotifier = require('./lib/server/changesNotifier.js')(),
-    busboy = require('connect-busboy');
+    busboy = require('connect-busboy'),
+    mkdir = require('./lib/server/mkdir-p');
 
 var app = express();
 
@@ -42,7 +43,8 @@ app.use('/dist',
 app.use('/bower_components',
     express.static(__dirname + '/bower_components'));
 
-app.use(require('./lib/server/upload'));
+mkdir(__dirname, '/dist/upload');
+app.use(require('./lib/server/upload')(__dirname + '/dist/upload'));
 
 // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
 // of the returned function pointer (with optional passing of locals) will do the actual compilation.
