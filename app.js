@@ -14,7 +14,8 @@ var projectFolder = __dirname + '/static',
     bodyParser = require('body-parser'),
     changesNotifier = require('./lib/server/changesNotifier.js')(),
     busboy = require('connect-busboy'),
-    mkdir = require('./lib/server/mkdir-p');
+    mkdir = require('./lib/server/mkdir-p'),
+    operations = require('./lib/server/operations.js')(dao, changesNotifier);
 
 var app = express();
 
@@ -44,7 +45,9 @@ app.use('/bower_components',
     express.static(__dirname + '/bower_components'));
 
 mkdir(__dirname, '/dist/upload');
-app.use(require('./lib/server/upload')(__dirname + '/dist/upload'));
+app.use(require('./lib/server/upload')(__dirname + '/dist/upload', function (folder, key, fName) {
+    operations.addImage(folder, key, fName);
+}));
 
 // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
 // of the returned function pointer (with optional passing of locals) will do the actual compilation.
@@ -80,11 +83,10 @@ app.all('*', (req, res) => {
 
 var server = app.listen(serverPort);
 
-var Operations = require('./lib/server/operations.js');
 var websocketServer = shoe(function (stream) {
     "use strict";
 
-    var operations = Operations(dao, changesNotifier);
+
     var d = dnode(operations);
 
     // handle errors from processing commands from clients: at least log them
