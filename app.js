@@ -12,7 +12,8 @@ var projectFolder = __dirname + '/static',
     jade = require('jade'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
-    changesNotifier = require('./lib/server/changesNotifier.js')();
+    changesNotifier = require('./lib/server/changesNotifier.js')(),
+    busboy = require('connect-busboy');
 
 var app = express();
 
@@ -22,6 +23,8 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 // same for parsing cookie
 app.use(cookieParser());
+
+app.use(busboy());
 
 // activate the LDAP auth
 if (enableAuth) {
@@ -38,6 +41,8 @@ app.use('/dist',
     express.static(__dirname + '/dist'));
 app.use('/bower_components',
     express.static(__dirname + '/bower_components'));
+
+app.use(require('./lib/server/upload'));
 
 // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
 // of the returned function pointer (with optional passing of locals) will do the actual compilation.

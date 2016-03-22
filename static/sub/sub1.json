@@ -4,9 +4,17 @@
   "description": "This is only for testing the test application. This is part of a sub folder",
   "defaultLanguage": "en",
   "keyDescriptions": {
-    "__description": "hallo du da was geht so",
+    "__description": "Das ist die project Beschreibung from sub1. All what you can see here is nice and easy to use. Also place holder are working if you are lucky. ",
     "fourth": "Some description in here",
-    "first_key_3": "the description for key 3"
+    "first_key_3": "the description for key 3",
+    "first": "The first key should always have a text! sd",
+    "first_key_2": "Don't add more then 20 characters in here!",
+    "first_key_4": "Key four needs only be translated in german",
+    "new1_second_test_5": "The key lies - don't translate this :p",
+    "first_key_1": "d"
+  },
+  "images" : {
+    "first": "/sub/sub1/sub1_fluffy.jpg"
   },
   "keys": {
     "de": {
@@ -19,10 +27,11 @@
       "fourth_nr_4": "vier",
       "second_test_1": "sdsd",
       "second_test_4": "manchmal ist komisch",
-      "second_test_5": "test 2"
+      "second_test_5": "test 2",
+      "first_key_4": ""
     },
     "en": {
-      "first_key_1": "test key number one 1",
+      "first_key_1": "test key number one 1 sd",
       "first_key_2": "another key",
       "first_key_3": "three",
       "second_test_1": "some text",
