@@ -559,7 +559,6 @@ describe('dao', () => {
                 dao.saveProjectDescription(projectId, id, description, (err) => {
                     expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
-                        // TODO: Is this intended to be, i.e. key description is empty string?
                         expect(projectData.keyDescriptions[id]).toEqual(description);
                         done();
                     });
@@ -590,7 +589,6 @@ describe('dao', () => {
                 dao.saveProjectDescription(projectId, id, description, (err) => {
                     expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
-                        // TODO: Is this intended to be, i.e. key description is empty string?
                         expect(projectData.keyDescriptions[id]).toEqual(description);
                         done();
                     });
