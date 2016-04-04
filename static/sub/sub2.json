@@ -1,0 +1,33 @@
+{
+  "project": "sub2",
+  "projectId": "/sub/sub2",
+  "description": "Sub2 in a sub folder",
+  "defaultLanguage": "en",
+  "keyDescriptions": {
+    "first": {
+      "__description": "Description for the category",
+      "__image": [],
+      "key_1": "Only German translation required"
+    }
+  },
+  "keys": {
+    "de": {
+      "first_key_1": "Schluessel Eins"
+    },
+    "en": {
+      "first_key_1": "key one",
+      "first_key2": "fancy long entry where the rendered result will span multiple lines and maybe even pages - oh, maybe it will even be larger then Earth's radius! And then it'll conquer the whole universe!"
+    }
+  },
+  "availableLanguages": [
+    "en",
+    "de",
+    "fr",
+    "es",
+    "nl",
+    "da",
+    "sv",
+    "en_GB"
+  ],
+  "images": {}
+}

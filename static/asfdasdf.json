@@ -1,0 +1,19 @@
+{
+  "defaultLanguage": "en",
+  "description": "asdfasdf",
+  "keyDescriptions": {},
+  "keys": {},
+  "images": {},
+  "project": "asfdasdf",
+  "projectId": "/asfdasdf",
+  "availableLanguages": [
+    "en",
+    "de",
+    "fr",
+    "es",
+    "nl",
+    "da",
+    "sv",
+    "en_GB"
+  ]
+}
