@@ -554,11 +554,12 @@ describe('dao', () => {
             });
 
             it('should save description if project had none before', (done) => {
+                var id = '__description';
                 var description = 'testdescription';
-                dao.saveProjectDescription(projectId, description, (err) => {
+                dao.saveProjectDescription(projectId, id, description, (err) => {
                     expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
-                        expect(projectData.description).toEqual(description);
+                        expect(projectData.keyDescriptions[id]).toEqual(description);
                         done();
                     });
                 });
@@ -583,11 +584,12 @@ describe('dao', () => {
             });
 
             it('should save description if project had one before', (done) => {
+                var id = '__description';
                 var description = 'new_description';
-                dao.saveProjectDescription(projectId, description, (err) => {
+                dao.saveProjectDescription(projectId, id, description, (err) => {
                     expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
-                        expect(projectData.description).toEqual(description);
+                        expect(projectData.keyDescriptions[id]).toEqual(description);
                         done();
                     });
                 });
