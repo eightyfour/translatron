@@ -9,6 +9,13 @@
           span Create new category
           span.icon.octicon.octicon-tag
         li
+          a(canny-mod='projectMainNavigation', canny-var='enableEditorMode')
+            span Enable edit buttons
+            span.icon.octicon.octicon-pencil
+    label Developer menu
+    .menuNavigation.developer
+      ul.navigationMenu.developer
+        li
           a(canny-mod='projectMainNavigation', canny-var='showMessageBundleFormat')
             span Show as message bundles
             span.icon.octicon.octicon-squirrel
@@ -16,10 +23,6 @@
           a(canny-mod='projectMainNavigation', canny-var='showJSONBundle')
             span Show as JSON
             span.icon.octicon.octicon-eye
-        li
-          a(canny-mod='projectMainNavigation', canny-var='enableEditorMode')
-            span Enable edit buttons
-            span.icon.octicon.octicon-pencil
     label Info and help
     .menuNavigation.infoHelp
       ul.navigationMenu.infoHelp
