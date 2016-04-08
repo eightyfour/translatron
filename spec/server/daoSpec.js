@@ -249,7 +249,7 @@ describe('dao', () => {
                 expect(projectData.description).toEqual('');
                 expect(projectData.languages).toEqual({});
                 expect(projectData.availableLanguages.length).toEqual(8);
-                expect(projectData.keyDescriptions).toEqual({});
+                expect(projectData.keyDescriptions).toEqual({ __description: '' });
                 expect(projectData.numberOfKeys).toEqual(0);
                 expect(projectData.keys).toEqual({});
                 done();
