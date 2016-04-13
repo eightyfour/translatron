@@ -1,11 +1,12 @@
 /*global console */
 /*jslint node: true */
 var projectFolder = __dirname + '/static',
+    uploadFolder = __dirname + '/dist/upload',
     packageJSON = require('./package.json'),
     express = require('express'),
     shoe = require('shoe'),
     dnode = require('dnode'),
-    dao = require('./lib/server/dao.js')(projectFolder),
+    dao = require('./lib/server/dao.js')(projectFolder, uploadFolder),
     fileManager = require('./lib/server/legacy/fileManager.js')(projectFolder),
     serverPort = packageJSON.config.port || 3000,
     enableAuth = packageJSON.config.enableAuth,
@@ -45,7 +46,7 @@ app.use('/bower_components',
     express.static(__dirname + '/bower_components'));
 
 mkdir(__dirname, '/dist/upload');
-app.use(require('./lib/server/upload')(__dirname + '/dist/upload', function (folder, key, fName) {
+app.use(require('./lib/server/upload')(uploadFolder, function (folder, key, fName) {
     operations.addImage(folder, key, fName);
 }));
 
