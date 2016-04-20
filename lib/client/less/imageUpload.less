@@ -1,29 +1,71 @@
 .imageUpload {
+  // editor panel
+
   &-imageBox {
+
     display: none;
-    border: 1px solid rgba(117, 117, 117, 0.3);
-    padding: .5em;
-    resize: both;
-    overflow: hidden;
-    width: 100px;
     margin: 0 1em;
+    position: relative;
     float:left;
     &.c-show {
       display: block;
     }
+    &-resizeable{
+      resize: both;
+      overflow: hidden;
+      width: 100px;
+      padding: .5em;
+      border: 1px solid rgba(117, 117, 117, 0.3);
+    }
+    &-content{
+
+    }
+
+    &-editPanel{
+      position: absolute;
+      width: 5em;
+      height: 2em;
+      top: 0;
+      right: -5em;
+
+      .edit-btn{}
+      .cancel-btn{display: none;}
+      .delete-btn{display: none;}
+
+      &.c-edit{
+        .edit-btn{display: none;}
+        .cancel-btn, .delete-btn{display: inline-block;}
+      }
+
+      .edit-btn,.cancel-btn, .delete-btn{
+        cursor: pointer;
+        position: relative;
+        transition: margin 200ms;
+        width: 1.5em;
+        height: 100%;
+        text-align: center;
+      }
+
+      .delete-btn{
+        &:hover {
+          &:before {
+            color: rgba(255, 31, 45, 0.6);
+          }
+        }
+      }
+      .cancel-btn{
+        &:hover {
+          &:before {
+            color: #1EA000;
+          }
+        }
+      }
+    }
+
 
     img {
       width: 100%;
       cursor: pointer;
-    }
-
-    .delete-btn {
-      cursor: pointer;
-      &:hover {
-        &:before {
-          color: rgba(255, 31, 45, 0.6);
-        }
-      }
     }
   }
   &-wrap{
@@ -32,8 +74,6 @@
   }
   &-editButton {
     margin: 0 1em;
-    //border: 1px solid rgba(117, 117, 117, 0.3);
-    padding: .5em;
 
     .upload-btn {
       cursor: pointer;
