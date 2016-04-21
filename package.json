@@ -9,9 +9,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "canny": "0.1.x",
-    "dom-opts": "git://github.com/eightyfour/dom-opts.git",
-    "browserify": "^9.0.7",
     "body-parser": "^1.14.2",
     "connect-busboy": "0.0.2",
     "cookie-parser": "^1.4.1",
@@ -19,7 +16,6 @@
     "express": "x",
     "express-session": "^1.13.0",
     "jade": "^1.11.0",
-    "less": "~2.4.0",
     "passport": "^0.3.2",
     "passport-ldapauth": "^0.5.0",
     "shoe": "x"
@@ -30,7 +26,6 @@
   },
   "main" : "translatron.js",
   "scripts": {
-    "install" : "npm run buildjs && npm run less",
     "buildjs" : "browserify lib/client/js/main.js -o dist/js/translatron.js && browserify lib/client/js/login.js -o dist/js/translatron-login.js",
     "buildjs-dev" : "browserify --debug lib/client/js/main.js -o dist/js/translatron.js && browserify --debug lib/client/js/login.js -o dist/js/translatron-login.js",
     "less" : "lessc lib/client/less/main.less dist/css/translatron.css",
@@ -40,6 +35,10 @@
     "devsetup" : "bower install"
   },
   "devDependencies": {
+    "canny": "0.1.x",
+    "dom-opts": "git://github.com/eightyfour/dom-opts.git",
+    "browserify": "^9.0.7",
+    "less": "~2.4.0",
     "bower": "^1.7.2",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",

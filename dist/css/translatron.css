@@ -1,0 +1,2080 @@
+.icon-btn {
+  color: white;
+  cursor: pointer;
+}
+.icon-btn:hover {
+  color: lightgrey;
+}
+.icon-btn:active {
+  color: darkgrey;
+}
+body {
+  font-family: sans-serif;
+  font-size: 80%;
+  padding-top: 3em;
+  padding-left: 4em;
+  padding-right: 14em;
+  overflow-x: hidden;
+  color: #555;
+}
+div,
+span,
+applet,
+object,
+iframe,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: inherit;
+  vertical-align: baseline;
+  font-weight: inherit;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+ol,
+ul {
+  list-style: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+a {
+  text-decoration: underline;
+  color: blue;
+}
+body ::-webkit-scrollbar {
+  width: 7px;
+}
+body ::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(100, 100, 100, 0.3);
+  border-radius: 0px;
+  background-color: #131313;
+}
+body ::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  background-color: #424242;
+}
+body.invert ::-webkit-scrollbar-track {
+  background-color: #424242;
+}
+body.invert ::-webkit-scrollbar-thumb {
+  background-color: #131313;
+}
+.fullWidthDarkBar,
+header.header,
+footer.footer {
+  height: 3em;
+  padding-left: 5em;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  background-color: #303030;
+  z-index: 20;
+  color: white;
+}
+header.header {
+  top: 0;
+}
+header.header .beforeText {
+  margin: .5em 1em 0 1em;
+  position: relative;
+  display: block;
+  float: left;
+}
+header.header .projectName {
+  font-size: 1.5em;
+  line-height: 2em;
+  color: darkorange;
+}
+header.header .projectName:before {
+  margin-right: .3em;
+}
+footer.footer {
+  line-height: 3em;
+  padding: 0 3em;
+  box-sizing: border-box;
+  bottom: 0;
+  text-align: center;
+}
+footer.footer a {
+  color: white;
+  text-decoration: none;
+}
+footer.footer a:after {
+  margin: 0 2em;
+  content: '|';
+}
+footer.footer a:last-child:after {
+  display: none;
+}
+#fileManager .switchLink {
+  display: block;
+}
+.floatL {
+  float: left;
+}
+.projectMainNavigation {
+  z-index: 20;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 24.6em;
+  margin-left: -20em;
+  background-color: #303030;
+  color: white;
+  transition: margin 300ms;
+}
+.projectMainNavigation.c-open {
+  margin-left: 0;
+  transition: margin 300ms;
+}
+.projectMainNavigation.c-open .menuNavigation.infoHelp li,
+.projectMainNavigation.c-open .menuNavigation.projects li {
+  margin: 0;
+}
+.projectMainNavigation.c-open .menuToggleButton {
+  transition: opacity 600ms;
+  opacity: 1;
+}
+.projectMainNavigation:hover .menuToggleButton {
+  transition: opacity 600ms;
+  opacity: 1;
+}
+.projectMainNavigation .menuToggleButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-right: 0;
+  background-color: #303030;
+  transition: opacity 1s 600ms;
+  opacity: 0.5;
+  padding-right: 0.2em;
+  cursor: pointer;
+}
+.projectMainNavigation .page-scroll {
+  position: absolute;
+  width: 100%;
+  box-sizing: border-box;
+  top: 3em;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.projectMainNavigation .page-scroll--content {
+  overflow-y: scroll;
+  height: 100%;
+  background-color: #404040;
+  box-sizing: border-box;
+}
+.projectMainNavigation--header {
+  width: 100%;
+  height: 3em;
+  line-height: 3em;
+}
+.projectMainNavigation--header > span {
+  font-weight: bold;
+  padding: 0 0 0 .7em;
+  display: block;
+  font-size: 1.5em;
+}
+.projectMainNavigation p {
+  margin-top: 5px;
+}
+.projectMainNavigation label {
+  font-weight: bold;
+  padding: 0.7em;
+  display: block;
+  font-size: 1.7em;
+  background-color: #303030;
+}
+.projectMainNavigation a {
+  color: #FFF;
+  line-height: 18px;
+}
+.projectMainNavigation ul {
+  padding: 0;
+  margin: 0;
+}
+.projectMainNavigation .menuNavigation.language li {
+  background-color: rgba(0, 110, 60, 0.2);
+}
+.projectMainNavigation .menuNavigation.language li .langName {
+  margin-right: 10px;
+}
+.projectMainNavigation .menuNavigation.infoHelp li,
+.projectMainNavigation .menuNavigation.projects li {
+  background-color: rgba(100, 150, 200, 0.2);
+  margin: 0 3em 0 0;
+}
+.projectMainNavigation .menuNavigation li {
+  padding: 0;
+  background-color: rgba(150, 150, 100, 0.2);
+}
+.projectMainNavigation .menuNavigation li a {
+  position: absolute;
+  width: 100%;
+  display: block;
+  text-decoration: none;
+  box-sizing: border-box;
+  height: 100%;
+  padding: .5em 0 .5em .5em;
+  top: 0;
+  left: 0;
+}
+.projectMainNavigation .menuNavigation ul:last-child li:last-child {
+  border-bottom: 1px solid black;
+}
+.projectMainNavigation .menuNavigation li {
+  min-height: 2.2em;
+  box-sizing: border-box;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1.5em;
+  padding: .5em 0 .5em .5em;
+  border-top: 1px solid black;
+  box-shadow: 0px 1px 2px 0px rgba(250, 250, 250, 0.2) inset;
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.projectMainNavigation .menuNavigation li:active {
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.1) inset, 0px 1px 2px 1px rgba(0, 0, 0, 0.8) inset;
+}
+.projectMainNavigation .menuNavigation li .icon {
+  position: absolute;
+  right: 0px;
+  font-size: 1.5em;
+  top: 50%;
+  margin-top: -4.5%;
+  line-height: 1em;
+  display: inline-block;
+  width: 1.833333em;
+  text-align: center;
+}
+.projectMainNavigation .menuNavigation li .flag-icon {
+  position: absolute;
+  right: 5px;
+  font-size: 1.6em;
+  top: 50%;
+  margin-top: -5.2%;
+  line-height: 1em;
+  display: inline-block;
+  width: 1.33333333em;
+}
+.projectMainNavigation .menuNavigation li .flag-icon:after {
+  display: block;
+  text-align: center;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+}
+.projectMainNavigation .menuNavigation li .flag-icon:before {
+  z-index: 1;
+  position: relative;
+}
+.projectMainNavigation .menuNavigation li .icon.plus:after {
+  content: '+';
+}
+.projectMainNavigation .menuNavigation li .icon.info:after {
+  content: '!';
+}
+.projectMainNavigation .menuNavigation li .icon.question:after {
+  content: '?';
+}
+.projectMainNavigation .menuNavigation li.c-active .flag-icon:after {
+  display: none;
+}
+.projectMainNavigation .menuNavigation li.c-active .flag-icon:before {
+  content: "\00a0";
+}
+.projectMainNavigation .menuNavigation li.c-active.c-inactive .flag-icon:after {
+  display: block;
+  content: "\00a0";
+}
+.projectMainNavigation .switchLink {
+  margin-bottom: 20px;
+}
+.projectMainNavigation .clear {
+  clear: both;
+}
+.menuRight {
+  z-index: 20;
+  position: fixed;
+  top: 3em;
+  right: 0;
+  height: calc(94%);
+  width: 14em;
+  margin-right: 0;
+  transition: margin 300ms;
+}
+.menuRight .anchorMenu {
+  position: relative;
+  text-align: right;
+}
+.menuRight .anchorMenu ul {
+  box-sizing: border-box;
+  font-size: 1.5rem;
+}
+.menuRight .anchorMenu ul li {
+  box-sizing: border-box;
+  -webkit-transition: height 400ms;
+  -moz-transition: height 400ms;
+  -ms-transition: height 400ms;
+  -o-transition: height 400ms;
+  transition: height 400ms;
+  cursor: pointer;
+  margin-right: 0.2em;
+  padding-right: 0.3em;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.menuRight .anchorMenu ul li.c-inView {
+  border-right: 3px solid #666;
+}
+.menuRight .anchorMenu ul li.c-inView ul li {
+  height: 1.1em;
+}
+.menuRight .anchorMenu ul li.c-key-highlight > span {
+  color: #3F8FFB;
+}
+.menuRight .anchorMenu ul li.c-active > span,
+.menuRight .anchorMenu ul li:focus > span {
+  color: #3F8FFB;
+}
+.menuRight .anchorMenu ul li.c-active ul li,
+.menuRight .anchorMenu ul li:focus ul li {
+  height: 1.1em;
+}
+.menuRight .anchorMenu ul li:hover > span {
+  color: #3F8FFB;
+}
+.menuRight .anchorMenu ul li:hover ul li {
+  height: 1.1em;
+}
+.menuRight .anchorMenu ul li ul {
+  font-size: 0.9rem;
+  overflow: hidden;
+}
+.menuRight .anchorMenu ul li ul li {
+  padding-left: 1em;
+  height: 0;
+}
+.menuRight .anchorMenu > ul {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  font-size: 1.5rem;
+  overflow-y: scroll;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  width: 100%;
+  padding-right: 2em;
+  margin-left: 0;
+  box-sizing: content-box;
+}
+.menuRight .anchorMenu > ul > li {
+  border-right: 3px solid transparent;
+  padding-top: .3em;
+}
+.menuRight .anchorMenu:before,
+.menuRight .anchorMenu:after {
+  -webkit-pointer-events: none;
+  -moz-pointer-events: none;
+  -ms-pointer-events: none;
+  pointer-events: none;
+  display: block;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  content: ' ';
+  height: 2em;
+}
+.menuRight .anchorMenu:before {
+  background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0.3) 100%);
+  top: 0;
+}
+.menuRight .anchorMenu:after {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 0%, #ffffff 100%);
+  bottom: 0;
+}
+.layoutManager-overlay {
+  overflow: auto;
+  z-index: 22;
+  position: fixed;
+  top: 0;
+  left: 0;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  -ms-justify-content: center;
+  justify-content: center;
+}
+.initialView .sun {
+  height: 0;
+  border-radius: 50px;
+  margin: 12% 0 0 0;
+  position: relative;
+  display: block;
+  width: 100%;
+}
+.initialView .sun .wrap {
+  position: relative;
+  width: 1px;
+  height: 1px;
+  margin: 10% auto;
+  top: 150px;
+  left: -2em;
+  font-size: 3em;
+}
+.initialView .sun .wrap .projectName {
+  cursor: pointer;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  padding: 0.5em;
+  height: 3em;
+  width: 3em;
+  line-height: 3em;
+  box-shadow: 0 0 1px 2px #00ff00;
+  border-radius: 100%;
+  position: absolute;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  -ms-transition: all 1s;
+  -o-transition: all 1s;
+  transition: all 1s;
+  text-align: center;
+}
+.initialView .sun .wrap .ownProject {
+  background-color: rgba(255, 255, 255, 0.8);
+  line-height: 0.7em;
+}
+.initialView .sun .wrap .ownProject span {
+  font-size: 50%;
+}
+.translationView .octicon.octicon-pencil {
+  display: none;
+}
+.translationView.c-enableEditorMode .octicon.octicon-pencil {
+  display: block;
+}
+.translationView .data {
+  display: table-cell;
+}
+.translationView.c-hide_de .js_de {
+  display: none;
+}
+.translationView.c-hide_fr .js_fr {
+  display: none;
+}
+.translationView.c-hide_da .js_da {
+  display: none;
+}
+.translationView.c-hide_nl .js_nl {
+  display: none;
+}
+.translationView.c-hide_en .js_en {
+  display: none;
+}
+.translationView.c-hide_en_GB .js_en_GB {
+  display: none;
+}
+.translationView.c-hide_sv .js_sv {
+  display: none;
+}
+.translationView.c-hide_es .js_es {
+  display: none;
+}
+.translationView .imageUpload-imageBox {
+  display: none;
+  margin: 0 1em;
+  position: relative;
+  float: left;
+}
+.translationView .imageUpload-imageBox.c-show {
+  display: block;
+}
+.translationView .imageUpload-imageBox-resizeable {
+  resize: both;
+  overflow: hidden;
+  width: 100px;
+  padding: .5em;
+}
+.translationView .imageUpload-imageBox-content::before {
+  display: block;
+  content: ' ';
+  width: 1.5em;
+  height: 1.5em;
+  border-right: 2px solid #ccc;
+  border-bottom: 2px solid #ccc;
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  z-index: -1;
+}
+.translationView .imageUpload-imageBox-editPanel {
+  position: absolute;
+  width: 5em;
+  height: 2em;
+  top: 0;
+  right: -5em;
+}
+.translationView .imageUpload-imageBox-editPanel .cancel-btn {
+  display: none;
+}
+.translationView .imageUpload-imageBox-editPanel .delete-btn {
+  display: none;
+}
+.translationView .imageUpload-imageBox-editPanel.c-edit .edit-btn {
+  display: none;
+}
+.translationView .imageUpload-imageBox-editPanel.c-edit .cancel-btn,
+.translationView .imageUpload-imageBox-editPanel.c-edit .delete-btn {
+  display: inline-block;
+}
+.translationView .imageUpload-imageBox-editPanel .edit-btn,
+.translationView .imageUpload-imageBox-editPanel .cancel-btn,
+.translationView .imageUpload-imageBox-editPanel .delete-btn {
+  cursor: pointer;
+  position: relative;
+  transition: margin 200ms;
+  width: 1.5em;
+  height: 100%;
+  text-align: center;
+}
+.translationView .imageUpload-imageBox-editPanel .delete-btn:hover:before {
+  color: rgba(255, 31, 45, 0.6);
+}
+.translationView .imageUpload-imageBox-editPanel .cancel-btn:hover:before {
+  color: #1EA000;
+}
+.translationView .imageUpload-imageBox img {
+  width: 100%;
+  cursor: pointer;
+}
+.translationView .imageUpload-wrap {
+  display: flex;
+  align-items: center;
+}
+.translationView .imageUpload-editButton {
+  margin: 0 1em;
+}
+.translationView .imageUpload-editButton .upload-btn {
+  cursor: pointer;
+  font-size: 3em;
+}
+.translationView .imageUpload-editButton .upload-btn:hover:before {
+  color: rgba(117, 117, 117, 0.6);
+}
+.translationView .octicon:before {
+  color: rgba(117, 117, 117, 0.3);
+}
+.translationView #resourceBundleTable {
+  margin-bottom: 70px;
+}
+.translationView #titleText,
+.translationView #titleTextTranslation {
+  height: 40px;
+}
+.translationView .textField {
+  width: 100%;
+  height: 100%;
+  min-height: 5.4em;
+  position: relative;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: .3em;
+  margin: 0;
+  box-sizing: border-box;
+}
+.translationView .sendSuccess {
+  background-color: #7cfc00;
+}
+.translationView .updateKey {
+  background-color: #ffff00;
+}
+.translationView .keyField {
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+.translationView .keyField[disabled=true] {
+  visibility: hidden;
+}
+.translationView .addKeyButton {
+  padding: 0.2em;
+  min-width: 3em;
+}
+.translationView > div {
+  width: 100%;
+  margin-top: 1em;
+  position: relative;
+  padding-bottom: 60px;
+}
+.translationView .addNewKeyrow {
+  position: absolute;
+  bottom: 15px;
+  left: 10px;
+}
+.translationView .addNewKeyrow {
+  cursor: pointer;
+}
+.translationView .addNewKeyrow input {
+  padding: 0 0.2em;
+  margin-right: 1em;
+  box-sizing: border-box;
+  width: 15em;
+  height: 1.6em;
+}
+.translationView .c-anchorMenu-focus {
+  background-color: #f1faff;
+}
+.translationView h2 {
+  cursor: pointer;
+  border-bottom: 1px solid #303030;
+  font-size: 2em;
+  padding: 0 0 0.1em 1.5em;
+  margin: 0 0.5em 0.5em 0;
+}
+.translationView h2.icon {
+  position: relative;
+}
+.translationView h2:before {
+  position: absolute;
+  left: 0.3em;
+}
+.translationView h2:hover {
+  text-shadow: 0 0 0px #95c2ff, 0 0 0px #95c2ff, 0 0 0px #95c2ff;
+}
+.translationView h2:hover:before {
+  content: '\f05c';
+}
+.translationView .categoryNode.c-anchorMenu-focus h2:before {
+  content: '\f05c';
+}
+.translationView .row {
+  margin: 1em 1em 2em 1em;
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  clear: both;
+}
+.translationView .row.c-removed {
+  background-color: red !important;
+}
+.translationView .row .remove-button {
+  position: relative;
+  width: 1em;
+  height: 1em;
+  color: #fff;
+  font-size: 2em;
+  font-weight: bold;
+  text-shadow: 0 0 6px #000;
+  cursor: pointer;
+}
+.translationView .row .translationContainer {
+  display: table;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 80px;
+  flex: none;
+}
+.translationView .row .translationContainer .data {
+  position: relative;
+  padding: 0 .5em;
+}
+.translationView .row > div {
+  vertical-align: middle;
+  position: relative;
+  margin: auto;
+  flex: 100 0 0px;
+}
+.translationView .row > div .flag-icon {
+  position: absolute;
+  width: 3.3em;
+  height: 2.1em;
+  bottom: .9em;
+  left: .6em;
+  background-size: cover;
+  background-position: 100%;
+  opacity: 1;
+}
+.translationView .row .data.key {
+  flex: 30 0 0;
+  padding-right: 4.8em;
+  padding-left: 1.5em;
+  margin-bottom: .5em;
+}
+.translationView .row .data.key::before {
+  position: absolute;
+  left: 4px;
+  top: 5px;
+}
+.translationView .row .data.key::after {
+  position: absolute;
+  left: 24px;
+  top: 3px;
+  content: attr(data);
+}
+.translationView .row .textEditor-main-wrap {
+  margin: 0;
+}
+.translationView .textEditor-main-wrap {
+  margin: 0 1em;
+}
+.translationView .textEditor-main-wrap .js-text {
+  margin: 0.4em 0;
+}
+.inputEditManager.wrap {
+  position: absolute;
+  overflow: hidden;
+  height: 1.2em;
+  width: auto;
+  right: 0;
+  top: .1em;
+}
+.inputEditManager-button {
+  transition: margin 200ms;
+  margin-top: -2em;
+  font-size: 2em;
+  width: 1.5em;
+  height: 100%;
+  float: right;
+  text-align: center;
+  cursor: pointer;
+}
+.inputEditManager.c-edit .edit {
+  margin-top: -2em;
+  position: absolute;
+  right: 0;
+}
+.inputEditManager.c-edit .cancel,
+.inputEditManager.c-edit .save,
+.inputEditManager.c-edit .delete {
+  margin-top: 0;
+}
+.inputEditManager .edit {
+  margin-top: 0;
+  position: absolute;
+  left: 0;
+}
+#imageViewer {
+  display: inline-block;
+}
+#imageViewer .hidden {
+  display: none;
+}
+.translationViewHeader {
+  text-align: center;
+}
+.translationViewHeader p {
+  padding-left: 4em;
+  font-weight: normal;
+  text-align: center;
+}
+.translationViewHeader .flag-icon {
+  margin-right: 1em;
+}
+.translationViewHeader .projectDescription {
+  font-size: 1.5em;
+}
+/* MODULES */
+.textEditor-main-wrap {
+  position: relative;
+  cursor: pointer;
+  padding-right: 4em;
+  box-sizing: border-box;
+}
+.textEditor-main-wrap .js-text {
+  display: none;
+}
+.textEditor-wrap-area {
+  position: relative;
+  width: 100%;
+  min-width: 12em;
+  top: 0;
+  left: 0;
+  opacity: 1;
+  transition: opacity 100ms;
+  height: 100%;
+  box-sizing: border-box;
+}
+.textEditor-buttonWrap {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.textEditor-buttonWrap .textEditor-button-edit {
+  visibility: hidden;
+  z-index: -1;
+  position: relative;
+}
+.textEditor-button {
+  position: relative;
+  cursor: pointer;
+  transition: margin 200ms;
+  width: 1.5em;
+  height: 100%;
+  float: right;
+  text-align: center;
+}
+.textEditor-area {
+  font-family: inherit;
+  width: 100%;
+  height: auto;
+  padding: 0 0;
+  margin: 0;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  border: 1px solid gainsboro;
+}
+.textEditor-area:focus ~ button {
+  opacity: 0.2;
+}
+.textEditor-hide .js-text {
+  display: block;
+}
+.textEditor-hide .textEditor-button-edit {
+  display: block;
+  visibility: visible;
+  z-index: 1;
+}
+.textEditor-hide .textEditor-wrap-area > * {
+  display: none;
+}
+.textEditor-hide .textEditor-button-cancel,
+.textEditor-hide .textEditor-button-change {
+  display: none;
+}
+.button {
+  font-size: 1em;
+  min-height: 20px;
+  color: #777;
+  text-align: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  font-weight: bold;
+  font-family: inherit;
+  border-radius: 2px;
+  background-clip: padding-box;
+  -o-text-shadow: 0 1px 1px #464d52;
+  -moz-text-shadow: 0 1px 1px #464d52;
+  -webkit-text-shadow: 0 1px 1px #464d52;
+  text-shadow: 0 1px 1px #ddd,0 1px 1px #ddd,0 1px 1px #ddd;
+  /* background: #a2a8ad; */
+  background: linear-gradient(#d6d5d5, #c5cdd4);
+  box-shadow: 0px -2px 0px 0px #989a9c inset;
+}
+.button:hover {
+  background: #d6d5d5;
+}
+.button:active {
+  background: #b1b8be;
+}
+.button:before {
+  padding-right: .3em;
+}
+.inputField {
+  font-size: 1em;
+  background-color: #f7f7f7;
+  border: 2px solid #a6a6a6;
+  border-radius: 5px;
+  background-clip: padding-box;
+  box-shadow: inset 0 0 5px 0 #c8c8c8;
+  box-sizing: border-box;
+  color: #868686;
+  display: block;
+  line-height: 1.4em;
+  width: 100%;
+  padding-left: 16px;
+}
+.overlayWindow {
+  font-size: 150%;
+  width: 100%;
+  max-width: 22em;
+  padding: 1em 2em;
+  background-color: #F7F7F7;
+  border-radius: 4px;
+  box-shadow: 0 0em 1em 100em rgba(0, 0, 0, 0.5), 0 0 4px 2px #d3d3d3 inset;
+  position: relative;
+}
+.overlayWindow.overlayDark {
+  margin-left: 3em;
+  border-radius: 1.5em 1.5em;
+  padding: 3em 3em 7em;
+  width: 70%;
+  min-width: 320px;
+  max-width: 1280px;
+  background-color: #2d2d2d;
+  font-size: 100%;
+  height: 80%;
+  box-sizing: border-box;
+}
+.overlayWindow.overlayDark > * {
+  box-sizing: border-box;
+}
+.overlayWindow.overlayDark .codeContainer-wrap {
+  margin: 0 0 1em 0;
+  border-radius: 5px;
+  color: #c7c7c7;
+  overflow: auto;
+  height: 100%;
+}
+.overlayWindow.overlayDark .codeContainer {
+  height: 100%;
+}
+.overlayWindow.overlayDark .button {
+  display: block;
+  margin: 0 auto 0;
+  width: 100%;
+}
+.overlayWindow .inputWrap {
+  width: 70%;
+  position: relative;
+  padding-left: 7%;
+  font-size: 1em;
+  margin: auto;
+  display: table;
+}
+.overlayWindow .inputWrap:before {
+  position: absolute;
+  top: 0.3em;
+  left: 0;
+}
+.overlayWindow h2 {
+  width: 100%;
+  left: 0;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0 0 1em 0;
+  text-align: left;
+}
+.overlayWindow p {
+  padding: 2em 0 0 0;
+  font-style: italic;
+  color: #666;
+}
+.overlayWindow label {
+  margin: 0 0 0.4em 0;
+  display: block;
+}
+.overlayWindow input {
+  margin: 0 0 1em auto;
+}
+.overlayWindow .button {
+  width: 100%;
+  margin: 0.3em auto 0;
+  padding: .5em;
+}
+.icon-btn-effect {
+  cursor: pointer;
+}
+.icon-btn-effect:hover {
+  color: #7b7b7b;
+}
+.icon-btn-effect:active {
+  color: darkslategray;
+}
+.projectOverview {
+  width: 50%;
+  min-width: 30em;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10em;
+}
+.projectOverview h1 {
+  margin-bottom: 1em;
+}
+.projectOverview-back-btn {
+  cursor: pointer;
+}
+.projectOverview-back-btn:hover {
+  color: #7b7b7b;
+}
+.projectOverview-back-btn:active {
+  color: darkslategray;
+}
+.projectOverview-back-btn:after {
+  padding-left: 0.3em;
+  display: inline-block;
+  content: "...";
+}
+.projectOverview-list {
+  min-height: 300px;
+  padding: 1em;
+}
+.projectOverview ul {
+  padding-top: .5em;
+}
+.projectOverview ul li {
+  cursor: pointer;
+  margin: 0.3em 1em .6em 0;
+  display: block;
+}
+.projectOverview ul li:hover {
+  color: #7b7b7b;
+}
+.projectOverview ul li:active {
+  color: darkslategray;
+}
+.projectOverview ul li:before {
+  padding-right: 0.3em;
+}
+.projectOverview-buttons {
+  text-align: center;
+  margin-top: 2em;
+}
+.projectOverview-buttons button {
+  margin-right: 2em;
+  padding: 0.5em;
+}
+.breadcrumb li {
+  font-size: 1.5em;
+  line-height: 2em;
+  float: left;
+  color: white;
+  cursor: pointer;
+}
+.breadcrumb li:hover {
+  color: lightgrey;
+}
+.breadcrumb li:active {
+  color: darkgrey;
+}
+.breadcrumb li:before {
+  padding-right: .3em;
+}
+.breadcrumb li:after {
+  float: right;
+  display: block;
+  content: '/';
+  padding: 0 0.5em 0 0;
+}
+.auth-logout-btn {
+  position: absolute;
+  top: 0.5em;
+  right: 3em;
+  width: 3em;
+  height: 3em;
+  line-height: 3em;
+  color: white;
+  cursor: pointer;
+}
+.auth-logout-btn:hover {
+  color: lightgrey;
+}
+.auth-logout-btn:active {
+  color: darkgrey;
+}
+.auth-logout-btn:before {
+  font-size: 1.5em;
+}
+body.login,
+html.login {
+  height: 100%;
+  font-size: 110%;
+  font-family: monospace;
+  color: #868686;
+  background-color: whitesmoke;
+  padding: 0;
+}
+body.login {
+  margin: 0;
+}
+body.login main {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+body.login section {
+  padding: 0 2em 15%;
+}
+body.login a {
+  margin-top: 10%;
+  display: block;
+}
+body.login a {
+  color: #868686;
+}
+body.login a:hover {
+  color: #565656;
+}
+body.login a:before {
+  content: '>';
+  display: inline-block;
+  margin-right: 0.5em;
+}
+body.login h1 {
+  position: relative;
+  top: -3em;
+}
+body.login form {
+  width: 50%;
+  margin: 3em auto;
+}
+body.login form input {
+  min-height: 2em;
+  margin-bottom: 1em;
+}
+body.login form label {
+  margin-bottom: 0.4em;
+}
+body.login form button {
+  width: 100%;
+  min-height: 2em;
+  padding: .7em 0;
+}
+.upload * {
+  box-sizing: border-box;
+}
+.upload .dropWrap {
+  position: relative;
+  margin: 1rem 0;
+  height: 15em;
+  border: 5px dotted gray;
+  padding: 2em;
+  width: 26.5em;
+}
+.upload .dropWrap::before {
+  position: absolute;
+  top: 60%;
+  z-index: 1;
+  font-size: 4em;
+  margin: 0 50%;
+  transform: translateX(-100%);
+}
+.upload .dropWrap label {
+  position: relative;
+  text-align: center;
+  font-size: 1.7rem;
+  padding: 1rem 1rem;
+  height: 100%;
+  display: block;
+  color: #666666;
+  z-index: 2;
+  line-height: 1.4;
+}
+.upload .dropWrap input {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 2;
+}
+.flag-icon {
+  position: relative;
+  display: inline-block;
+  width: 1.33333333em;
+  line-height: 1em;
+  background-size: contain;
+  background-position: 50%;
+  background-repeat: no-repeat;
+}
+.flag-icon:before {
+  content: "\00a0";
+}
+.flag-icon.flag-icon-squared {
+  width: 1em;
+}
+.flag-icon-background {
+  background-size: contain;
+  background-position: 50%;
+  background-repeat: no-repeat;
+}
+.flag-icon-at {
+  background-image: url(../flags/flags/4x3/at.svg);
+}
+.flag-icon-at.flag-icon-squared {
+  background-image: url(../flags/flags/1x1/at.svg);
+}
+.flag-icon-ch {
+  background-image: url(../flags/flags/4x3/ch.svg);
+}
+.flag-icon-ch.flag-icon-squared {
+  background-image: url(../flags/flags/1x1/ch.svg);
+}
+.flag-icon-de {
+  background-image: url(../flags/flags/4x3/de.svg);
+}
+.flag-icon-de.flag-icon-squared {
+  background-image: url(../flags/flags/1x1/de.svg);
+}
+.flag-icon-dk {
+  background-image: url(../flags/flags/4x3/dk.svg);
+}
+.flag-icon-dk.flag-icon-squared {
+  background-image: url(../flags/flags/1x1/dk.svg);
+}
+.flag-icon-es {
+  background-image: url(../flags/flags/4x3/es.svg);
+}
+.flag-icon-es.flag-icon-squared {
+  background-image: url(../flags/flags/1x1/es.svg);
+}
+.flag-icon-fr {
+  background-image: url(../flags/flags/4x3/fr.svg);
+}
+.flag-icon-fr.flag-icon-squared {
+  background-image: url(../flags/flags/1x1/fr.svg);
+}
+.flag-icon-gb {
+  background-image: url(../flags/flags/4x3/gb.svg);
+}
+.flag-icon-gb.flag-icon-squared {
+  background-image: url(../flags/flags/1x1/gb.svg);
+}
+.flag-icon-gd {
+  background-image: url(../flags/flags/4x3/gd.svg);
+}
+.flag-icon-gd.flag-icon-squared {
+  background-image: url(../flags/flags/1x1/gd.svg);
+}
+.flag-icon-nl {
+  background-image: url(../flags/flags/4x3/nl.svg);
+}
+.flag-icon-nl.flag-icon-squared {
+  background-image: url(../flags/flags/1x1/nl.svg);
+}
+.flag-icon-se {
+  background-image: url(../flags/flags/4x3/se.svg);
+}
+.flag-icon-se.flag-icon-squared {
+  background-image: url(../flags/flags/1x1/se.svg);
+}
+.flag-icon-sv {
+  background-image: url(../flags/flags/4x3/sv.svg);
+}
+.flag-icon-sv.flag-icon-squared {
+  background-image: url(../flags/flags/1x1/sv.svg);
+}
+.flag-icon-us {
+  background-image: url(../flags/flags/4x3/us.svg);
+}
+.flag-icon-us.flag-icon-squared {
+  background-image: url(../flags/flags/1x1/us.svg);
+}
+@font-face {
+  font-family: 'octicons';
+  src: url('/bower_components/octicons/octicons/octicons.eot?#iefix&v=6f0908ee5b07e503e10c6040adaebd65ea4f4c0e') format('embedded-opentype'), url('/bower_components/octicons/octicons/octicons.woff?v=6f0908ee5b07e503e10c6040adaebd65ea4f4c0e') format('woff'), url('/bower_components/octicons/octicons/octicons.ttf?v=6f0908ee5b07e503e10c6040adaebd65ea4f4c0e') format('truetype'), url('/bower_components/octicons/octicons/octicons.svg?v=6f0908ee5b07e503e10c6040adaebd65ea4f4c0e#octicons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.octicon,
+.mega-octicon {
+  font: normal normal normal 16px/1 octicons;
+  display: inline-block;
+  text-decoration: none;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.mega-octicon {
+  font-size: 32px;
+}
+.octicon-alert:before {
+  content: '\f02d';
+}
+/*  */
+.octicon-arrow-down:before {
+  content: '\f03f';
+}
+/*  */
+.octicon-arrow-left:before {
+  content: '\f040';
+}
+/*  */
+.octicon-arrow-right:before {
+  content: '\f03e';
+}
+/*  */
+.octicon-arrow-small-down:before {
+  content: '\f0a0';
+}
+/*  */
+.octicon-arrow-small-left:before {
+  content: '\f0a1';
+}
+/*  */
+.octicon-arrow-small-right:before {
+  content: '\f071';
+}
+/*  */
+.octicon-arrow-small-up:before {
+  content: '\f09f';
+}
+/*  */
+.octicon-arrow-up:before {
+  content: '\f03d';
+}
+/*  */
+.octicon-microscope:before,
+.octicon-beaker:before {
+  content: '\f0dd';
+}
+/*  */
+.octicon-bell:before {
+  content: '\f0de';
+}
+/*  */
+.octicon-bold:before {
+  content: '\f0e2';
+}
+/*  */
+.octicon-book:before {
+  content: '\f007';
+}
+/*  */
+.octicon-bookmark:before {
+  content: '\f07b';
+}
+/*  */
+.octicon-briefcase:before {
+  content: '\f0d3';
+}
+/*  */
+.octicon-broadcast:before {
+  content: '\f048';
+}
+/*  */
+.octicon-browser:before {
+  content: '\f0c5';
+}
+/*  */
+.octicon-bug:before {
+  content: '\f091';
+}
+/*  */
+.octicon-calendar:before {
+  content: '\f068';
+}
+/*  */
+.octicon-check:before {
+  content: '\f03a';
+}
+/*  */
+.octicon-checklist:before {
+  content: '\f076';
+}
+/*  */
+.octicon-chevron-down:before {
+  content: '\f0a3';
+}
+/*  */
+.octicon-chevron-left:before {
+  content: '\f0a4';
+}
+/*  */
+.octicon-chevron-right:before {
+  content: '\f078';
+}
+/*  */
+.octicon-chevron-up:before {
+  content: '\f0a2';
+}
+/*  */
+.octicon-circle-slash:before {
+  content: '\f084';
+}
+/*  */
+.octicon-circuit-board:before {
+  content: '\f0d6';
+}
+/*  */
+.octicon-clippy:before {
+  content: '\f035';
+}
+/*  */
+.octicon-clock:before {
+  content: '\f046';
+}
+/*  */
+.octicon-cloud-download:before {
+  content: '\f00b';
+}
+/*  */
+.octicon-cloud-upload:before {
+  content: '\f00c';
+}
+/*  */
+.octicon-code:before {
+  content: '\f05f';
+}
+/*  */
+.octicon-color-mode:before {
+  content: '\f065';
+}
+/*  */
+.octicon-comment-add:before,
+.octicon-comment:before {
+  content: '\f02b';
+}
+/*  */
+.octicon-comment-discussion:before {
+  content: '\f04f';
+}
+/*  */
+.octicon-credit-card:before {
+  content: '\f045';
+}
+/*  */
+.octicon-dash:before {
+  content: '\f0ca';
+}
+/*  */
+.octicon-dashboard:before {
+  content: '\f07d';
+}
+/*  */
+.octicon-database:before {
+  content: '\f096';
+}
+/*  */
+.octicon-clone:before,
+.octicon-desktop-download:before {
+  content: '\f0dc';
+}
+/*  */
+.octicon-device-camera:before {
+  content: '\f056';
+}
+/*  */
+.octicon-device-camera-video:before {
+  content: '\f057';
+}
+/*  */
+.octicon-device-desktop:before {
+  content: '\f27c';
+}
+/*  */
+.octicon-device-mobile:before {
+  content: '\f038';
+}
+/*  */
+.octicon-diff:before {
+  content: '\f04d';
+}
+/*  */
+.octicon-diff-added:before {
+  content: '\f06b';
+}
+/*  */
+.octicon-diff-ignored:before {
+  content: '\f099';
+}
+/*  */
+.octicon-diff-modified:before {
+  content: '\f06d';
+}
+/*  */
+.octicon-diff-removed:before {
+  content: '\f06c';
+}
+/*  */
+.octicon-diff-renamed:before {
+  content: '\f06e';
+}
+/*  */
+.octicon-ellipsis:before {
+  content: '\f09a';
+}
+/*  */
+.octicon-eye-unwatch:before,
+.octicon-eye-watch:before,
+.octicon-eye:before {
+  content: '\f04e';
+}
+/*  */
+.octicon-file-binary:before {
+  content: '\f094';
+}
+/*  */
+.octicon-file-code:before {
+  content: '\f010';
+}
+/*  */
+.octicon-file-directory:before {
+  content: '\f016';
+}
+/*  */
+.octicon-file-media:before {
+  content: '\f012';
+}
+/*  */
+.octicon-file-pdf:before {
+  content: '\f014';
+}
+/*  */
+.octicon-file-submodule:before {
+  content: '\f017';
+}
+/*  */
+.octicon-file-symlink-directory:before {
+  content: '\f0b1';
+}
+/*  */
+.octicon-file-symlink-file:before {
+  content: '\f0b0';
+}
+/*  */
+.octicon-file-text:before {
+  content: '\f011';
+}
+/*  */
+.octicon-file-zip:before {
+  content: '\f013';
+}
+/*  */
+.octicon-flame:before {
+  content: '\f0d2';
+}
+/*  */
+.octicon-fold:before {
+  content: '\f0cc';
+}
+/*  */
+.octicon-gear:before {
+  content: '\f02f';
+}
+/*  */
+.octicon-gift:before {
+  content: '\f042';
+}
+/*  */
+.octicon-gist:before {
+  content: '\f00e';
+}
+/*  */
+.octicon-gist-secret:before {
+  content: '\f08c';
+}
+/*  */
+.octicon-git-branch-create:before,
+.octicon-git-branch-delete:before,
+.octicon-git-branch:before {
+  content: '\f020';
+}
+/*  */
+.octicon-git-commit:before {
+  content: '\f01f';
+}
+/*  */
+.octicon-git-compare:before {
+  content: '\f0ac';
+}
+/*  */
+.octicon-git-merge:before {
+  content: '\f023';
+}
+/*  */
+.octicon-git-pull-request-abandoned:before,
+.octicon-git-pull-request:before {
+  content: '\f009';
+}
+/*  */
+.octicon-globe:before {
+  content: '\f0b6';
+}
+/*  */
+.octicon-graph:before {
+  content: '\f043';
+}
+/*  */
+.octicon-heart:before {
+  content: '\2665';
+}
+/* ♥ */
+.octicon-history:before {
+  content: '\f07e';
+}
+/*  */
+.octicon-home:before {
+  content: '\f08d';
+}
+/*  */
+.octicon-horizontal-rule:before {
+  content: '\f070';
+}
+/*  */
+.octicon-hubot:before {
+  content: '\f09d';
+}
+/*  */
+.octicon-inbox:before {
+  content: '\f0cf';
+}
+/*  */
+.octicon-info:before {
+  content: '\f059';
+}
+/*  */
+.octicon-issue-closed:before {
+  content: '\f028';
+}
+/*  */
+.octicon-issue-opened:before {
+  content: '\f026';
+}
+/*  */
+.octicon-issue-reopened:before {
+  content: '\f027';
+}
+/*  */
+.octicon-italic:before {
+  content: '\f0e4';
+}
+/*  */
+.octicon-jersey:before {
+  content: '\f019';
+}
+/*  */
+.octicon-key:before {
+  content: '\f049';
+}
+/*  */
+.octicon-keyboard:before {
+  content: '\f00d';
+}
+/*  */
+.octicon-law:before {
+  content: '\f0d8';
+}
+/*  */
+.octicon-light-bulb:before {
+  content: '\f000';
+}
+/*  */
+.octicon-link:before {
+  content: '\f05c';
+}
+/*  */
+.octicon-link-external:before {
+  content: '\f07f';
+}
+/*  */
+.octicon-list-ordered:before {
+  content: '\f062';
+}
+/*  */
+.octicon-list-unordered:before {
+  content: '\f061';
+}
+/*  */
+.octicon-location:before {
+  content: '\f060';
+}
+/*  */
+.octicon-gist-private:before,
+.octicon-mirror-private:before,
+.octicon-git-fork-private:before,
+.octicon-lock:before {
+  content: '\f06a';
+}
+/*  */
+.octicon-logo-gist:before {
+  content: '\f0ad';
+}
+/*  */
+.octicon-logo-github:before {
+  content: '\f092';
+}
+/*  */
+.octicon-mail:before {
+  content: '\f03b';
+}
+/*  */
+.octicon-mail-read:before {
+  content: '\f03c';
+}
+/*  */
+.octicon-mail-reply:before {
+  content: '\f051';
+}
+/*  */
+.octicon-mark-github:before {
+  content: '\f00a';
+}
+/*  */
+.octicon-markdown:before {
+  content: '\f0c9';
+}
+/*  */
+.octicon-megaphone:before {
+  content: '\f077';
+}
+/*  */
+.octicon-mention:before {
+  content: '\f0be';
+}
+/*  */
+.octicon-milestone:before {
+  content: '\f075';
+}
+/*  */
+.octicon-mirror-public:before,
+.octicon-mirror:before {
+  content: '\f024';
+}
+/*  */
+.octicon-mortar-board:before {
+  content: '\f0d7';
+}
+/*  */
+.octicon-mute:before {
+  content: '\f080';
+}
+/*  */
+.octicon-no-newline:before {
+  content: '\f09c';
+}
+/*  */
+.octicon-octoface:before {
+  content: '\f008';
+}
+/*  */
+.octicon-organization:before {
+  content: '\f037';
+}
+/*  */
+.octicon-package:before {
+  content: '\f0c4';
+}
+/*  */
+.octicon-paintcan:before {
+  content: '\f0d1';
+}
+/*  */
+.octicon-pencil:before {
+  content: '\f058';
+}
+/*  */
+.octicon-person-add:before,
+.octicon-person-follow:before,
+.octicon-person:before {
+  content: '\f018';
+}
+/*  */
+.octicon-pin:before {
+  content: '\f041';
+}
+/*  */
+.octicon-plug:before {
+  content: '\f0d4';
+}
+/*  */
+.octicon-repo-create:before,
+.octicon-gist-new:before,
+.octicon-file-directory-create:before,
+.octicon-file-add:before,
+.octicon-plus:before {
+  content: '\f05d';
+}
+/*  */
+.octicon-primitive-dot:before {
+  content: '\f052';
+}
+/*  */
+.octicon-primitive-square:before {
+  content: '\f053';
+}
+/*  */
+.octicon-pulse:before {
+  content: '\f085';
+}
+/*  */
+.octicon-question:before {
+  content: '\f02c';
+}
+/*  */
+.octicon-quote:before {
+  content: '\f063';
+}
+/*  */
+.octicon-radio-tower:before {
+  content: '\f030';
+}
+/*  */
+.octicon-repo-delete:before,
+.octicon-repo:before {
+  content: '\f001';
+}
+/*  */
+.octicon-repo-clone:before {
+  content: '\f04c';
+}
+/*  */
+.octicon-repo-force-push:before {
+  content: '\f04a';
+}
+/*  */
+.octicon-gist-fork:before,
+.octicon-repo-forked:before {
+  content: '\f002';
+}
+/*  */
+.octicon-repo-pull:before {
+  content: '\f006';
+}
+/*  */
+.octicon-repo-push:before {
+  content: '\f005';
+}
+/*  */
+.octicon-rocket:before {
+  content: '\f033';
+}
+/*  */
+.octicon-rss:before {
+  content: '\f034';
+}
+/*  */
+.octicon-ruby:before {
+  content: '\f047';
+}
+/*  */
+.octicon-search-save:before,
+.octicon-search:before {
+  content: '\f02e';
+}
+/*  */
+.octicon-server:before {
+  content: '\f097';
+}
+/*  */
+.octicon-settings:before {
+  content: '\f07c';
+}
+/*  */
+.octicon-shield:before {
+  content: '\f0e1';
+}
+/*  */
+.octicon-log-in:before,
+.octicon-sign-in:before {
+  content: '\f036';
+}
+/*  */
+.octicon-log-out:before,
+.octicon-sign-out:before {
+  content: '\f032';
+}
+/*  */
+.octicon-squirrel:before {
+  content: '\f0b2';
+}
+/*  */
+.octicon-star-add:before,
+.octicon-star-delete:before,
+.octicon-star:before {
+  content: '\f02a';
+}
+/*  */
+.octicon-stop:before {
+  content: '\f08f';
+}
+/*  */
+.octicon-repo-sync:before,
+.octicon-sync:before {
+  content: '\f087';
+}
+/*  */
+.octicon-tag-remove:before,
+.octicon-tag-add:before,
+.octicon-tag:before {
+  content: '\f015';
+}
+/*  */
+.octicon-tasklist:before {
+  content: '\f0e5';
+}
+/*  */
+.octicon-telescope:before {
+  content: '\f088';
+}
+/*  */
+.octicon-terminal:before {
+  content: '\f0c8';
+}
+/*  */
+.octicon-text-size:before {
+  content: '\f0e3';
+}
+/*  */
+.octicon-three-bars:before {
+  content: '\f05e';
+}
+/*  */
+.octicon-thumbsdown:before {
+  content: '\f0db';
+}
+/*  */
+.octicon-thumbsup:before {
+  content: '\f0da';
+}
+/*  */
+.octicon-tools:before {
+  content: '\f031';
+}
+/*  */
+.octicon-trashcan:before {
+  content: '\f0d0';
+}
+/*  */
+.octicon-triangle-down:before {
+  content: '\f05b';
+}
+/*  */
+.octicon-triangle-left:before {
+  content: '\f044';
+}
+/*  */
+.octicon-triangle-right:before {
+  content: '\f05a';
+}
+/*  */
+.octicon-triangle-up:before {
+  content: '\f0aa';
+}
+/*  */
+.octicon-unfold:before {
+  content: '\f039';
+}
+/*  */
+.octicon-unmute:before {
+  content: '\f0ba';
+}
+/*  */
+.octicon-versions:before {
+  content: '\f064';
+}
+/*  */
+.octicon-watch:before {
+  content: '\f0e0';
+}
+/*  */
+.octicon-remove-close:before,
+.octicon-x:before {
+  content: '\f081';
+}
+/*  */
+.octicon-zap:before {
+  content: '\26A1';
+}
+/* ⚡ */
