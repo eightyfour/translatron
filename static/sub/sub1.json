@@ -13,7 +13,9 @@
     "new1_second_test_5": "The key lies - don't translate this :p",
     "first_key_1": "The first key description should describe what this key means or which limitation the key has."
   },
-  "images": {},
+  "images": {
+    "first": "sub1_blue_coke.jpg"
+  },
   "keys": {
     "de": {
       "first_key_1": "test Schluessel Nummer Eins",
@@ -29,7 +31,7 @@
       "first_key_4": ""
     },
     "en": {
-      "first_key_1": "test key number one 1 sd",
+      "first_key_1": "test key number one 1",
       "first_key_2": "another key",
       "first_key_3": "three",
       "second_test_1": "some text",

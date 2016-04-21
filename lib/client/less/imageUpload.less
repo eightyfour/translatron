@@ -15,10 +15,21 @@
       overflow: hidden;
       width: 100px;
       padding: .5em;
-      border: 1px solid rgba(117, 117, 117, 0.3);
     }
     &-content{
 
+       &::before{
+         display: block;
+         content: ' ';
+         width: 1.5em;
+         height: 1.5em;
+         border-right: 2px solid #ccc;
+         border-bottom: 2px solid #ccc;
+         position: absolute;
+         bottom: -2px;
+         right: -2px;
+         z-index: -1;
+       }
     }
 
     &-editPanel{
