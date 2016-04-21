@@ -5,7 +5,13 @@ function run(configuration) {
 
     var projectFolder = (config.hasOwnProperty('fileStorage') ? config.fileStorage.projectFiles || __dirname + '/static' : __dirname + '/static'),
         uploadFolder = (config.hasOwnProperty('fileStorage') ? config.fileStorage.images || __dirname + '/dist/upload' : __dirname + '/dist/upload'),
-        packageJSON = require('./package.json'),
+        mkdir = require('./lib/server/mkdir-p');
+
+    // create required folders:
+    mkdir('/', uploadFolder);
+    mkdir('/', projectFolder);
+
+    var packageJSON = require('./package.json'),
         express = require('express'),
         shoe = require('shoe'),
         dnode = require('dnode'),
@@ -18,16 +24,12 @@ function run(configuration) {
         bodyParser = require('body-parser'),
         changesNotifier = require('./lib/server/changesNotifier.js')(),
         busboy = require('connect-busboy'),
-        mkdir = require('./lib/server/mkdir-p'),
         operations = require('./lib/server/operations.js')(dao, changesNotifier);
 
     var app = express();
 
     enableAuth = config.hasOwnProperty('auth');
 
-    // create required folders:
-    mkdir('/', uploadFolder);
-    mkdir('/', projectFolder);
 
     // use bodyParser middleware for handling request bodies (express does *not* provide that feature out-of-the-box).
     // since we only have one case of that (POST to /login where username, password are in the body) and that one is url-encoded,
