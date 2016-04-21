@@ -10,15 +10,12 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.14.2",
-    "canny": "0.1.x",
     "connect-busboy": "0.0.2",
     "cookie-parser": "^1.4.1",
     "dnode": "x",
-    "dom-opts": "git://github.com/eightyfour/dom-opts.git",
     "express": "x",
     "express-session": "^1.13.0",
     "jade": "^1.11.0",
-    "less": "~2.4.0",
     "passport": "^0.3.2",
     "passport-ldapauth": "^0.5.0",
     "shoe": "x"
@@ -27,6 +24,7 @@
     "port": "3000",
     "enableAuth": true
   },
+  "main" : "translatron.js",
   "scripts": {
     "postinstall": "bower install",
     "test": "jasmine && karma start karma.conf.js",
@@ -36,6 +34,8 @@
     "start": "node app.js"
   },
   "devDependencies": {
+    "canny": "0.1.x",
+    "dom-opts": "git://github.com/eightyfour/dom-opts.git",
     "bower": "^1.7.2",
     "browserify": "^9.0.7",
     "gulp": "^3.9.0",
