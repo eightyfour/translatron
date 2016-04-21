@@ -17,7 +17,7 @@ function run(configuration) {
         dnode = require('dnode'),
         dao = require('./lib/server/dao.js')(projectFolder, uploadFolder),
         fileManager = require('./lib/server/legacy/fileManager.js')(projectFolder),
-        serverPort = configuration.port || (packageJSON.config.port || 3000),
+        serverPort = config.port || (packageJSON.config.port || 3000),
         enableAuth = packageJSON.config.enableAuth,
         jade = require('jade'),
         cookieParser = require('cookie-parser'),
