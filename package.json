@@ -32,7 +32,6 @@
   "main" : "translatron.js",
   "scripts": {
     "install" : "npm run buildjs && npm run less",
-    "preinstall": "bower install",
     "buildjs" : "browserify lib/client/js/main.js -o dist/js/translatron.js && browserify lib/client/js/login.js -o dist/js/translatron-login.js",
     "buildjs-dev" : "browserify --debug lib/client/js/main.js -o dist/js/translatron.js && browserify --debug lib/client/js/login.js -o dist/js/translatron-login.js",
     "less" : "lessc lib/client/less/main.less dist/css/translatron.css",
