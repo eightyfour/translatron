@@ -2,13 +2,17 @@
   "name": "translatron",
   "auth": "eightyfour",
   "email": "eightyfour@thinkuseful.de",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "readmeFilename": "README.md",
   "engines": {
     "node": ">= v4.2.3"
   },
   "license": "MIT",
   "dependencies": {
+    "canny": "0.1.x",
+    "dom-opts": "git://github.com/eightyfour/dom-opts.git",
+    "bower": "^1.7.2",
+    "browserify": "^9.0.7",
     "body-parser": "^1.14.2",
     "connect-busboy": "0.0.2",
     "cookie-parser": "^1.4.1",
@@ -16,6 +20,7 @@
     "express": "x",
     "express-session": "^1.13.0",
     "jade": "^1.11.0",
+    "less": "~2.4.0",
     "passport": "^0.3.2",
     "passport-ldapauth": "^0.5.0",
     "shoe": "x"
@@ -26,18 +31,16 @@
   },
   "main" : "translatron.js",
   "scripts": {
-    "postinstall": "bower install",
-    "test": "jasmine && karma start karma.conf.js",
-    "buildjs" : "browserify --debug lib/client/js/main.js -o dist/js/translatron.js && browserify --debug lib/client/js/login.js -o dist/js/translatron-login.js",
+    "install" : "npm run buildjs && npm run less",
+    "preinstall": "bower install",
+    "buildjs" : "browserify lib/client/js/main.js -o dist/js/translatron.js && browserify lib/client/js/login.js -o dist/js/translatron-login.js",
+    "buildjs-dev" : "browserify --debug lib/client/js/main.js -o dist/js/translatron.js && browserify --debug lib/client/js/login.js -o dist/js/translatron-login.js",
     "less" : "lessc lib/client/less/main.less dist/css/translatron.css",
+    "test": "jasmine && karma start karma.conf.js",
     "prestart": "npm run buildjs && npm run less",
     "start": "node app.js"
   },
   "devDependencies": {
-    "canny": "0.1.x",
-    "dom-opts": "git://github.com/eightyfour/dom-opts.git",
-    "bower": "^1.7.2",
-    "browserify": "^9.0.7",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-browserify": "^0.5.1",
