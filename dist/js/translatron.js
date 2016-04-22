@@ -1304,7 +1304,7 @@ trade.ready(function () {
         }
     });
 });
-}).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e8687f6e.js","/")
+}).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_40602347.js","/")
 },{"+7ZJp0":60,"./Toast.js":2,"./controller/authController.js":3,"./controller/breadcrumbController.js":4,"./controller/createNewProjectController.js":5,"./controller/menuRightController.js":6,"./controller/pageHeaderController.js":7,"./controller/projectMainNavigationController.js":8,"./controller/projectOverviewController.js":9,"./controller/textEditorController.js":10,"./controller/translationViewController.js":11,"./controller/uploadController.js":12,"./controller/urlManipulator.js":13,"./textEditor.js":16,"./trade.js":17,"./uiModules/anchorMenu.js":19,"./uiModules/auth.js":20,"./uiModules/breadcrumb.js":21,"./uiModules/createNewProject.js":22,"./uiModules/displayManager.js":23,"./uiModules/imageViewer.js":25,"./uiModules/menuRight.js":27,"./uiModules/projectMainNavigation.js":29,"./uiModules/projectOverview.js":30,"./uiModules/texts.js":31,"./uiModules/translationView.js":32,"./uiModules/translationViewDescription.js":33,"./uiModules/translationViewImageUpload.js":34,"./uiModules/upload.js":35,"./unicode.js":36,"buffer":55,"canny":38,"canny/mod/flowControl":40,"canny/mod/repeat":41,"canny/mod/whisker":42,"dom-opts":54}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /**
@@ -2961,8 +2961,8 @@ var translationView = (function () {
             sendSuccess : function (key, inputPrefix) {
                 var node1  = document.getElementById(key),
                     node2  = document.getElementById(key + inputPrefix);
-                if (node1) {ui.removeStateClasses(node1).domAddClass(ui.css.sendSuccess); }
-                if (node2) {ui.removeStateClasses(node2).domAddClass(ui.css.sendSuccess); }
+                if (node1) {ui.removeStateClasses(node1).classList.remove(ui.css.sendSuccess); setTimeout(function () {ui.removeStateClasses(node1).classList.add(ui.css.sendSuccess);}, 100) }
+                if (node2) {ui.removeStateClasses(node2).classList.remove(ui.css.sendSuccess); setTimeout(function () {ui.removeStateClasses(node2).classList.add(ui.css.sendSuccess);}, 100)  }
             },
             updateInputFields : function (key, inputPrefix) {
                 var node = document.getElementById(key + inputPrefix);

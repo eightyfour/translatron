@@ -35,10 +35,14 @@
     box-sizing: border-box;
   }
   .sendSuccess {
-    background-color: #7cfc00;
+    background-color: #95c2ff;
+    transition: background-color 500ms;
+    animation: fadeoutColor 2s 3s forwards;
   }
   .updateKey {
     background-color: #ffff00;
+    transition: background-color 500ms;
+    animation: fadeoutColor 2s 3s forwards;
   }
   .keyField {
     width: 100%;
@@ -191,5 +195,11 @@
     .js-text{
       margin: 0.4em 0;
     }
+  }
+}
+
+@keyframes fadeoutColor {
+  to {
+    background-color: transparent;
   }
 }

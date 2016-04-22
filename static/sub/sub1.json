@@ -13,16 +13,14 @@
     "new1_second_test_5": "The key lies - don't translate this :p",
     "first_key_1": "The first key description should describe what this key means or which limitation the key has."
   },
-  "images": {
-    "first": "sub1_blue_coke.jpg"
-  },
+  "images": {},
   "keys": {
     "de": {
       "first_key_1": "test Schluessel Nummer Eins",
       "first_key_2": "anderer schlüssel",
       "first_key_3": "drei",
       "fourth_nr_1": "eins",
-      "fourth_nr_2": "zwei",
+      "fourth_nr_2": "zwei ",
       "fourth_nr_3": "drei",
       "fourth_nr_4": "vier",
       "second_test_1": "sdsd",
@@ -34,10 +32,10 @@
       "first_key_1": "test key number one 1",
       "first_key_2": "another key",
       "first_key_3": "three",
-      "second_test_1": "some text",
+      "second_test_1": "some text ",
       "third_test_1": "only one key for third cat?",
       "fourth_nr_1": "one",
-      "fourth_nr_2": "two",
+      "fourth_nr_2": "two  ",
       "fourth_nr_3": "three",
       "fourth_nr_4": "four",
       "second_test_4": "and so on",
