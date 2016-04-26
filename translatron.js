@@ -75,7 +75,7 @@ function run(configuration) {
     mainRouter.use(require('./lib/server/middleware-exporter/jpmbfExporter')(dao));
     mainRouter.use(require('./lib/server/middleware-exporter/jsonExporter')(dao));
     mainRouter.get('*', (req, res) => {
-        res.send(jade.compileFile(__dirname + '/lib/client/jade/index.jade')());
+        res.send(jade.compileFile(__dirname + '/lib/client/jade/index.jade')({version: packageJSON.version}));
     });
 
     var toLoginIfUnauthenticated = function(req, res, next) {
