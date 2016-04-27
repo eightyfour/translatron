@@ -1,17 +1,21 @@
 @header-height: 3em;
 @navigation-left-space: 4em;
+@navigation-right-space: 14em;
 
 @import "mixins";
 
 html{
-  background: #dce4ea;
+//  background: #dce4ea;
 }
 body{
   font-family: sans-serif;
   font-size: 80%;
   padding-top: @header-height;
   padding-left: @navigation-left-space;
+  padding-right: @navigation-right-space;
   overflow-x: hidden; // needed for the overlay
+  color: #555;
+  padding-bottom: 6em;
 }
 // Reset
 div, span, applet, object, iframe,
@@ -106,7 +110,8 @@ header.header {
 .floatL {float: left;}
 
 @import "projectMainNavigation";
-@import "layoutManager";
+@import "menuRight";
+@import "displayManager";
 @import "initialView";
 @import "translationView";
 @import "inputEditManager";
@@ -120,6 +125,7 @@ header.header {
 @import "breadcrumb";
 @import "auth";
 @import "login";
+@import "upload";
 
 @import "../../../dist/flags/less/flag-icon";
 @import "../../../bower_components/octicons/octicons/octicons";

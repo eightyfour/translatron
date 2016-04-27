@@ -3,24 +3,73 @@ translatron
 
 <img title="Translatron hero" src="./dist/images/translatron.jpg" width="250px"/> 
 
-Translate your texts in the browser. 
+Translate, manage and maintain your texts in the browser. Translatron is a server which 
+provides you a file structure to manage your translations.
 
-#dev
+### features
+It supports actually the following features:
+* translate from a language to a language by key value
+* group keys in categories
+* group categories in projects
+* group projects in folders
+* add comments in a description field for keys, categories or projects
+* upload images (screen shots) for categories
+* export projects as JSON
+* export projects as message bundle format for each locale
+* create, rename and delete keys 
+* category/key overview menu
+* links to keys or categories
+* live synchronization to server
+* LDAP authentication (optional)
+* ...more coming soon
 
-Go to root and execute:
+# run in production
+If you want use this module in production we offer you to save the project files in a different folder as the translatron installation.
+ 
+You can add translatron as dependency and create you own node file to start the tool.
+
+```js
+var translatron = require('translatron'),
+    fs = require('fs');
+
+translatron({
+    port : 3000, // configure port
+    fileStorage : {
+        projectFiles : __dirname + '/translations',  // file storage for project fiels
+        images : __dirname + '/images'  // file storage for uploaded images
+    },
+    auth : { // configure the LDAP auth
+        url: 'ldaps://example.com:3269',
+        bindDn: '...',
+        bindCredentials: '...',
+        searchBase: '...',
+        searchFilter: '...',
+        tlsOptions: {
+            ca: [
+                fs.readFileSync('exampleCertificate.crt')
+            ]
+        }
+    }
+});
+```
+
+# dev
+
+Clone this project and execute:
 
 ```sh
 npm install
+npm run devsetup
 ```
 All required modules will be installed.
 
-#start
-To start the application just execute the app.js with node.
+## start
+To start the application just execute the app.js with node. Or run
 ```sh
 npm start
 ```
 
-##test setup
+## test setup
 There are two types of test:
  
 First a Karma setup with phantomjs which tests the client side code. Run it with:
@@ -51,7 +100,7 @@ Please read the following lines to understood the architecture of the translatro
 ### compile
 To compile the javascript we use browserify. You can call this in your console:
 ```sh
-browserify lib/client/js/main.js -o dist/js/translatron.js
+npm run buildjs-dev
 ```
 
 ### trade.js
@@ -113,9 +162,7 @@ Functions in a controller's public API:
 * under normal circumstances, a controller's public functions are only callbacks for events coming from _trade_.
 
 A controller will already register itself at construction time at the corresponding UI module's _onXYZTriggered_ functions. 
- The callback functions passed to these UI module functions will call _trade_ to do the actual work (e.g. calling the 
- server).
- server).
+The callback functions passed to these UI module functions will call _trade_ to do the actual work (e.g. calling the server).
  
 #### trade
  
@@ -133,4 +180,3 @@ _trade_ supports the following events:
     the new current directory (replaces **getDirectory** event)
 * **onNewDirectoryCreated**: a new directory has been created. Payload is _projectId_ and _parentProjectId_
 
- 

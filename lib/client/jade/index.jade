@@ -10,36 +10,45 @@ html
     header.header
       block breadcrumbTrail
         include breadcrumb
-        div(style='display: none', canny-mod='flowControl', canny-flowcontrol="{'view':'resourceBundle'}")
+        div(style='display: none', canny-mod='displayManager', canny-displaymanager="{'view':'resourceBundle'}")
           span.projectName.octicon.octicon-file-code {{msg.projectName}}
         div.auth-logout-btn.octicon.octicon-sign-out(canny-mod='auth', canny-var="logoutButton", title="logout")
 
 
-    #resourceEditor.translationView
-      #resourceBundleTable(style='display: none', canny-mod='flowControl', canny-flowcontrol="{'view':'resourceBundle'}")
+    #resourceEditor
+      #resourceBundleTable(style='display: none', canny-mod='displayManager', canny-displaymanager="{'view':'resourceBundle'}")
         include projectView
 
-    div(canny-mod="flowControl", canny-flowcontrol="{'view':'projectsOverview'}")
+    div(canny-mod="displayManager", canny-displaymanager="{'view':'projectsOverview'}")
       include projectOverview
 
     #debugIncomming
 
-    #fixedNavigation.projectMainNavigation(style='display: none',canny-mod='projectMainNavigation flowControl', canny-var='main', canny-flowcontrol="{'view':'resourceBundle'}")
+    .projectMainNavigation(style='display: none',canny-mod='projectMainNavigation displayManager', canny-var='main', canny-displaymanager="{'view':'resourceBundle'}")
       .menuToggleButton.si-icon.si-icon-hamburger-cross(data-icon-name='hamburgerCross', canny-mod='projectMainNavigation', canny-var='menuToggleButton')
       .projectMainNavigation--header
         span {{msg.projectName}}
       include menuBar
 
-    div(canny-mod='layoutManager', canny-var="{'overlay':'translationViewProjectCategoryKey'}")
+    .menuRight(style='display: none',canny-mod='menuRight displayManager', canny-var='main', canny-displaymanager="{'view':'resourceBundle'}")
+      .anchorMenu(canny-mod="anchorMenu")
+
+    div(style='display: none', canny-mod='displayManager', canny-var="{'overlay':'translationViewProjectCategoryKey'}")
       include createNewCategory
 
-    div(canny-mod='layoutManager', canny-var="{'overlay':'createNewProjectView'}")
+    div(style='display: none', canny-mod='displayManager', canny-var="{'overlay':'createNewProjectView'}")
       include createNewProject
 
-    div(canny-mod='layoutManager', canny-var="{'overlay':'createNewDirectoryView'}")
+    div(style='display: none', canny-mod='displayManager', canny-var="{'overlay':'createNewDirectoryView'}")
       include createNewDirectory
 
+    div(style='display: none', canny-mod='displayManager', canny-var="{'overlay':'uploadView'}")
+      include upload
+
     footer.footer
+      .version-print Version: #{version}
       a(href='https://confluence.gameduell.de/display/DEV/Translation+Tool', target='_blank') About
       a(href='https://github.com/gameduell/translatron', target='_blank') Github
+
+    include templates
 

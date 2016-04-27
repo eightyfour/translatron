@@ -1,72 +1,95 @@
-.translationView,
-.translationViewHeader.header{
-  @import "languageHideShow";
-}
 .translationView {
 
+  .octicon.octicon-pencil{
+    display: none;
+  }
+  &.c-enableEditorMode .octicon.octicon-pencil{
+    display: block;
+  }
+
+  .data {
+    display: table-cell;
+  }
+  @import "languageHideShow";
+  @import "imageUpload";
+
+  .octicon:before{
+    color: rgba(117, 117, 117, 0.3);
+  }
   #resourceBundleTable {
     margin-bottom: 70px;
   }
   #titleText,
-  #titleTextTranslation,
-  .textField {
+  #titleTextTranslation{
     height: 40px;
   }
   .textField {
     width: 100%;
     height: 100%;
+    min-height: 5.4em;
     position: relative;
     z-index: 1;
     background-color: rgba(255,255,255,0.8);
-    padding: 0;
+    padding: .3em;
+    margin: 0;
+    box-sizing: border-box;
   }
   .sendSuccess {
-    background-color: #7cfc00;
+    background-color: #95c2ff;
+    transition: background-color 500ms;
+    animation: fadeoutColor 2s 3s forwards;
   }
   .updateKey {
     background-color: #ffff00;
+    transition: background-color 500ms;
+    animation: fadeoutColor 2s 3s forwards;
   }
   .keyField {
     width: 100%;
+    &[disabled=true] {
+      visibility: hidden;
+    }
+    position: relative;
+    z-index: 2;
   }
   .addKeyButton{
-    min-width: 4em;
-    &:before{
-      font-size: 2em;
-    }
+    padding: 0.2em;
+    min-width: 3em;
   }
-  .header {
-    font-size: 14px;
-    font-weight: bold;
-  }
-  .header,
-  #tableBody > div {
-    display: table;
+  > div {
     width: 100%;
-  }
-  #tableBody > div {
+    margin-top: 1em;
     position: relative;
     padding-bottom: 60px;
   }
-  #tableBody .addNewKeyrow {
+  .addNewKeyrow {
     position: absolute;
     bottom: 15px;
     left: 10px;
   }
-  #tableBody .addNewKeyrow {
+  .addNewKeyrow {
     cursor: pointer;
   }
-  #tableBody .addNewKeyrow input {
-    padding: 0 5px;
-    margin-right: 20px;
+  .addNewKeyrow input {
+    padding: 0 0.2em;
+    margin-right: 1em;
+    box-sizing: border-box;
+    width: 15em;
+    height: 1.6em;
   }
-  #tableBody > div:nth-child(even) {
-    background-color: rgba(49, 134, 0, 0.6);
+
+  .c-anchorMenu-focus{
+    //background-color: rgb(221, 242, 255);
+    background-color: rgb(241, 250, 255);
+
   }
-  #tableBody h2 {
+
+  h2 {
+    cursor: pointer;
     border-bottom: 1px solid #303030;
     font-size: 2em;
-    padding: 0.4em 0 0.1em 1.5em;
+    padding: 0 0 0.1em 1.5em;
+    margin: 0 0.5em 0.5em 0;
     &.icon{
       position: relative;
     }
@@ -74,11 +97,28 @@
       position: absolute;
       left: 0.3em;
     }
+    &:hover {
+      text-shadow: 0 0 0px #95c2ff, 0 0 0px #95c2ff, 0 0 0px #95c2ff;
+      &:before{
+        content:'\f05c';
+      }
+    }
   }
-  .header .row,
+  .categoryNode.c-anchorMenu-focus h2 {
+    &:before{
+      content:'\f05c';
+    }
+  }
   .row {
+    margin: 1em 1em 2em 1em;
+
     position: relative;
-    display: table-row;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    clear: both;
+
     &.c-removed {
       background-color: red !important;
     }
@@ -90,44 +130,76 @@
       color: #fff;
       font-size: 2em;
       font-weight: bold;
-      text-shadow: 0px 0px 6px #000;
+      text-shadow: 0 0 6px #000;
       cursor: pointer;
     }
-  }
 
-  .header .row > div,
-  .row > div {
-    display: table-cell;
-    padding: .5em 0;
-    vertical-align: middle;
-    position: relative;
-  }
-  .row .data.key:before{
-    position: absolute;
-    left: 4px;
-    top: 15px;
-    opacity: 0.4;
-  }
-  .row .data.key{
-    padding-left: 1.5em;
-  }
-  .content .row > div {
-    padding: .5em;
-    .flag-icon {
-      position: absolute;
-      width: 3.3em;
-      height: 2.1em;
-      bottom: .6em;
-      left: .6em;
-      background-size: cover;
-      background-position: 100%;
-      opacity: 1;
+    .translationContainer{
+      display: table;
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 80px;
+      flex: none;
+      .data {
+        position: relative;
+        padding: 0 .5em;
+      }
+    }
+    > div {
+      //    display: table-cell;
+      //    padding: .5em 0;
+      vertical-align: middle;
+      position: relative;
+      margin: auto;
+      flex: 100 0 0px;
+      .flag-icon {
+        position: absolute;
+        width: 3.3em;
+        height: 2.1em;
+        bottom: .9em;
+        left: .6em;
+        background-size: cover;
+        background-position: 100%;
+        opacity: 1;
+      }
+    }
+    .data.key{
+      flex: 30 0 0;
+      padding-right: 4.8em;
+      padding-left: 1.5em;
+      margin-bottom: .5em;
+
+      &::before{
+        position: absolute;
+        left: 4px;
+        top: 5px;
+      }
+      &::after{
+        position: absolute;
+        left: 24px;
+        top: 3px;
+        content: attr(data);
+      }
+    }
+
+    .textEditor-main-wrap{
+      //min-height: 20px;
+
+      margin:0;
+
     }
   }
-  .row .data.key {
-//    width: 300px;
+  .textEditor-main-wrap{
+    //min-height: 20px;
+    margin: 0 1em;
+    .js-text{
+      margin: 0.4em 0;
+    }
   }
-  .row:nth-child(odd) {
-    background-color: rgba(211, 211, 211, 0.5);
+}
+
+@keyframes fadeoutColor {
+  to {
+    background-color: transparent;
   }
 }
