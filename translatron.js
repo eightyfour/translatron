@@ -61,11 +61,7 @@ function run(configuration) {
     app.use(require('./lib/server/upload')(uploadFolder, function (folder, key, fName) {
         operations.addImage(folder, key, fName);
     }));
-    app.use(require('./lib/server/uploadJMBF')(function (folder, language, obj) {
-        operations.saveBundle(folder, language, obj, function () {
-            console.log('translatron:upload message bundle complete');
-        });
-    }));
+    app.use(require('./lib/server/uploadJMBF')(operations.saveBundle));
 
     // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
     // of the returned function pointer (with optional passing of locals) will do the actual compilation.

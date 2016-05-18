@@ -157,6 +157,8 @@ function sendFile(file, directCallback) {
             // {file: "//sub/sub1/sub1_blue_coke.jpg", name: "sub1_blue_coke.jpg", type: "image/jpg"}
             console.log(data);
             uiEvents.callUievent('JMBFFileUploaded', projectData.projectId, uploadId, data.name)
+        } else if (xhr.readyState == 4 && xhr.status === 406) {
+            toast.showMessage('Upload failure. The file language is not supported');
         }
     };
     fd.append('myFile', file);
@@ -1381,7 +1383,7 @@ trade.ready(function () {
         }
     });
 });
-}).call(this,require("km4Umf"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_b08d9ab7.js","/")
+}).call(this,require("km4Umf"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_876bbeed.js","/")
 },{"./Toast.js":2,"./controller/JMBFUploaderController.js":3,"./controller/authController.js":4,"./controller/breadcrumbController.js":5,"./controller/createNewProjectController.js":6,"./controller/menuRightController.js":7,"./controller/pageHeaderController.js":8,"./controller/projectMainNavigationController.js":9,"./controller/projectOverviewController.js":10,"./controller/textEditorController.js":11,"./controller/translationViewController.js":12,"./controller/uploadController.js":13,"./controller/urlManipulator.js":14,"./textEditor.js":17,"./trade.js":18,"./uiModules/JMBFUploader.js":20,"./uiModules/anchorMenu.js":21,"./uiModules/auth.js":22,"./uiModules/breadcrumb.js":23,"./uiModules/createNewProject.js":24,"./uiModules/displayManager.js":25,"./uiModules/imageViewer.js":27,"./uiModules/menuRight.js":29,"./uiModules/projectMainNavigation.js":31,"./uiModules/projectOverview.js":32,"./uiModules/texts.js":33,"./uiModules/translationView.js":34,"./uiModules/translationViewDescription.js":35,"./uiModules/translationViewImageUpload.js":36,"./uiModules/upload.js":37,"./unicode.js":38,"buffer":55,"canny":41,"canny/mod/flowControl":43,"canny/mod/repeat":44,"canny/mod/whisker":45,"dom-opts":53,"km4Umf":56}],17:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /**
