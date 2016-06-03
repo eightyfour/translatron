@@ -48,7 +48,8 @@ gulp.task('scripts', function() {
     // Single entry point to browserify
     gulp.src('lib/client/js/main.js')
         .pipe(browserify({
-            insertGlobals : true
+            insertGlobals : true,
+            debug: true
         }))
         .pipe(rename("translatron.js"))
         .pipe(gulp.dest('dist/js'))

@@ -2,7 +2,7 @@
   "name": "translatron",
   "auth": "eightyfour",
   "email": "eightyfour@thinkuseful.de",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "readmeFilename": "README.md",
   "engines": {
     "node": ">= v4.2.3"
@@ -30,7 +30,7 @@
     "buildjs-dev" : "browserify --debug lib/client/js/main.js -o dist/js/translatron.js && browserify --debug lib/client/js/login.js -o dist/js/translatron-login.js",
     "less" : "lessc lib/client/less/main.less dist/css/translatron.css",
     "test": "jasmine && karma start karma.conf.js",
-    "prestart": "npm run buildjs && npm run less",
+    "prestart": "npm run buildjs-dev && npm run less",
     "start": "node app.js",
     "devsetup" : "bower install"
   },

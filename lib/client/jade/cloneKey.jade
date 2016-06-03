@@ -1,0 +1,9 @@
+.translationView-projectCategory.overlayWindow(canny-mod='translationView whisker', canny-var='cloneKeyOverlay', canny-whisker="canny.translationView.registerWhisker")
+  h2 Duplicate translation key
+    span.highlighted &nbsp;{{cloneKeyOverlayText.keyName}}&nbsp;
+    | from
+    span.highlighted &nbsp;{{cloneKeyOverlayText.categoryName}}&nbsp;
+    | to
+  .inputWrap.octicon.octicon-file-symlink-file
+    input.inputField.category(canny-mod='translationView', canny-var='cloneKeyInputCategory', placeholder='Enter category name')
+    button.button(canny-mod='translationView', canny-var='cloneKeyButtonSubmit') Clone
