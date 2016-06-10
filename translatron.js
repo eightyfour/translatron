@@ -62,6 +62,7 @@ function run(configuration) {
         operations.addImage(folder, key, fName);
     }));
     app.use(require('./lib/server/uploadJMBF')(operations.saveBundle));
+    app.use(require('./lib/server/importJSON')(operations.importJSON));
 
     // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
     // of the returned function pointer (with optional passing of locals) will do the actual compilation.
