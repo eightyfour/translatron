@@ -660,6 +660,25 @@ describe('dao', () => {
                     done();
                 });
             });
+
+            it("should not break or mess up existing keys on receiving unexpected JSON data", (done) => {
+
+                var importData = {
+                    "project": "projectName",
+                    "randomData": {
+                        "headline": "categoryHeadline",
+                        "subline": "anotherCategoryHeadline",
+                        "randomChild": {
+                            "content": "Lorem ipsum dolor est"
+                        }
+                    }
+                };
+
+                dao.importJSON(projectId, importData, (err, prjId, prjData) => {
+                    expect(prjData.keys).toEqual({});
+                    done();
+                });
+            });
         });
     });
 });
