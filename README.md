@@ -14,7 +14,7 @@ It supports actually the following features:
 * group projects in folders
 * add comments in a description field for keys, categories or projects
 * upload images (screen shots) for categories
-* import JSON data into existing projects
+* [import JSON data into existing projects](https://github.com/gameduell/translatron#notes-on-importing-data-from-json-files)
 * export projects as JSON
 * export projects as message bundle format for each locale
 * create, rename and delete keys 
