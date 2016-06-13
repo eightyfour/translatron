@@ -14,6 +14,7 @@ It supports actually the following features:
 * group projects in folders
 * add comments in a description field for keys, categories or projects
 * upload images (screen shots) for categories
+* import JSON data into existing projects
 * export projects as JSON
 * export projects as message bundle format for each locale
 * create, rename and delete keys 
@@ -180,3 +181,24 @@ _trade_ supports the following events:
     the new current directory (replaces **getDirectory** event)
 * **onNewDirectoryCreated**: a new directory has been created. Payload is _projectId_ and _parentProjectId_
 
+### Notes on importing data from JSON files
+Translatron enables you to upload and import translations from your local hard disk via JSON files.
+Open the import dialog/overlay by clicking the beaker-button positioned on the left sidebar's very bottom and drag a JSON file from your favourite window manager onto the drag area of the overlay.
+Optionally click on the drag area to open a file dialogue to browse through your computer's folders/files and chose an appropriate JSON.   
+To make sure Translatron can process and merge the data with keys of the existing project it has to be structured as follows:
+
+```
+{
+    "en": {
+        "nameOfCategory_keyName": "Content"
+    }
+    "de": {
+        "nameOfCategory_keyName": "Inhalt"
+    }
+}
+```
+
+whereby the json's top level contains objects named by country-code, like "da", "de", "en", "es", "fr", "nl", "sv" and so on (check/update project-configuration for field availableLanguages).
+Furthermore each country's content is defined by key/value pairs where the keys contain information about   
+- a category they belong to (visualized by translatron's project-view) and   
+- the actual key id, separated by an underscore.
