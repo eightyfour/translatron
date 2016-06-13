@@ -661,7 +661,7 @@ describe('dao', () => {
                 });
             });
 
-            it("should not break or mess up existing keys on receiving unexpected JSON data", (done) => {
+            it("should not break or mess up existing keys on receiving totally unrelated JSON data", (done) => {
 
                 var importData = {
                     "project": "projectName",
@@ -676,6 +676,22 @@ describe('dao', () => {
 
                 dao.importJSON(projectId, importData, (err, prjId, prjData) => {
                     expect(prjData.keys).toEqual({});
+                    done();
+                });
+            });
+
+            it("should not mess up project on receiving corrupt translation keys", (done) => {
+
+                var importData = {
+                    "en": {
+                        "headline": "Not a category headline."
+                    }
+                };
+
+                dao.importJSON(projectId, importData, (err, prjId, prjData) => {
+                    expect(err).toBeDefined();
+                    expect(err.name).toBe('TypeError');
+                    expect(err.message).toMatch(`Key 'headline' not compatible with Translatron projects, has to provide both category and key id.`);
                     done();
                 });
             });
