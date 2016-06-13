@@ -118,8 +118,8 @@ describe('dao', () => {
             dao.getDirectory("/", (obj) => {
                 expect(obj.projects.length).toEqual(1);
                 expect(obj.projects).toEqual([{
-                    name : 'project1',
-                    id : '/project1'
+                    name: 'project1',
+                    id: '/project1'
                 }]);
                 done();
             });
@@ -129,8 +129,8 @@ describe('dao', () => {
             dao.getDirectory("/", (obj) => {
                 expect(obj.dirs.length).toEqual(1);
                 expect(obj.dirs).toEqual([{
-                    name : 'subFolder',
-                    id : '/subFolder'
+                    name: 'subFolder',
+                    id: '/subFolder'
                 }]);
                 done();
             });
@@ -140,15 +140,15 @@ describe('dao', () => {
             dao.getDirectory("/subFolder", (obj) => {
                 expect(obj.projects.length).toEqual(1);
                 expect(obj.projects).toEqual([{
-                    name : 'project2',
-                    id : '/subFolder/project2'
+                    name: 'project2',
+                    id: '/subFolder/project2'
                 }]);
                 expect(obj.parentDirectory).toEqual('/');
                 expect(obj.currentDirectory).toEqual('/subFolder');
                 expect(obj.dirs).toEqual([{
                     name: 'emptySubFolder',
                     id: '/subFolder/emptySubFolder'
-                },{
+                }, {
                     name: 'subSubFolder',
                     id: '/subFolder/subSubFolder'
                 }]);
@@ -249,7 +249,7 @@ describe('dao', () => {
                 expect(projectData.description).toEqual('');
                 expect(projectData.languages).toEqual({});
                 expect(projectData.availableLanguages.length).toEqual(8);
-                expect(projectData.keyDescriptions).toEqual({ __description: '' });
+                expect(projectData.keyDescriptions).toEqual({__description: ''});
                 expect(projectData.numberOfKeys).toEqual(0);
                 expect(projectData.keys).toEqual({});
                 done();
@@ -274,7 +274,7 @@ describe('dao', () => {
 
         it('should include a given project description in the created config', (done) => {
             var description = "My special description";
-            dao.createNewProject(directory, projectName, {description : description}, (err, projectData) => {
+            dao.createNewProject(directory, projectName, {description: description}, (err, projectData) => {
                 expect(err).toBeFalsy();
                 expect(projectData.description).toEqual(description);
                 done();
@@ -349,7 +349,7 @@ describe('dao', () => {
         describe('new keys', () => {
             it('should save new key in project file', (done) => {
                 var keyValue = 'test text DE';
-                var change = {key: keyName, value : keyValue };
+                var change = {key: keyName, value: keyValue};
                 dao.saveKey(projectId, language, change, (err, savedKey, savedValue) => {
                     expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
@@ -363,7 +363,7 @@ describe('dao', () => {
 
             it('should return saved key', (done) => {
                 var keyValue = 'test text DE';
-                var change = {key: keyName, value : keyValue };
+                var change = {key: keyName, value: keyValue};
                 dao.saveKey(projectId, language, change, (err, savedKeyName, savedKeyValue) => {
                     expect(err).toBeFalsy();
                     expect(savedKeyName).toEqual(keyName);
@@ -378,13 +378,13 @@ describe('dao', () => {
             var keyNewValue = 'test text DE_changed';
 
             beforeAll((done) => {
-                dao.saveKey(projectId, language, { key : keyName, value : keyOldValue }, (savedKeyName, savedKeyValue) => {
+                dao.saveKey(projectId, language, {key: keyName, value: keyOldValue}, (savedKeyName, savedKeyValue) => {
                     done();
                 });
             });
 
             it('should still have key in project after update', (done) => {
-                var change = { key : keyName, value : keyNewValue };
+                var change = {key: keyName, value: keyNewValue};
                 dao.saveKey(projectId, language, change, (err, savedKeyName, savedKeyValue) => {
                     expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
@@ -395,7 +395,7 @@ describe('dao', () => {
             });
 
             it('should have changed the key to the new value', (done) => {
-                var change = { key : keyName, value : keyNewValue };
+                var change = {key: keyName, value: keyNewValue};
                 dao.saveKey(projectId, language, change, (err, savedKeyName, savedKeyValue) => {
                     expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
@@ -422,8 +422,8 @@ describe('dao', () => {
 
             dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
                 expect(err).toBeFalsy();
-                dao.saveKey(projectId, languageDE, { key : keyName, value : keyValueDE }, () => {
-                    dao.saveKey(projectId, languageEN, { key : keyName, value : keyValueEN }, () => {
+                dao.saveKey(projectId, languageDE, {key: keyName, value: keyValueDE}, () => {
+                    dao.saveKey(projectId, languageEN, {key: keyName, value: keyValueEN}, () => {
                         done();
                     })
                 });
@@ -458,14 +458,14 @@ describe('dao', () => {
         var keyValueDE = 'test text DE';
         var keyValueEN = 'test text EN';
 
-        var keyRename = { oldKey : keyOldName, newKey : keyNewName };
+        var keyRename = {oldKey: keyOldName, newKey: keyNewName};
 
         beforeEach((done) => {
             dao = require('../../lib/server/dao')(storageFolder);
             dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
                 expect(err).toBeFalsy();
-                dao.saveKey(projectId, languageDE, { key : keyOldName, value : keyValueDE }, () => {
-                    dao.saveKey(projectId, languageEN, { key : keyOldName, value : keyValueEN }, () => {
+                dao.saveKey(projectId, languageDE, {key: keyOldName, value: keyValueDE}, () => {
+                    dao.saveKey(projectId, languageEN, {key: keyOldName, value: keyValueEN}, () => {
                         done();
                     })
                 });
@@ -571,7 +571,7 @@ describe('dao', () => {
 
             var initialDescription = 'initialDescription';
             var projectInitialValues = {
-                description : initialDescription
+                description: initialDescription
             };
 
             beforeEach((done) => {
@@ -592,6 +592,72 @@ describe('dao', () => {
                         expect(projectData.keyDescriptions[id]).toEqual(description);
                         done();
                     });
+                });
+            });
+        });
+    });
+
+    describe('importJSON', () => {
+        var storageFolder = fixturesDirectory + 'empty_rootfolder',
+            projectFolder = '/',
+            projectName = 'testProject_importJSON',
+            projectId;
+
+        beforeEach((done) => {
+            dao = require('../../lib/server/dao')(storageFolder);
+            done();
+        });
+
+        afterEach((done) => {
+            fs.unlink(storageFolder + projectFolder + projectName + '.json', (err) => {
+                expect(err).toBeFalsy();
+                done();
+            });
+        });
+
+        describe('', () => {
+            var projectInitialValues = {
+                description: 'initialDescription'
+            };
+
+            beforeEach((done) => {
+                dao.createNewProject(projectFolder, projectName, projectInitialValues, (err, projectData) => {
+                    expect(err).toBeFalsy();
+                    expect(projectData).toBeDefined();
+                    projectId = projectData.projectId;
+                    done();
+                });
+            });
+
+            it("should add valid JSON data to current project's keys", (done) => {
+
+                var importData = {
+                    "en": {
+                        "category_headline": "categoryHeadline",
+                        "anotherCategory_headline": "anotherCategoryHeadline"
+                    },
+                    "de": {
+                        "category_headline": "ueberschrift_kategorie",
+                        "anotherCategory_headline": "ueberschrift_kategorie"
+                    }
+                };
+
+                dao.importJSON(projectId, importData, (err, prjId, prjData) => {
+                    expect(err).toBeFalsy();
+                    expect(prjData).toBeDefined();
+                    expect(prjId).toMatch(projectId);
+
+                    for (var lang in importData) {
+                        if (importData.hasOwnProperty(lang)) {
+                            expect(prjData.keys[lang]).toBeDefined();
+                            for (var key in importData[lang]) {
+                                if (importData[lang].hasOwnProperty(key)) {
+                                    expect(prjData.keys[lang][key]).toMatch(importData[lang][key]);
+                                }
+                            }
+                        }
+                    }
+                    done();
                 });
             });
         });
