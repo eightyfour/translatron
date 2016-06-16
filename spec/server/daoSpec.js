@@ -691,7 +691,7 @@ describe('dao', () => {
                 dao.importJSON(projectId, importData, (err, prjId, prjData) => {
                     expect(err).toBeDefined();
                     expect(err.name).toBe('TypeError');
-                    expect(err.message).toMatch(`Key 'headline' not compatible with Translatron projects, has to provide both category and key id.`);
+                    expect(err.message).toMatch(`Key 'headline' not compatible with Translatron project, has to provide both category and key id.`);
                     done();
                 });
             });
