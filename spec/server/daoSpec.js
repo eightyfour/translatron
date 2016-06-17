@@ -690,8 +690,26 @@ describe('dao', () => {
 
                 dao.importJSON(projectId, importData, (err, prjId, prjData) => {
                     expect(err).toBeDefined();
-                    expect(err.name).toBe('TypeError');
-                    expect(err.message).toMatch(`Key 'headline' not compatible with Translatron project, has to provide both category and key id.`);
+                    expect(err instanceof TypeError).toBeTruthy();
+                    done();
+                });
+            });
+
+            it("should be able to import json storing category data in objects for each category", (done) => {
+
+                var importData = {
+                    "en": {
+                        "category": {
+                            "headline": "Category headline."
+                        }
+                    }
+                };
+
+                dao.importJSON(projectId, importData, (err, prjId, prjData) => {
+                    expect(err).toBeFalsy();
+                    expect(prjData).toBeDefined();
+                    expect(prjId).toMatch(projectId);
+                    expect(prjData.keys.en.category_headline).toBe(importData.en.category.headline);
                     done();
                 });
             });
