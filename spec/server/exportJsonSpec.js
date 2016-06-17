@@ -122,5 +122,16 @@ describe('exportJson', () => {
             expect(JSON.stringify(result)).toBe(JSON.stringify(expectedData));
             done();
         });
+
+        it('UNLESS the requested language has a value of undefined => returning an empty object', (done) => {
+            var expectedData = {},
+                result = langFilter.filter({
+                    json: originalData,
+                    paramValue: undefined
+                });
+
+            expect(JSON.stringify(result)).toBe(JSON.stringify(expectedData));
+            done();
+        });
     });
 });
