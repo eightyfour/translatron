@@ -715,5 +715,59 @@ describe('dao', () => {
             });
         });
     });
+
+    describe('removeCategory', () => {
+        var storageFolder = fixturesDirectory + 'test_folder/',
+            projectName = 'removeCategoryTest',
+            projectId = '/' + projectName,
+            keys = {
+                "en": {
+                    "category01_key01": "0101 text EN",
+                    "category01_key02": "0102 text EN",
+                    "category02_key01": "0201 text EN"
+                },
+                "de": {
+                    "category01_key01": "0101 text DE",
+                    "category01_key02": "0102 text DE",
+                    "category02_key01": "0201 text DE"
+                }
+            },
+            categoryToDelete = 'category01';
+
+        beforeEach((done) => {
+            dao = require('../../lib/server/dao')(storageFolder);
+
+            dao.createNewProject('/', projectName, {}, (err, projectData) => {
+                expect(err).toBeFalsy();
+                dao.importJSON(projectName, keys, (err, projectId, projectData) => {
+                    expect(projectData.keys).toEqual(keys);
+                    done();
+                });
+            });
+        });
+
+        afterEach((done) => {
+            fs.unlink(storageFolder + projectName + '.json', (err) => {
+                expect(err).toBeFalsy();
+                done();
+            });
+        });
+
+        it('should have removed all contained keys', (done) => {
+            dao.removeCategory(projectName, categoryToDelete, (err, deletedCatName) => {
+                expect(err).toBeFalsy();
+                expect(deletedCatName).toMatch(categoryToDelete);
+                dao.loadProject(projectId, (projectData) => {
+                    expect(projectData.keys['en']['category01_key01']).toBeUndefined();
+                    expect(projectData.keys['de']['category01_key01']).toBeUndefined();
+                    expect(projectData.keys['de']['category01_key02']).toBeUndefined();
+                    expect(projectData.keys['de']['category01_key02']).toBeUndefined();
+                    expect(projectData.keys['en']['category02_key01']).toEqual(keys['en']['category02_key01']);
+                    expect(projectData.keys['de']['category02_key01']).toEqual(keys['de']['category02_key01']);
+                    done();
+                });
+            });
+        });
+    });
 });
 
