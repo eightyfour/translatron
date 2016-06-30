@@ -24,22 +24,21 @@
     "port": "3000",
     "enableAuth": true
   },
-  "main" : "translatron.js",
+  "main": "translatron.js",
   "scripts": {
-    "buildjs" : "browserify lib/client/js/main.js -o dist/js/translatron.js && browserify lib/client/js/login.js -o dist/js/translatron-login.js",
-    "buildjs-dev" : "browserify --debug lib/client/js/main.js -o dist/js/translatron.js && browserify --debug lib/client/js/login.js -o dist/js/translatron-login.js",
-    "less" : "lessc lib/client/less/main.less dist/css/translatron.css",
+    "buildjs": "browserify lib/client/js/main.js -o dist/js/translatron.js && browserify lib/client/js/login.js -o dist/js/translatron-login.js",
+    "buildjs-dev": "browserify --debug lib/client/js/main.js -o dist/js/translatron.js && browserify --debug lib/client/js/login.js -o dist/js/translatron-login.js",
+    "less": "lessc lib/client/less/main.less dist/css/translatron.css",
     "test": "jasmine && karma start karma.conf.js",
     "prestart": "npm run buildjs && npm run less",
     "start": "node app.js",
-    "devsetup" : "bower install"
+    "devsetup": "bower install"
   },
   "devDependencies": {
+    "bower": "^1.7.2",
+    "browserify": "^9.0.8",
     "canny": "0.1.x",
     "dom-opts": "git://github.com/eightyfour/dom-opts.git",
-    "browserify": "^9.0.7",
-    "less": "~2.4.0",
-    "bower": "^1.7.2",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-browserify": "^0.5.1",
@@ -56,6 +55,7 @@
     "karma-coverage": "^0.5.0",
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^0.2.1",
+    "less": "~2.4.0",
     "phantomjs": "^1.9.18",
     "watchify": "^3.6.1"
   }
