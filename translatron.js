@@ -58,9 +58,11 @@ function run(configuration) {
     app.use('/bower_components',
         express.static(__dirname + '/bower_components'));
 
-    app.use(require('./lib/server/upload')(uploadFolder, function (folder, key, fName) {
+    app.use(require('./lib/server/middleware-importer/upload')(uploadFolder, function (folder, key, fName) {
         operations.addImage(folder, key, fName);
     }));
+    app.use(require('./lib/server/middleware-importer/uploadJMBF')(operations.saveBundle));
+    app.use(require('./lib/server/middleware-importer/importJSON')(operations.importJSON));
 
     // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
     // of the returned function pointer (with optional passing of locals) will do the actual compilation.
