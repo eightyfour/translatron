@@ -705,13 +705,18 @@ footer.footer .version-print {
   transition: background-color 500ms;
   animation: fadeoutColor 2s 3s forwards;
 }
-.translationView .keyField {
+.translationView .keyField,
+.translationView .categoryField {
   width: 100%;
   position: relative;
   z-index: 2;
 }
-.translationView .keyField[disabled=true] {
+.translationView .keyField[disabled=true],
+.translationView .categoryField[disabled=true] {
   visibility: hidden;
+}
+.translationView .categoryField {
+  font-size: 0.75em;
 }
 .translationView .addKeyButton {
   padding: 0.2em;
@@ -741,12 +746,27 @@ footer.footer .version-print {
 .translationView .c-anchorMenu-focus {
   background-color: #f1faff;
 }
+.translationView .headline .inputEditManager.wrap {
+  position: relative;
+  display: inline-block;
+  right: 2em;
+}
+.translationView .headline .inputEditManager.wrap .edit {
+  position: relative;
+  right: auto;
+}
 .translationView h2 {
   cursor: pointer;
-  border-bottom: 1px solid #303030;
   font-size: 2em;
   padding: 0 0 0.1em 1.5em;
   margin: 0 0.5em 0.5em 0;
+}
+.translationView h2.displayData::after {
+  position: absolute;
+  top: 0;
+  left: 1.65em;
+  border-bottom: 1px solid #303030;
+  content: attr(data);
 }
 .translationView h2.icon {
   position: relative;

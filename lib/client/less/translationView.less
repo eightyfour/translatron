@@ -44,13 +44,17 @@
     transition: background-color 500ms;
     animation: fadeoutColor 2s 3s forwards;
   }
-  .keyField {
+  .keyField,
+  .categoryField {
     width: 100%;
     &[disabled=true] {
       visibility: hidden;
     }
     position: relative;
     z-index: 2;
+  }
+  .categoryField {
+    font-size: 0.75em;
   }
   .addKeyButton{
     padding: 0.2em;
@@ -84,12 +88,34 @@
 
   }
 
+  .headline {
+    .inputEditManager {
+      &.wrap {
+        position: relative;
+        display: inline-block;
+        right: 2em;
+        .edit {
+          position: relative;
+          right: auto;
+        }
+      }
+    }
+  }
+
   h2 {
     cursor: pointer;
-    border-bottom: 1px solid #303030;
     font-size: 2em;
     padding: 0 0 0.1em 1.5em;
     margin: 0 0.5em 0.5em 0;
+    &.displayData {
+      &::after {
+        position: absolute;
+        top: 0;
+        left: 1.65em;
+        border-bottom: 1px solid #303030;
+        content: attr(data);
+      }
+    }
     &.icon{
       position: relative;
     }
