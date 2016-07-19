@@ -746,12 +746,12 @@ footer.footer .version-print {
 .translationView .c-anchorMenu-focus {
   background-color: #f1faff;
 }
-.translationView .headline .inputEditManager.wrap {
+.translationView .headlineWrapper .inputEditManager.wrap {
   position: relative;
   display: inline-block;
   right: 2em;
 }
-.translationView .headline .inputEditManager.wrap .edit {
+.translationView .headlineWrapper .inputEditManager.wrap .edit {
   position: relative;
   right: auto;
 }
