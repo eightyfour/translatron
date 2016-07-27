@@ -15,4 +15,12 @@
     
 ## 0.6.0
 
-- Feature added: Renaming categories 
+- Feature added: Renaming categories
+
+## 0.6.1
+
+- fixed category headline styling
+ 
+## 0.6.2
+
+- fixed anchor menu for Internet Explorer 11
