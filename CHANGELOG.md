@@ -24,3 +24,12 @@
 ## 0.6.2
 
 - fixed anchor menu for Internet Explorer 11
+
+## 0.6.3
+
+- fixed key descriptions for
+-- renamed keys
+-- cloned keys
+-- deleted keys
+-- keys affected by renaming categories
+-- keys affected by deleting categories
