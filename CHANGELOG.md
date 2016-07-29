@@ -28,8 +28,8 @@
 ## 0.6.3
 
 - fixed key descriptions for
--- renamed keys
--- cloned keys
--- deleted keys
--- keys affected by renaming categories
--- keys affected by deleting categories
+    - renamed keys
+    - cloned keys
+    - deleted keys
+    - keys affected by renaming categories
+    - keys affected by deleting categories
