@@ -1,0 +1,31 @@
+{
+  "project": "project1",
+  "projectId": "/project1",
+  "description": "This is for testing if key descriptions are updated properly according to user actions, e.g. renaming, cloning or deleting keys",
+  "images": [],
+  "defaultLanguage": "en",
+  "keyDescriptions": {
+    "__description": "Overall description for the project (__description)",
+    "resourceBundleTable": "Overall description for the project (resourceBundleTable)",
+    "__image": [],
+    "first": "Description for category first",
+    "first_key_1": "Description for key_1 of category first",
+    "second": "Description for category second",
+    "second_key_1": "Description for key_1 of category second"
+  },
+  "keys": {
+    "de": {
+      "first_key_1": "Test Schluessel Nummer Eins (First)",
+      "first_key_2": "Test Schluessel Nummer Zwei (First)",
+      "second_key_1": "Test Schluessel Nummer Eins (Second)"
+    },
+    "en": {
+      "first_key_1": "test key number one (first)",
+      "first_key_2": "test key number two (first)",
+      "first_key_3": "test key number three (first)",
+      "second_key_1": "test key number one (second)"
+    },
+    "fr": {}
+  },
+  "availableLanguages": {}
+}

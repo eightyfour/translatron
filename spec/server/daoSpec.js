@@ -1,4 +1,5 @@
 var fixturesDirectory = __dirname + '/fixtures/',
+    exec = require('child_process').execSync,
     fs = require('fs'),
     path = require('path');
 
@@ -765,6 +766,185 @@ describe('dao', () => {
                     expect(projectData.keys['en']['category02_key01']).toEqual(keys['en']['category02_key01']);
                     expect(projectData.keys['de']['category02_key01']).toEqual(keys['de']['category02_key01']);
                     done();
+                });
+            });
+        });
+    });
+
+    describe('key descriptions should always be updated, ', () => {
+        var storageFolder = fixturesDirectory + 'key_descriptions',
+            tempFolder = 'temp',
+            projectName = 'project1',
+            projectId = `/${projectName}`;
+
+        beforeEach((done) => {
+            // Create temp folder and clone project-template into it
+            exec(`mkdir ${storageFolder}/${tempFolder}`);
+            exec(`cp ${storageFolder}/${projectName}.json ${storageFolder}/${tempFolder}/${projectName}.json`);
+            dao = require('../../lib/server/dao')(`${storageFolder}/${tempFolder}`);
+            done();
+        });
+
+        afterEach((done) => {
+            // Delete temp folder and project
+            exec(`rm -rf ${storageFolder}/${tempFolder}`);
+            done();
+        });
+
+        it('so when user deletes a key it´s description (if present) should be deleted too', (done) => {
+            dao.loadProject(projectId, (data) => {
+                // See fixtures/keys_descriptions/project1.json for keys
+                dao.removeKey(projectId, 'first_key_1', (err, keyName) => {
+                    expect(err).toBeNull();
+                    expect(keyName).toBeDefined();
+                    expect(keyName).toBe('first_key_1');
+
+                    dao.loadProject(projectId, (prjData) => {
+                        expect(prjData.keyDescriptions.hasOwnProperty(keyName)).toBe(false);
+                        done();
+                    });
+                });
+            });
+        });
+
+        it('so when user deletes a key without associated description the app should not crash', (done) => {
+            dao.loadProject(projectId, (data) => {
+                // project1.json does not have a key description for 'first_key_2'
+                dao.removeKey(projectId, 'first_key_2', (err, keyName) => {
+                    expect(err).toBeNull();
+                    expect(keyName).toBeDefined();
+                    expect(keyName).toBe('first_key_2');
+
+                    dao.loadProject(projectId, (prjData) => {
+                        // Verify that loading the project does not result in errors (i.e. prjData === false)
+                        expect(prjData).toBeTruthy();
+                        done();
+                    });
+                });
+            });
+        });
+
+        it('so when user renames a key it´s description should be referenced by that name too', (done) => {
+            dao.loadProject(projectId, (data) => {
+                var testData = {
+                        sourceKey: 'first_key_1',
+                        targetKey: 'renamed_key_1'
+                    },
+                    descValue = data.keyDescriptions[testData.sourceKey];
+
+                expect(descValue).toBeDefined();
+                // See fixtures/key_descriptions/project1.json
+                expect(descValue).toBe('Description for key_1 of category first');
+
+                dao.renameKey(projectId, {
+                    oldKey: testData.sourceKey,
+                    newKey: testData.targetKey
+                }, (err, oldName, newName) => {
+                    expect(err).toBeNull();
+                    expect(oldName).toBe(testData.sourceKey);
+                    expect(newName).toBe(testData.targetKey);
+
+                    dao.loadProject(projectId, (prjData) => {
+                        // Verify that old key was deleted from keyDescriptions
+                        expect(prjData.keyDescriptions.hasOwnProperty(testData.sourceKey)).toBe(false);
+                        // Verify that new key was added to keyDescriptions
+                        expect(prjData.keyDescriptions.hasOwnProperty(testData.targetKey)).toBe(true);
+                        // Verify that value from source key descriptions was transferred to newly created key description
+                        expect(prjData.keyDescriptions[testData.targetKey]).toBe(descValue);
+                        done();
+                    });
+                });
+
+            });
+        });
+
+        it('so when user clones a key into another category ', (done) => {
+            dao.loadProject(projectId, (data) => {
+                var testData = {
+                    id: 'first_key_1',
+                    key: 'key_1',
+                    sourceCategory: 'first',
+                    targetCategory: 'newCategory'
+                };
+
+                dao.cloneKey(projectId, testData, (err, projectId, result) => {
+                    expect(err).toBeNull();
+
+                    // Check result data passed into callback
+                    expect(result.keyDescriptions.hasOwnProperty(`${testData.sourceCategory}_${testData.key}`)).toBe(true);
+                    expect(result.keyDescriptions.hasOwnProperty(`${testData.targetCategory}_${testData.key}`)).toBe(true);
+                    expect(result.keyDescriptions[`${testData.targetCategory}_${testData.key}`]).toBe(result.keyDescriptions[`${testData.sourceCategory}_${testData.key}`]);
+
+                    // Check whether data has been stored correctly
+                    dao.loadProject(projectId, (prjData) => {
+                        // Check whether key descriptions has been copied
+                        expect(prjData.keyDescriptions.hasOwnProperty(`${testData.sourceCategory}_${testData.key}`)).toBe(true);
+                        expect(prjData.keyDescriptions.hasOwnProperty(`${testData.targetCategory}_${testData.key}`)).toBe(true);
+                        // Check whether values of source and target description are the same
+                        expect(prjData.keyDescriptions[`${testData.targetCategory}_${testData.key}`]).toBe(prjData.keyDescriptions[`${testData.sourceCategory}_${testData.key}`]);
+                        done();
+                    });
+                });
+            });
+        });
+
+        it('so when user removes a category all key related descriptions should be deleted', (done) => {
+            dao.loadProject(projectId, (data) => {
+                var categoryToDelete = 'second';
+                dao.removeCategory(projectId, categoryToDelete, (err, categoryName) => {
+                    expect(err).toBeNull();
+                    expect(categoryName).toBe(categoryToDelete);
+
+                    dao.loadProject(projectId, (prjData) => {
+                        Object.keys(prjData.keyDescriptions).forEach(item => {
+                            var prefix = item.split('_').shift();
+                            expect(prefix).not.toEqual(categoryToDelete);
+                        });
+                        done();
+                    });
+                });
+            });
+        });
+
+        it('so when user renames a category all child keys should be renamed as well', (done) => {
+            dao.loadProject(projectId, (data) => {
+                var testData = {
+                        origCatName: 'second',
+                        origCatDesc: data.keyDescriptions['second'],
+                        renamedCatName: 'renamedCategory'
+                    },
+                    origCatKeyCount = 0;
+
+                // Count key descriptions associated with the category to be renamed
+                Object.keys(data.keyDescriptions).forEach(item => {
+                    var prefix = item.split('_').shift();
+                    if (prefix === testData.origCatName) {
+                        origCatKeyCount++;
+                    }
+                });
+
+                dao.renameCategory(projectId, testData.origCatName, testData.renamedCatName, (err, oldName, newName) => {
+                    expect(err).toBeNull();
+                    dao.loadProject(projectId, (prjData) => {
+                        var renamedCatKeyCount = 0;
+                        expect(prjData).toBeTruthy();
+                        // Verify that description value has been taken over
+                        expect(prjData.keyDescriptions[testData.renamedCatName]).toBe(testData.origCatDesc);
+
+                        Object.keys(prjData.keyDescriptions).forEach(item => {
+                            var prefix = item.split('_').shift();
+                            // Verify that original key descriptions were wiped out
+                            expect(prefix).not.toEqual(testData.origCatName);
+
+                            // Count number of renamed category's descriptions
+                            if (prefix === testData.renamedCatName) {
+                                renamedCatKeyCount++;
+                            }
+                        });
+                        // Verify that no key description was lost during renaming
+                        expect(renamedCatKeyCount).toBe(origCatKeyCount);
+                        done();
+                    });
                 });
             });
         });
