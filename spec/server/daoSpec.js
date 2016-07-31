@@ -718,7 +718,7 @@ describe('dao', () => {
     });
 
     describe('removeCategory', () => {
-        var storageFolder = fixturesDirectory + 'test_folder/',
+        var storageFolder = fixturesDirectory,
             projectName = 'removeCategoryTest',
             projectId = '/' + projectName,
             keys = {

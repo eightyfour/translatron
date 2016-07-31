@@ -3263,6 +3263,25 @@ var translationView = (function() {
         });
     }
 
+    function insertCategory(catNodeToInsert, catNodes) {
+        var catToAppendID = catNodeToInsert.id.toLowerCase(),
+            shownCatNode,
+            shownCatID;
+
+        for (var i = 0; i < catNodes.length; i++) {
+            shownCatNode = catNodes[i];
+            shownCatID = catNodes[i].id.toLowerCase();
+            if (catToAppendID < shownCatID) {
+                rootNode.insertBefore(catNodeToInsert, shownCatNode);
+                break;
+            }
+        }
+
+        if (catNodes.length === 0 || catToAppendID > shownCatID) {
+            rootNode.appendChild(catNodeToInsert);
+        }
+    }
+
     var rootNode, // main node all content are added to here
         renderTextFc,
         selectors = {
@@ -3536,6 +3555,7 @@ var translationView = (function() {
             printBundleTemplate: function(bundles, actualLanguage, availableProjectLanguages, cb) {
                 var keyObj,
                     projectNode,
+                    shownCategories = [].slice.call(rootNode.querySelectorAll('.categoryNode')),
                     /**
                      * Setup header and handle the category
                      * @param node
@@ -3633,15 +3653,19 @@ var translationView = (function() {
                                     }
                                 });
                             }
-                            rootNode.appendChild(categoryNode);
                         }
                         return categoryNode;
                     };
+
+                bundles.sort(function(a, b) {
+                    return a.key.toLowerCase() > b.key.toLowerCase();
+                });
 
                 bundles.forEach(function(data) {
                     keyObj = fc.getViewKeyObject(data);
                     // TODO which who calc the cate...
                     projectNode = prepareCategoryNode(rootNode, keyObj);
+                    insertCategory(projectNode, shownCategories);
                     fc.addRowWithLanguages(projectNode, keyObj, actualLanguage, availableProjectLanguages);
                     cb(projectNode.getAttribute('id'));
                     cb(keyObj.key);

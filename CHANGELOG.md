@@ -33,3 +33,9 @@
     - deleted keys
     - keys affected by renaming categories
     - keys affected by deleting categories
+
+## 0.6.4
+
+- fixed sorting of categories
+    - on loading projects
+    - inserting newly created categories 
