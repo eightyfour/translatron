@@ -17,7 +17,8 @@ It supports actually the following features:
 * [import JSON data into existing projects](https://github.com/gameduell/translatron#notes-on-importing-data-from-json-files)
 * [export projects as JSON](https://github.com/gameduell/translatron#json-export-options)
 * export projects as message bundle format for each locale
-* create, rename and delete keys 
+* create, rename and delete categories 
+* create, rename, delete and clone keys
 * category/key overview menu
 * links to keys or categories
 * live synchronization to server
