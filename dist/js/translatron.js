@@ -329,19 +329,12 @@ uiEvents.addUiEventListener({
 });
 
 module.exports = {
-    /**
-     * is called if the user rename key request was successful
-     * @param newKey
-     * @param oldKey
-     */
     renameCategory : function (oldName, newName) {
         anchorMenu.renderMenu();
     },
-    /**
-     * is called if the user rename key request was successful
-     * @param newKey
-     * @param oldKey
-     */
+    removeCategory: function(categoryName) {
+        anchorMenu.renderMenu();
+    },
     renameKey : function (oldKey, newKey) {
         anchorMenu.renderMenu();
     },
@@ -359,6 +352,9 @@ module.exports = {
      * @param projectData
      */
     onLoadProject : function (projectData) {
+        anchorMenu.renderMenu();
+    },
+    onNewProjectCreated: function() {
         anchorMenu.renderMenu();
     }
 };
