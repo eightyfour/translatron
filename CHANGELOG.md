@@ -38,4 +38,10 @@
 
 - fixed sorting of categories
     - on loading projects
-    - inserting newly created categories 
+    - inserting newly created categories
+     
+## 0.6.5
+
+- fixed issues with updating the anchor menu
+    - on deletion of categories
+    - on creating new project after having opened one before 
