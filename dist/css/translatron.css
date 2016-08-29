@@ -1182,7 +1182,9 @@ footer.footer .version-print {
 .projectOverview table tr td:active {
   color: darkslategray;
 }
-.projectOverview table tr td.octicon-file-directory,
+.projectOverview table tr td.octicon-file-directory {
+  width: 100%;
+}
 .projectOverview table tr td.octicon-file-code {
   width: 95%;
 }

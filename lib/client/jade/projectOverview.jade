@@ -5,11 +5,10 @@
     table
       tbody(canny-mod="repeat" canny-var="{'for':'item','in':'canny.projectOverview.setRenderProjectsAndDirectoriesListFunction'}")
         tr(if="item.dir")
-          td.octicon.octicon-file-directory(on-click="item.openProjectListItem", title="Open directory") {{item.name}}
-          td.octicon.octicon-trashcan
-        tr(if-not="item.dir")
-          td.octicon.octicon-file-code(on-click="item.openProjectListItem", title="Open '{{item.name}}' project") {{item.name}}
-          td.octicon.octicon-trashcan
+          td(on-click="item.openProjectListItem", title="Open directory", colspan="2").octicon.octicon-file-directory {{item.name}}
+        tr(if-not="item.dir", data-project="{{item.name}}")
+          td(on-click="item.openProjectListItem", title="Open '{{item.name}}' project").octicon.octicon-file-code {{item.name}}
+          td(on-click="item.deleteProjectListItem").octicon.octicon-trashcan
 
   .projectOverview-buttons
       button.button.js-createFolderButton.octicon.octicon-file-directory Create folder
