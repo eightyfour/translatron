@@ -8,12 +8,12 @@
           td(on-click="item.openProjectListItem", title="Open directory", colspan="2").octicon.octicon-file-directory {{item.name}}
         tr(if-not="item.dir", data-project="{{item.name}}")
           td(on-click="item.openProjectListItem", title="Open '{{item.name}}' project").octicon.octicon-file-code {{item.name}}
-          td(on-click="item.deleteProjectListItem").octicon.octicon-trashcan
+          td(on-click="item.deleteProjectListItem").deleteButton.octicon.octicon-trashcan
 
   .projectOverview-buttons
       button.button.js-createFolderButton.octicon.octicon-file-directory Create folder
       button.button.js-createProjectButton.octicon.octicon-file-code Create project
-      button.button.js-deleteProjectsButton.octicon.octicon-trashcan Delete projects
+      button.button.js-deleteProjectsButton.octicon.octicon-pencil Edit
 
   // remove this if we can go live
   div(style="margin-top:3em")

@@ -1160,7 +1160,7 @@ footer.footer .version-print {
   box-sizing: border-box;
 }
 .projectOverview table tr {
-  display: block;
+  display: flex;
 }
 .projectOverview table tr:nth-child(odd) {
   background: #F0F7FA;
@@ -1173,6 +1173,7 @@ footer.footer .version-print {
 }
 .projectOverview table tr td {
   display: inline-block;
+  flex-grow: 1;
   padding: 0.5em 0;
   cursor: pointer;
 }
@@ -1182,14 +1183,24 @@ footer.footer .version-print {
 .projectOverview table tr td:active {
   color: darkslategray;
 }
-.projectOverview table tr td.octicon-file-directory {
-  width: 100%;
-}
-.projectOverview table tr td.octicon-file-code {
-  width: 95%;
+.projectOverview table tr td.octicon-trashcan {
+  flex-grow: 0;
+  width: 5%;
 }
 .projectOverview table tr td:before {
   padding-right: 0.3em;
+}
+.projectOverview .deleteButton {
+  display: none;
+}
+.projectOverview.editMode-enabled .deleteButton {
+  display: inline-block;
+}
+.projectOverview .button.active {
+  box-shadow: 0 2px 2px 0 #777 inset;
+  background: #999;
+  color: #e0e0e0;
+  text-shadow: 0 1px 1px #666,0 1px 1px #ddd,0 1px 1px #333;
 }
 .projectOverview-buttons {
   text-align: center;

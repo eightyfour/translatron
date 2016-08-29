@@ -32,37 +32,64 @@
     min-height: 300px;
     padding: 1em;
   }
+
   table {
+
     * {
       box-sizing: border-box;
     }
+
     padding-top: .5em;
     width: 100%;
+
     tr {
-      display: block;
+      display: flex;
+
       &:nth-child(odd) {
         background: #F0F7FA;
         &:hover {
           background: #E4EEF2;
         }
       }
+
       &:hover {
         background: #DFE8EB;
       }
+
       td {
         display: inline-block;
+        flex-grow: 1;
         padding: 0.5em 0;
         .icon-btn-effect();
-        &.octicon-file-directory {
-          width: 100%;
+
+        &.octicon-trashcan {
+          flex-grow: 0;
+          width: 5%;
         }
-        &.octicon-file-code {
-          width: 95%;
-        }
-        &:before{
+
+        &:before {
           padding-right:0.3em;
         }
       }
+    }
+  }
+
+  .deleteButton {
+    display: none;
+  }
+
+  &.editMode-enabled {
+    .deleteButton {
+      display: inline-block;
+    }
+  }
+
+  .button {
+    &.active {
+      box-shadow: 0 2px 2px 0 #777 inset;
+      background: #999;
+      color: #e0e0e0;
+      text-shadow: 0 1px 1px #666,0 1px 1px #ddd,0 1px 1px #333;
     }
   }
 
