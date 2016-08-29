@@ -2,12 +2,19 @@
   h1 Project overview
   .projectOverview-list
     .projectOverview-back-btn.octicon.octicon-mail-reply.js-selectParentDirectoryButton(title="show parent directory")
-    ul(canny-mod="repeat" canny-var="{'for':'item','in':'canny.projectOverview.setRenderProjectsAndDirectoriesListFunction'}")
-      li.octicon.octicon-file-directory(if="item.dir", on-click="item.openProjectListItem", title="Open directory") {{item.name}}
-      li.octicon.octicon-file-code(if-not="item.dir", on-click="item.openProjectListItem", title="Open '{{item.name}}' project") {{item.name}}
+    table
+      tbody(canny-mod="repeat" canny-var="{'for':'item','in':'canny.projectOverview.setRenderProjectsAndDirectoriesListFunction'}")
+        tr(if="item.dir")
+          td.octicon.octicon-file-directory(on-click="item.openProjectListItem", title="Open directory") {{item.name}}
+          td.octicon.octicon-trashcan
+        tr(if-not="item.dir")
+          td.octicon.octicon-file-code(on-click="item.openProjectListItem", title="Open '{{item.name}}' project") {{item.name}}
+          td.octicon.octicon-trashcan
+
   .projectOverview-buttons
       button.button.js-createFolderButton.octicon.octicon-file-directory Create folder
       button.button.js-createProjectButton.octicon.octicon-file-code Create project
+      button.button.js-deleteProjectsButton.octicon.octicon-trashcan Delete projects
 
   // remove this if we can go live
   div(style="margin-top:3em")

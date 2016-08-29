@@ -1119,7 +1119,7 @@ footer.footer .version-print {
   cursor: pointer;
 }
 .icon-btn-effect:hover {
-  color: #7b7b7b;
+  color: #2b9bbf;
 }
 .icon-btn-effect:active {
   color: darkslategray;
@@ -1138,7 +1138,7 @@ footer.footer .version-print {
   cursor: pointer;
 }
 .projectOverview-back-btn:hover {
-  color: #7b7b7b;
+  color: #2b9bbf;
 }
 .projectOverview-back-btn:active {
   color: darkslategray;
@@ -1152,26 +1152,46 @@ footer.footer .version-print {
   min-height: 300px;
   padding: 1em;
 }
-.projectOverview ul {
+.projectOverview table {
   padding-top: .5em;
+  width: 100%;
 }
-.projectOverview ul li {
-  cursor: pointer;
-  margin: 0.3em 1em .6em 0;
+.projectOverview table * {
+  box-sizing: border-box;
+}
+.projectOverview table tr {
   display: block;
 }
-.projectOverview ul li:hover {
-  color: #7b7b7b;
+.projectOverview table tr:nth-child(odd) {
+  background: #F0F7FA;
 }
-.projectOverview ul li:active {
+.projectOverview table tr:nth-child(odd):hover {
+  background: #E4EEF2;
+}
+.projectOverview table tr:hover {
+  background: #DFE8EB;
+}
+.projectOverview table tr td {
+  display: inline-block;
+  padding: 0.5em 0;
+  cursor: pointer;
+}
+.projectOverview table tr td:hover {
+  color: #2b9bbf;
+}
+.projectOverview table tr td:active {
   color: darkslategray;
 }
-.projectOverview ul li:before {
+.projectOverview table tr td.octicon-file-directory,
+.projectOverview table tr td.octicon-file-code {
+  width: 95%;
+}
+.projectOverview table tr td:before {
   padding-right: 0.3em;
 }
 .projectOverview-buttons {
   text-align: center;
-  margin-top: 2em;
+  margin: 0 2em 1em 0;
 }
 .projectOverview-buttons button {
   margin-right: 2em;
