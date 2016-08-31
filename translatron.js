@@ -1,5 +1,6 @@
 /*global console */
 /*jslint node: true */
+
 function run(configuration) {
     var config = configuration || {};
 
@@ -24,12 +25,11 @@ function run(configuration) {
         bodyParser = require('body-parser'),
         changesNotifier = require('./lib/server/changesNotifier.js')(),
         busboy = require('connect-busboy'),
-        operations = require('./lib/server/operations.js')(dao, changesNotifier);
+        operations = require('./lib/server/operations.js')(dao, changesNotifier, config.auth);
 
     var app = express();
 
     enableAuth = config.hasOwnProperty('auth');
-
 
     // use bodyParser middleware for handling request bodies (express does *not* provide that feature out-of-the-box).
     // since we only have one case of that (POST to /login where username, password are in the body) and that one is url-encoded,
@@ -98,9 +98,8 @@ function run(configuration) {
 
     var server = app.listen(serverPort);
 
-    var websocketServer = shoe(function (stream) {
+    var websocketServer = shoe(function(stream) {
         "use strict";
-
 
         var d = dnode(operations);
 
@@ -108,7 +107,7 @@ function run(configuration) {
         // if we didn't have this error handler, errors would propagate up the stack and effectively close down the
         // application
         d.on('error', (err) => {
-           console.error(err.message, err.stack);
+            console.error(err.message, err.stack);
         });
         d.on('end', () => {
             operations.detachClientCallbacks();

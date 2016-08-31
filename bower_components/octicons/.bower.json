@@ -34,7 +34,7 @@
     "tag": "v3.3.0",
     "commit": "92efb667ddcc179ab75c1ba6cf5d7971faf84dcd"
   },
-  "_source": "git://github.com/github/octicons.git",
-  "_target": "*",
+  "_source": "https://github.com/github/octicons.git",
+  "_target": "3.3.0",
   "_originalSource": "octicons"
 }

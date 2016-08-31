@@ -12,7 +12,9 @@ html
         include breadcrumb
         div(style='display: none', canny-mod='displayManager', canny-displaymanager="{'view':'resourceBundle'}")
           span.projectName.octicon.octicon-file-code {{msg.projectName}}
-        div.auth-logout-btn.octicon.octicon-sign-out(canny-mod='auth', canny-var="logoutButton", title="logout")
+        div.user-options-container
+          span.auth-userName {{msg.userName}}
+          span.auth-logout-btn.octicon.octicon-sign-out(canny-mod='auth', canny-var="logoutButton", title="logout")
 
 
     #resourceEditor
