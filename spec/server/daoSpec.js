@@ -949,5 +949,43 @@ describe('dao', () => {
             });
         });
     });
+
+    describe('deleteProject', () => {
+        var storageFolder = fixturesDirectory + 'project_deletion',
+            tempFolder = 'temp',
+            projectName = 'project1';
+
+        beforeEach((done) => {
+            // Create temp folder and clone project-template into it
+            exec(`mkdir ${storageFolder}/${tempFolder}`);
+            exec(`cp ${storageFolder}/${projectName}.json ${storageFolder}/${tempFolder}/${projectName}.json`);
+            dao = require('../../lib/server/dao')(`${storageFolder}`);
+            done();
+        });
+
+        afterEach((done) => {
+            // Delete temp folder and project
+            exec(`rm -rf ${storageFolder}/${tempFolder}`);
+            done();
+        });
+
+        it('should delete an existent project from file server', (done) => {
+            dao.deleteProject('/' + tempFolder, projectName, (err, prjName) => {
+                expect(err).toBeNull();
+                expect(prjName).toMatch(projectName);
+            });
+            done();
+        });
+
+        it('should return an error message in case project does not exist on file server', (done) => {
+            dao.deleteProject('/' + tempFolder, 'fantasyProject', (err, prjName) => {
+                expect(err).toBeDefined();
+                expect(err.message).toMatch('ENOENT: no such file or directory');
+                expect(prjName).toBeUndefined();
+            });
+            done();
+        });
+
+    });
 });
 
