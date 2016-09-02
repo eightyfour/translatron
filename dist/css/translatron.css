@@ -1203,11 +1203,10 @@ footer.footer .version-print {
 }
 .projectOverview-buttons {
   text-align: center;
-  margin: 0 2em 1em 0;
+  margin: 0 0 1em;
 }
 .projectOverview-buttons button {
-  margin-top: 1em;
-  margin-right: 2em;
+  margin: 0 1em 1em;
   padding: 0.5em;
 }
 .breadcrumb li {
@@ -1364,6 +1363,12 @@ body.login form button {
   height: 100%;
   opacity: 0;
   z-index: 2;
+}
+.projectOverview-buttons .js-toggleEditModeButton {
+  display: none;
+}
+.isAdmin .projectOverview-buttons .js-toggleEditModeButton {
+  display: inline-block;
 }
 .flag-icon {
   position: relative;

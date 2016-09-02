@@ -1466,6 +1466,10 @@ canny.ready(function () {
 
         canny.texts.setTexts({userName: userObject.name});
 
+        if (userObject.isAdmin) {
+            document.body.classList.add('isAdmin');
+        }
+
         setInterval(function() {
             canny.async.doAjax({
                 method: 'GET',
@@ -3070,7 +3074,7 @@ var projectOverview = (function() {
                 });
             }
 
-            var toggleEditModeButtonNode = componentRootNode.querySelector('.js-deleteProjectsButton');
+            var toggleEditModeButtonNode = componentRootNode.querySelector('.js-toggleEditModeButton');
             if (!toggleEditModeButtonNode) {
                 console.error('No child node with class "createFolderButton found inside "projectOverviewContainer"');
             } else {
