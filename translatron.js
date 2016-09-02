@@ -63,6 +63,7 @@ function run(configuration) {
     }));
     app.use(require('./lib/server/middleware-importer/uploadJMBF')(operations.saveBundle));
     app.use(require('./lib/server/middleware-importer/importJSON')(operations.importJSON));
+    app.use(require('./lib/server/middleware/touchSession'));
 
     // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
     // of the returned function pointer (with optional passing of locals) will do the actual compilation.

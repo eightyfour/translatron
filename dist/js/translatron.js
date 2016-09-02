@@ -9,6 +9,9 @@ var C = {
             image : 'base64',
             file : 'utf8'
         }
+    },
+    SESSION : {
+        renewal_interval_in_ms: 1000 * 60 * 10
     }
 };
 
@@ -1410,7 +1413,8 @@ module.exports = events;
 var unicode = require('./unicode.js'),
     toast = require('./Toast.js'),
     canny = require('canny'),
-    trade = require('./trade.js');
+    trade = require('./trade.js'),
+    C = require('./CONST.js');
 
 window.domOpts = window.domOpts || require('dom-opts');
 // made it public - just for development
@@ -1418,10 +1422,11 @@ window.canny = canny;
 
 canny.add('repeat',         require('canny/mod/repeat'));
 canny.add('whisker',        require('canny/mod/whisker'));
+canny.add('async',          require('canny/mod/async'));
 canny.add('flowControl',    require('canny/mod/flowControl')('flowControl'));
 canny.add('displayManager', require('./uiModules/displayManager.js'));
 canny.add('textEditor',     require('./textEditor.js'));
-canny.add('cookieManager', require('canny-cookieManager-lib'));
+canny.add('cookieManager',  require('canny-cookieManager-lib'));
 
 canny.add('texts',                  require('./uiModules/texts.js'));
 canny.add('auth',                   require('./uiModules/auth.js'));
@@ -1458,7 +1463,16 @@ canny.ready(function () {
     "use strict";
     // create websocket connection via trade
     trade.initialize(function (userObject) {
-        canny.texts.setTexts({userName: userObject.name})
+
+        canny.texts.setTexts({userName: userObject.name});
+
+        setInterval(function() {
+            canny.async.doAjax({
+                method: 'GET',
+                path: location.protocol + '//' + location.host + '/touchSession'
+            });
+        }, C.SESSION.renewal_interval_in_ms);
+
     });
 });
 
@@ -1508,7 +1522,7 @@ trade.ready(function () {
         }
     });
 });
-},{"./Toast.js":2,"./controller/JMBFUploaderController.js":3,"./controller/JsonImportController.js":4,"./controller/authController.js":5,"./controller/breadcrumbController.js":6,"./controller/createNewProjectController.js":7,"./controller/menuRightController.js":8,"./controller/pageHeaderController.js":9,"./controller/projectMainNavigationController.js":10,"./controller/projectOverviewController.js":11,"./controller/textEditorController.js":12,"./controller/translationViewController.js":13,"./controller/uploadController.js":14,"./controller/urlManipulator.js":15,"./textEditor.js":18,"./trade.js":19,"./uiModules/JMBFUploader.js":21,"./uiModules/JsonImport.js":22,"./uiModules/anchorMenu.js":23,"./uiModules/auth.js":24,"./uiModules/breadcrumb.js":25,"./uiModules/createNewProject.js":26,"./uiModules/displayManager.js":27,"./uiModules/imageViewer.js":29,"./uiModules/menuRight.js":31,"./uiModules/projectMainNavigation.js":33,"./uiModules/projectOverview.js":34,"./uiModules/texts.js":35,"./uiModules/translationView.js":36,"./uiModules/translationViewDescription.js":37,"./uiModules/translationViewImageUpload.js":38,"./uiModules/upload.js":39,"./unicode.js":40,"canny":48,"canny-cookieManager-lib":47,"canny/mod/flowControl":50,"canny/mod/repeat":51,"canny/mod/whisker":52,"dom-opts":61}],18:[function(require,module,exports){
+},{"./CONST.js":1,"./Toast.js":2,"./controller/JMBFUploaderController.js":3,"./controller/JsonImportController.js":4,"./controller/authController.js":5,"./controller/breadcrumbController.js":6,"./controller/createNewProjectController.js":7,"./controller/menuRightController.js":8,"./controller/pageHeaderController.js":9,"./controller/projectMainNavigationController.js":10,"./controller/projectOverviewController.js":11,"./controller/textEditorController.js":12,"./controller/translationViewController.js":13,"./controller/uploadController.js":14,"./controller/urlManipulator.js":15,"./textEditor.js":18,"./trade.js":19,"./uiModules/JMBFUploader.js":21,"./uiModules/JsonImport.js":22,"./uiModules/anchorMenu.js":23,"./uiModules/auth.js":24,"./uiModules/breadcrumb.js":25,"./uiModules/createNewProject.js":26,"./uiModules/displayManager.js":27,"./uiModules/imageViewer.js":29,"./uiModules/menuRight.js":31,"./uiModules/projectMainNavigation.js":33,"./uiModules/projectOverview.js":34,"./uiModules/texts.js":35,"./uiModules/translationView.js":36,"./uiModules/translationViewDescription.js":37,"./uiModules/translationViewImageUpload.js":38,"./uiModules/upload.js":39,"./unicode.js":40,"canny":48,"canny-cookieManager-lib":47,"canny/mod/async":49,"canny/mod/flowControl":50,"canny/mod/repeat":51,"canny/mod/whisker":52,"dom-opts":61}],18:[function(require,module,exports){
 /**
  * textEditor
  */
