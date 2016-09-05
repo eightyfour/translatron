@@ -1462,7 +1462,7 @@ trade.addController(require('./controller/JsonImportController.js'));
 canny.ready(function () {
     "use strict";
     // create websocket connection via trade
-    trade.initialize(function (userObject) {
+    trade.initialize(function (userObject, sessionsEnabled) {
 
         canny.texts.setTexts({userName: userObject.name});
 
@@ -1470,12 +1470,14 @@ canny.ready(function () {
             document.body.classList.add('isAdmin');
         }
 
-        setInterval(function() {
-            canny.async.doAjax({
-                method: 'GET',
-                path: location.protocol + '//' + location.host + '/touchSession'
-            });
-        }, C.SESSION.renewal_interval_in_ms);
+        if (sessionsEnabled) {
+            setInterval(function() {
+                canny.async.doAjax({
+                    method: 'GET',
+                    path: location.protocol + '//' + location.host + '/touchSession'
+                });
+            }, C.SESSION.renewal_interval_in_ms);
+        }
 
     });
 });
@@ -1866,6 +1868,8 @@ var trade = (function () {
 
             if (server.setUserRights) {
                 server.setUserRights(canny.cookieManager.forSessionCookie('translatron_session').getValues(), fc);
+            } else {
+                fc({name:'Logout', isAdmin: true}, false);
             }
 
             server.attachClientCallbacks(events.serverEvents);

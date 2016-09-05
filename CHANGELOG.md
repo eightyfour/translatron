@@ -45,3 +45,9 @@
 - fixed issues with updating the anchor menu
     - on deletion of categories
     - on creating new project after having opened one before 
+    
+## 0.7.0
+
+- deletion of projects
+    - for LDAP authentication: Enable project deletion only for members of designated user-group
+    - enabled by default (e.g. no authentication used)
