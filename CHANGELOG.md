@@ -51,3 +51,10 @@
 - deletion of projects
     - for LDAP authentication: Enable project deletion only for members of designated user-group
     - enabled by default (e.g. no authentication used)
+    
+## 0.7.1
+    
+- deletion of folders
+    - only applicable to empty folders
+    - for LDAP authentication: Enable folder deletion only for members of designated user-group
+    - enabled by default (e.g. no authentication used)
