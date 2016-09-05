@@ -58,3 +58,7 @@
     - only applicable to empty folders
     - for LDAP authentication: Enable folder deletion only for members of designated user-group
     - enabled by default (e.g. no authentication used)
+    
+## 0.7.2
+    
+- fixed URL checking regular expression for json and message bundle exporter 

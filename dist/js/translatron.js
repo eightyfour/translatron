@@ -35,7 +35,7 @@ var toast = new (function Toast(id){
         var rootNode = document.getElementsByTagName('body')[0];
         toastNode = document.createElement('div');
         toastNode.id = id;
-        toastNode.style.cssText = "position:fixed;z-index:999;top:4.5em;right:2em;border-radius:5px;color:#fff;font-size:1.2em;font-weight:bold;background-color:rgba(43,154,191,0.8);padding: 1em 0.5em; box-sizing: border-box; max-width: 50%; text-align: center; word-wrap: break-word; break-word: break-all;"
+        toastNode.style.cssText = "position:fixed;z-index:999;top:4.5em;right:2em;border-radius:5px;color:#fff;font-size:1.2em;font-weight:bold;background-color:rgba(63,143,251,0.9);padding: 1em 0.5em; box-sizing: border-box; max-width: 50%; text-align: center; word-wrap: break-word; break-word: break-all;"
         rootNode.appendChild(toastNode);
     },
     toast = {
