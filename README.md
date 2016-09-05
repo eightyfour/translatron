@@ -17,6 +17,7 @@ It supports actually the following features:
 * [import JSON data into existing projects](https://github.com/gameduell/translatron#notes-on-importing-data-from-json-files)
 * [export projects as JSON](https://github.com/gameduell/translatron#json-export-options)
 * export projects as message bundle format for each locale
+* create and delete projects 
 * create, rename and delete categories 
 * create, rename, delete and clone keys
 * category/key overview menu
@@ -37,7 +38,7 @@ var translatron = require('translatron'),
 translatron({
     port : 3000, // configure port
     fileStorage : {
-        projectFiles : __dirname + '/translations',  // file storage for project fiels
+        projectFiles : __dirname + '/translations',  // file storage for project fields
         images : __dirname + '/images'  // file storage for uploaded images
     },
     auth : { // configure the LDAP auth
@@ -50,7 +51,11 @@ translatron({
             ca: [
                 fs.readFileSync('exampleCertificate.crt')
             ]
-        }
+        },
+        
+        secret: '...', // used for en- and decrypting server-side sessions
+        sessionTimeout: 'timeout in milliseconds', // used for setting session expiration (being applied to cookie-property maxAge)
+        adminGroupId: '...' // enable admin-features (e.g. deleting projects) for user if he/she belongs to this group
     }
 });
 ```
