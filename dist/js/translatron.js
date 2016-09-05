@@ -35,7 +35,7 @@ var toast = new (function Toast(id){
         var rootNode = document.getElementsByTagName('body')[0];
         toastNode = document.createElement('div');
         toastNode.id = id;
-        toastNode.style.cssText = "position:fixed;z-index:999;top:13px;right:10px;border-radius:5px;color:#fff;font-size:1.2em;font-weight:bold;background-color:rgba(80,110,110,0.8);padding: 0.3em 1em;"
+        toastNode.style.cssText = "position:fixed;z-index:999;top:4.5em;right:2em;border-radius:5px;color:#fff;font-size:1.2em;font-weight:bold;background-color:rgba(43,154,191,0.8);padding: 1em 0.5em; box-sizing: border-box; max-width: 50%; text-align: center; word-wrap: break-word; break-word: break-all;"
         rootNode.appendChild(toastNode);
     },
     toast = {
@@ -694,11 +694,24 @@ var projectOverviewController = (function() {
         displayManager.show('createNewDirectoryView');
     });
 
+    projectOverview.onDeleteFolderPressed(function(dirName) {
+        trade.deleteFolder(dirName, currentDirectory, function(err, dirName) {
+            var toastMessage;
+            if (!err) {
+                projectOverview.deleteProjectListNode(dirName);
+                toastMessage = 'Folder "' + dirName + '" has been deleted.';
+            } else {
+                toastMessage = 'There was an error: "' + err.message + '"';
+            }
+            toast.showMessage(toastMessage);
+        });
+    });
+
     projectOverview.onDeleteProjectPressed(function(projectName) {
         trade.deleteProject(projectName, currentDirectory, function(err, projectName) {
             var toastMessage;
             if (!err) {
-                projectOverview.deleteProjectNode(projectName);
+                projectOverview.deleteProjectListNode(projectName);
                 toastMessage = 'Project "' + projectName + '" has been deleted.';
             } else {
                 toastMessage = 'There was an error: "' + err.message + '"';
@@ -1920,6 +1933,22 @@ var trade = (function () {
                     callback && callback(err);
                 }
             });
+        },
+        /**
+         * Delete a project.
+         * @param dirName
+         * @param currentDirId
+         * @param callback
+         */
+        deleteFolder : function (dirName, currentDirId, callback) {
+            server.deleteFolder(currentDirId, dirName, function (err, dirName) {
+                if (!err) {
+                    callback && callback(null, dirName);
+                    callController('folderDeleted', [dirName]);
+                } else {
+                    callback && callback(err);
+                }
+            });
         }
     };
 }());
@@ -3037,6 +3066,7 @@ var projectOverview = (function() {
         onParentDirectorySelected = function() {console.warn('projectOverview.onParentDirectorySelected not set')},
         onProjectSelected = function() { console.warn('projectOverview.onProjectSelected not set')},
         onDeleteProjectPressed = function() { console.warn('projectOverview.onDeleteProjectPressed not set')},
+        onDeleteFolderPressed = function() { console.warn('projectOverview.onDeleteFolderPressed not set')},
         onDirectorySelected = function() { console.warn('projectOverview.onDirectorySelected not set')},
         onCreateDirectoryPressed = function() { console.warn('projectOverview.onCreateDirectoryPressed not set')},
         editModeEnabled = false;
@@ -3144,6 +3174,12 @@ var projectOverview = (function() {
                         if (onDirectorySelected) {
                             onDirectorySelected(directoryName);
                         }
+                    },
+                    deleteProjectListItem : function() {
+                        var deletionConfirmed = window.confirm('Really delete folder ' + directoryName + '?');
+                        if (onDeleteFolderPressed && deletionConfirmed) {
+                            onDeleteFolderPressed(directoryName);
+                        }
                     }
                 });
             });
@@ -3157,8 +3193,8 @@ var projectOverview = (function() {
         setRenderProjectsAndDirectoriesListFunction : function(func) {
             renderProjectsAndDirectoriesList = func;
         },
-        deleteProjectNode : function(projectName) {
-            var node = componentRootNode.querySelector('tr[data-project=' + projectName + ']');
+        deleteProjectListNode : function(itemName) {
+            var node = componentRootNode.querySelector('tr[data-listItem=' + itemName + ']');
             if (node && node.parentNode) {
                 node.parentNode.removeChild(node);
             }
@@ -3191,6 +3227,9 @@ var projectOverview = (function() {
         },
         onDeleteProjectPressed : function(func) {
             onDeleteProjectPressed = func;
+        },
+        onDeleteFolderPressed : function(func) {
+            onDeleteFolderPressed = func;
         },
         onCreateDirectoryPressed : function(func) {
             onCreateDirectoryPressed = func;

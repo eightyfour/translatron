@@ -973,8 +973,8 @@ describe('dao', () => {
             dao.deleteProject('/' + tempFolder, projectName, (err, prjName) => {
                 expect(err).toBeNull();
                 expect(prjName).toMatch(projectName);
+                done();
             });
-            done();
         });
 
         it('should return an error message in case project does not exist on file server', (done) => {
@@ -982,8 +982,56 @@ describe('dao', () => {
                 expect(err).toBeDefined();
                 expect(err.message).toMatch('ENOENT: no such file or directory');
                 expect(prjName).toBeUndefined();
+                done();
             });
+        });
+
+    });
+
+    describe('deleteFolder', () => {
+        var storageFolder = fixturesDirectory + 'folder_deletion',
+            tempFolder = 'temp';
+
+        beforeEach((done) => {
+            // Create temp folder and clone project-template into it
+            exec(`rsync -a ${storageFolder}/** ${storageFolder}/${tempFolder}`);
+            exec(`mkdir ${storageFolder}/${tempFolder}/empty_folder`);
+            dao = require('../../lib/server/dao')(`${storageFolder}`);
             done();
+        });
+
+        afterEach((done) => {
+            // Delete temp folder and project
+            exec(`rm -rf ${storageFolder}/${tempFolder}`);
+            done();
+        });
+
+        it('should delete an existent empty folder from file server', (done) => {
+            dao.deleteFolder('/' + tempFolder, 'empty_folder', (err, dirName) => {
+                expect(err).toBeNull();
+                expect(dirName).toMatch('empty_folder');
+                done();
+            });
+        });
+
+        it('should return an error message in case folder does not exist on file server', (done) => {
+            dao.deleteFolder('/' + tempFolder, 'non_existent_folder', (err, dirName) => {
+                expect(err).toBeDefined();
+                expect(err.code).toBe('ENOENT');
+                expect(err.message).toMatch('no such file or directory');
+                expect(dirName).toBeUndefined();
+                done();
+            });
+        });
+
+        it('should return an error message in case folder is not empty', (done) => {
+            dao.deleteFolder('/' + tempFolder, 'project_folder', (err, dirName) => {
+                expect(err).toBeDefined();
+                expect(err.code).toBe('ENOTEMPTY');
+                expect(err.message).toMatch('directory not empty');
+                expect(dirName).toBeUndefined();
+                done();
+            });
         });
 
     });

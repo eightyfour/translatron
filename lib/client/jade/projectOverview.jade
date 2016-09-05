@@ -4,9 +4,10 @@
     .projectOverview-back-btn.octicon.octicon-mail-reply.js-selectParentDirectoryButton(title="show parent directory")
     table
       tbody(canny-mod="repeat" canny-var="{'for':'item','in':'canny.projectOverview.setRenderProjectsAndDirectoriesListFunction'}")
-        tr(if="item.dir")
+        tr(if="item.dir", data-listItem="{{item.name}}")
           td(on-click="item.openProjectListItem", title="Open directory", colspan="2").octicon.octicon-file-directory {{item.name}}
-        tr(if-not="item.dir", data-project="{{item.name}}")
+          td(on-click="item.deleteProjectListItem").deleteButton.octicon.octicon-trashcan
+        tr(if-not="item.dir", data-listItem="{{item.name}}")
           td(on-click="item.openProjectListItem", title="Open '{{item.name}}' project").octicon.octicon-file-code {{item.name}}
           td(on-click="item.deleteProjectListItem").deleteButton.octicon.octicon-trashcan
 
