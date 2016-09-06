@@ -61,4 +61,8 @@
     
 ## 0.7.2
     
-- fixed URL checking regular expression for json and message bundle exporter 
+- fixed URL checking regular expression for json and message bundle exporter
+
+## 0.7.3
+    
+- fixed creation of subdirectories
