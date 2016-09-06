@@ -63,7 +63,6 @@ function run(configuration) {
     }));
     app.use(require('./lib/server/middleware-importer/uploadJMBF')(operations.saveBundle));
     app.use(require('./lib/server/middleware-importer/importJSON')(operations.importJSON));
-    app.use(require('./lib/server/middleware/touchSession'));
 
     // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
     // of the returned function pointer (with optional passing of locals) will do the actual compilation.
@@ -74,6 +73,8 @@ function run(configuration) {
         The main router handles all URLs for viewing/editing projects/directories and the export routes
      */
     var mainRouter = express.Router();
+    mainRouter.use(require('./lib/server/middleware/touchSession'));
+    mainRouter.use(require('./lib/server/middleware/usersOnline'));
     // TODO add middleware to mainRouter which will check if a project or directory with that id exists
     mainRouter.use(require('./lib/server/middleware-exporter/jpmbfExporter')(dao));
     mainRouter.use(require('./lib/server/middleware-exporter/jsonExporter')(dao));
