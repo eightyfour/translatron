@@ -66,3 +66,7 @@
 ## 0.7.3
     
 - fixed creation of subdirectories
+
+## 0.7.4
+
+- fixed session deletion on manual logout
