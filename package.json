@@ -25,6 +25,16 @@
     "enableAuth": true
   },
   "main": "translatron.js",
+  "watch": {
+    "buildjs-dev": {
+      "patterns": ["lib"],
+      "extensions": "js"
+    },
+    "less": {
+      "patterns": ["lib"],
+      "extensions": "less"
+    }
+  },
   "scripts": {
     "buildjs": "browserify lib/client/js/main.js -o dist/js/translatron.js && browserify lib/client/js/login.js -o dist/js/translatron-login.js",
     "buildjs-dev": "browserify --debug lib/client/js/main.js -o dist/js/translatron.js && browserify --debug lib/client/js/login.js -o dist/js/translatron-login.js",
@@ -32,7 +42,8 @@
     "test": "jasmine && karma start karma.conf.js",
     "prestart": "npm run buildjs-dev && npm run less",
     "start": "node app.js",
-    "devsetup": "bower install"
+    "devsetup": "bower install",
+    "watch": "npm-watch"
   },
   "devDependencies": {
     "bower": "1.7.9",
@@ -40,16 +51,6 @@
     "canny": "0.1.10",
     "canny-cookieManager-lib": "1.1.1",
     "dom-opts": "git://github.com/eightyfour/dom-opts.git",
-    "gulp": "3.9.1",
-    "gulp-autoprefixer": "3.1.1",
-    "gulp-browserify": "0.5.1",
-    "gulp-less": "3.1.0",
-    "gulp-livereload": "3.8.1",
-    "gulp-plumber": "1.1.0",
-    "gulp-rename": "1.2.2",
-    "gulp-sourcemaps": "1.6.0",
-    "gulp-util": "3.0.7",
-    "gulp-watchify": "0.5.0",
     "jasmine": "2.4.1",
     "jasmine-core": "2.4.1",
     "karma": "0.13.22",
@@ -58,6 +59,7 @@
     "karma-jasmine": "0.3.8",
     "karma-phantomjs-launcher": "1.0.2",
     "less": "2.7.1",
+    "npm-watch": "^0.1.6",
     "phantomjs": "1.9.20",
     "watchify": "3.7.0"
   }

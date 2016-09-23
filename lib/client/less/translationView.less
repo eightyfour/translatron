@@ -64,15 +64,24 @@
     width: 100%;
     margin-top: 1em;
     position: relative;
-    padding-bottom: 60px;
+    padding-bottom: 2em;
+  }
+  .footerWrapper {
+    position: relative;
+    .row {
+      .translationContainer {
+        min-height: 0;
+        .wordCountLabel {
+          color: #fff;
+          background: rgb(63, 143, 251);
+        }
+      }
+    }
   }
   .addNewKeyrow {
-    position: absolute;
-    bottom: 15px;
-    left: 10px;
-  }
-  .addNewKeyrow {
+    position: relative;
     cursor: pointer;
+    left: 1.5em;
   }
   .addNewKeyrow input {
     padding: 0 0.2em;
@@ -80,6 +89,23 @@
     box-sizing: border-box;
     width: 15em;
     height: 1.6em;
+  }
+  .wordCountLabel {
+    display: inline-block;
+    box-sizing: border-box;
+    border-radius: 2px;
+    padding: .5em;
+    width: 100%;
+    color: #777;
+    background: rgba(48,48,48,.1);
+  }
+  &.hideWordCount {
+    .row {
+      padding: 0;
+    }
+    .wordCountLabel {
+      display: none;
+    }
   }
 
   .c-anchorMenu-focus{
@@ -142,13 +168,13 @@
   }
 
   .row {
-    margin: 1em 1em 2em 1em;
-
     position: relative;
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
     align-content: flex-start;
+    margin: 1em 1em 2em 1em;
+    padding: 0 0 2em 0;
     clear: both;
 
     &.c-removed {
