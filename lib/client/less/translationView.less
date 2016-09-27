@@ -7,6 +7,21 @@
     display: block;
   }
 
+  &.c-wordCountEnabled {
+    .overallWordCountWrapper {
+      display: flex;
+    }
+    .wordCountLabel {
+      display: flex;
+    }
+    .row {
+      padding-bottom: 1em;
+      .flag-icon {
+        bottom: 2.7em;
+      }
+    }
+  }
+
   .data {
     display: table-cell;
   }
@@ -26,7 +41,7 @@
   .textField {
     width: 100%;
     height: 100%;
-    min-height: 5.4em;
+    min-height: 6.5em;
     position: relative;
     z-index: 1;
     background-color: rgba(255,255,255,0.8);
@@ -94,7 +109,7 @@
     height: 1.6em;
   }
   .wordCountLabel {
-    display: inline-block;
+    display: none;
     box-sizing: border-box;
     border-radius: 2px;
     padding: .5em;
@@ -177,7 +192,7 @@
     justify-content: space-between;
     align-content: flex-start;
     margin: 1em 1em 2em 1em;
-    padding: 0 0 2em 0;
+    padding: 0;
     clear: both;
 
     &.c-removed {
@@ -258,6 +273,7 @@
     }
   }
   .overallWordCountWrapper {
+    display: none;
     background-color: rgba(47, 62, 57, 1);
     border-radius: 4px;
     padding: 0 0.5em 0.75em;
