@@ -443,6 +443,15 @@ canny.projectMainNavigation.onLanguageSelect(function (obj) {
 
 }());
 
+(function() {
+    var wordCountEnabled = false;
+
+    canny.projectMainNavigation.onToggleWordCount(function() {
+        wordCountEnabled = !wordCountEnabled;
+        uiEvents.callUievent('toggleWordCount', wordCountEnabled);
+    });
+}());
+
 
 canny.projectMainNavigation.onShowJSON(function () {
     console.log('projectMainNavigationController:onShowJSON show JSON format in new tab.');
@@ -824,7 +833,6 @@ module.exports = {
     }
 };
 },{"../Toast.js":2,"../events.js":16,"../trade.js":19,"canny":48}],13:[function(require,module,exports){
-
 var canny = require("canny"),
     translationView = canny.translationView,
     translationViewImageUpload = canny.translationViewImageUpload,
@@ -834,9 +842,13 @@ var canny = require("canny"),
     events = require('../events.js'),
     trade = require('../trade.js'),
     url = require('../util/url'),
-    sortByKey = function (a, b) {
-        if (a.key < b.key) {return -1; }
-        if (a.key > b.key) {return 1; }
+    sortByKey = function(a, b) {
+        if (a.key < b.key) {
+            return -1;
+        }
+        if (a.key > b.key) {
+            return 1;
+        }
         return 0;
     },
     projectConfig,
@@ -847,19 +859,20 @@ var canny = require("canny"),
      * to uiEvents.
      * @type {{}}
      */
-    existingKeys = {};
+    existingKeys = {},
+    regExPunc = new RegExp(/[\.,\s!;?:\"]+/gi);
 
-translationViewImageUpload.onUploadButton(function (id) {
+translationViewImageUpload.onUploadButton(function(id) {
     uiEvents.callUievent('showFileUpload', id);
 });
 
-translationViewImageUpload.onDeleteButton(function (id) {
+translationViewImageUpload.onDeleteButton(function(id) {
     if (confirm('Delete the image for category » ' + id + ' « forever?')) {
         trade.removeImage(projectConfig.projectId, id);
     }
 });
 
-translationView.onCategoryClicked(function (id) {
+translationView.onCategoryClicked(function(id) {
     uiEvents.callUievent('anchorFocus', '#' + id);
 });
 /**
@@ -867,7 +880,10 @@ translationView.onCategoryClicked(function (id) {
  *
  * TODO replace bundle with locale and refactor the calls from translationView
  */
-translationView.onSaveKey(function (key, lang, value) {
+translationView.onSaveKey(function(key, lang, value) {
+
+    // TODO: Count words and tell word count label to update
+
     console.log('translationViewController:onSaveValue', [].slice.call(arguments));
     trade.saveKey(
         projectConfig.projectId,
@@ -877,9 +893,20 @@ translationView.onSaveKey(function (key, lang, value) {
             value: value || undefined
         },
         function(projectId, language, key, value) {
+            var catId;
+
             if (projectId === projectConfig.projectId) { // prevent applying the callback if project has been changed in the meantime
+                catId = key.split('_')[0];
                 existingKeys[key] = undefined; // save the key
-                translationView.printBundleTemplate([{key:key, value: value || ''}], language, availableLanguages, function () {});
+                projectConfig.keys[lang][key] = value;
+                translationView.printBundleTemplate([{
+                    key: key,
+                    value: value || '',
+                    words: countWordsInString(value)
+                }], language, availableLanguages, function() {
+                    updateCategoryWordCount(catId, language);
+                });
+
                 toast.showMessage('Auto save: "' + key + '" (success)');
 
                 translationView.sendSuccess(key, '_value');
@@ -888,12 +915,13 @@ translationView.onSaveKey(function (key, lang, value) {
             }
         });
 });
+
 /**
  * Setup the UI events and manage the logic for them.
  *
  * TODO replace bundle with locale and refactor the calls from translationView
  */
-translationView.onCreateKey(function (key, lang, value) {
+translationView.onCreateKey(function(key, lang, value) {
     console.log('translationViewController:onSaveValue', [].slice.call(arguments));
     trade.createKey(
         projectConfig.projectId,
@@ -903,9 +931,17 @@ translationView.onCreateKey(function (key, lang, value) {
             value: value || undefined
         },
         function(projectId, language, key, value) {
+            var catId = key.split('_')[0];
             if (projectId === projectConfig.projectId) { // prevent applying the callback if project has been changed in the meantime
                 existingKeys[key] = undefined; // save the key
-                translationView.printBundleTemplate([{key:key, value: value || ''}], language, availableLanguages, function () {});
+                projectConfig.keys[language][key] = value;
+                translationView.printBundleTemplate([{
+                    key: key,
+                    value: value || '',
+                    words: 0
+                }], language, availableLanguages, function() {
+                    updateCategoryWordCount(catId, language);
+                });
                 toast.showMessage('Auto save: "' + key + '" (success)');
 
                 translationView.sendSuccess(key, '_value');
@@ -931,10 +967,14 @@ translationView.onCloneKey(function(keyId, keyName, fromCategory, toCategory) {
                 texts = data.values;
                 for (var lang in texts) {
                     if (texts.hasOwnProperty(lang)) {
+                        projectConfig.keys[lang][data.key] = texts[lang];
                         translationView.printBundleTemplate([{
                             key: data.key,
-                            value: texts[lang] || ''
-                        }], lang, availableLanguages, function () {});
+                            value: texts[lang] || '',
+                            words: countWordsInString(texts[lang])
+                        }], lang, availableLanguages, function() {
+                            updateCategoryWordCount(toCategory, lang);
+                        });
                     }
                 }
                 canny.translationViewDescription.addDescriptions(data.keyDescriptions);
@@ -985,64 +1025,76 @@ function saveProjectConfig(config) {
 //    });
 //});
 
-translationView.onCreateNewProject(function (prjName, obj) {
+translationView.onCreateNewProject(function(prjName, obj) {
     trade.createNewProject(prjName, obj);
 });
 
-translationView.onRemoveCategory(function (obj) {
+translationView.onRemoveCategory(function(obj) {
     console.log('translationViewController:onRemoveCategory', obj, projectConfig.projectId);
     trade.removeCategory(projectConfig.projectId, obj.category);
 });
 
-translationView.onRenameCategory(function (obj) {
+translationView.onRenameCategory(function(obj) {
     console.log('translationViewController:onRenameCategory', obj, projectConfig.projectId);
     trade.renameCategory(projectConfig.projectId, obj.oldName, obj.newName);
 });
 
-translationView.onRenameKey(function (obj) {
+translationView.onRenameKey(function(obj) {
     console.log('translationViewController:onRenameKey', obj, projectConfig.projectId);
     trade.renameKey(projectConfig.projectId, {
-        newKey : obj.newKey,
-        oldKey : obj.oldKey
+        newKey: obj.newKey,
+        oldKey: obj.oldKey
     });
 });
 
-translationView.onRemoveKey(function (obj) {
+translationView.onRemoveKey(function(obj) {
     console.log('translationViewController:onRemoveKey', obj, projectConfig.projectId);
-    trade.removeKey(projectConfig.projectId, obj.key);
+    trade.removeKey(projectConfig.projectId, obj.key, function(key) {
+        var catName = key.split('_')[0];
+        for(var lang in projectConfig.keys) {
+            if (projectConfig.keys.hasOwnProperty(lang)) {
+                delete projectConfig.keys[lang][key];
+                updateCategoryWordCount(catName, lang);
+            }
+        }
+    });
 });
 
 // register listener function to the ui events
 uiEvents.addUiEventListener({
-    activateLanguage : function (lang) {
+    activateLanguage: function(lang) {
 //        translationViewHeader.showLang(lang);
         translationView.showLang(lang);
     },
-    deActivateLanguage : function (lang) {
+    deActivateLanguage: function(lang) {
 //        translationViewHeader.hideLang(lang);
         translationView.hideLang(lang);
     },
+    toggleWordCount: function(active) {
+        translationView.toggleWordCount(active);
+    },
     // TODO  don't trigger it twice for the same language
-    addLanguage : function (lang) {
+    addLanguage: function(lang) {
         availableLanguages.push(lang);
+        projectConfig.keys[lang] = {};
         translationView.addLanguage(Object.keys(existingKeys), lang);
 //        translationViewHeader.showLang(lang);
         translationView.showLang(lang);
     },
-    enableEditorMode : function (enabled) {
+    enableEditorMode: function(enabled) {
         translationView.enableEditorMode(enabled);
     },
-    fileUploaded : function (projectId, key, fileName) {
+    fileUploaded: function(projectId, key, fileName) {
         canny.translationViewImageUpload.appendImage(projectConfig.projectId, key, fileName);
     },
-    JMBFFileUploaded : function (projectId) {
-        trade.loadProject(projectId, function (error) {
+    JMBFFileUploaded: function(projectId) {
+        trade.loadProject(projectId, function(error) {
             // callback is only called if an error occurs
             console.error('translationViewController:loadProject fails for projectId:', prj.projectId);
         });
     },
-    jsonImported : function (projectId) {
-        trade.loadProject(projectId, function (error) {
+    jsonImported: function(projectId) {
+        trade.loadProject(projectId, function(error) {
             console.warn('Project with id ' + projectId + ' could not be loaded.');
             console.error(error.toString());
         });
@@ -1052,7 +1104,7 @@ uiEvents.addUiEventListener({
 /**
  * server event listener
  */
-events.addServerListener('keyUpdated', function () {
+events.addServerListener('keyUpdated', function() {
     // TODO more client changes are coming, we'll finish the code below then
     //if (projectId === projectConfig.projectId) {
     //    existingKeys[keyName] = undefined; // save the key // what's happening here?
@@ -1066,14 +1118,14 @@ events.addServerListener('keyUpdated', function () {
  * server event listener
  * all users will be notified of changes
  */
-events.addServerListener('onKeyCloned', function () {
+events.addServerListener('onKeyCloned', function() {
     console.log('events.listener::onKeyCloned' + [].slice.call(arguments));
 });
 
 /**
  * server event listener
  */
-events.addServerListener('keyDeleted', function (bundleName, obj) {
+events.addServerListener('keyDeleted', function(bundleName, obj) {
     // TODO more client changes are coming, we'll finish the code below then
     //if (bundleName === projectConfig.project) {
     //    console.log('translationViewController:keyRenamed', bundleName, obj);
@@ -1082,25 +1134,91 @@ events.addServerListener('keyDeleted', function (bundleName, obj) {
     //}
 });
 
-events.addServerListener('categoryDeleted', function (bundleName, obj) {
+events.addServerListener('categoryDeleted', function(bundleName, obj) {
     console.log('events.listener::categoryDeleted' + [].slice.call(arguments));
 });
 
-events.addServerListener('categoryRenamed', function (bundleName, obj) {
+events.addServerListener('categoryRenamed', function(bundleName, obj) {
     console.log('events.listener::categoryRenamed' + [].slice.call(arguments));
 });
 
 /**
  * server event listener
  */
-events.addServerListener('imageRemoved', function (bundleName, categoryName) {
+events.addServerListener('imageRemoved', function(bundleName, categoryName) {
     if (bundleName === projectConfig.projectId) {
         toast.showMessage('Image removed for category: ' + categoryName);
         translationView.removeImage(categoryName);
     }
 });
 
-function handleNewProjectConfig (newProjectConfig) {
+/**
+ * Update overall word-count view for category language
+ * @param catId
+ * @param lang
+ */
+function updateCategoryWordCount(catId, lang) {
+    translationView.updateCategoryWordCount({
+        id: catId,
+        language: lang,
+        words: countWordsInCategory(catId, lang)
+    });
+}
+
+/**
+ * Filter category names by iterating through project keys
+ * @param keys
+ * @returns Array
+ */
+function getCategoriesByKeys(keys) {
+    var currentCatName,
+        defaultKeys,
+        categories = [];
+    for (var lang in keys) {
+        if (keys.hasOwnProperty(lang)) {
+            defaultKeys = keys[lang];
+            for (var key in defaultKeys) {
+                if (defaultKeys.hasOwnProperty(key)) {
+                    currentCatName = key.split('_')[0];
+                    if (categories.indexOf(currentCatName) === -1) {
+                        categories.push(currentCatName);
+                    }
+                }
+            }
+        }
+    }
+    return categories;
+}
+
+/**
+ * Get word count for given category and language
+ * @param category
+ * @param lang
+ * @returns Number
+ */
+function countWordsInCategory(category, lang) {
+    var wordCount = 0;
+    Object.keys(projectConfig.keys[lang]).forEach(function(key) {
+        if (key.split('_')[0] === category) {
+            wordCount += countWordsInString(projectConfig.keys[lang][key]);
+        }
+    });
+    return wordCount;
+}
+
+/**
+ * Count amount of words in a given String
+ * @param str
+ * @returns Number
+ */
+function countWordsInString(str) {
+    if (str) {
+        return str.replace(regExPunc, ' ').trim().split(' ').length;
+    }
+    return 0;
+}
+
+function handleNewProjectConfig(newProjectConfig) {
     // project specific config
     console.log('translationViewController get new config', newProjectConfig);
     // n.b. nothing is saved here - "saving" only happens as in "store in our data structure"
@@ -1113,29 +1231,40 @@ function handleNewProjectConfig (newProjectConfig) {
 }
 
 function renderProject(projectData, cb) {
+    var categories = getCategoriesByKeys(projectData.keys);
+
     handleNewProjectConfig(projectData);
 
-    Object.keys(projectData.keys).forEach(function (lang) {
+    Object.keys(projectData.keys).forEach(function(lang) {
         var sorted, datas = [];
-        Object.keys(projectData.keys[lang]).forEach(function (key) {
-            datas.push({key: key, value : projectData.keys[lang][key]});
+        Object.keys(projectData.keys[lang]).forEach(function(key) {
+            datas.push({
+                key: key,
+                value: projectData.keys[lang][key],
+                words: countWordsInString(projectData.keys[lang][key])
+            });
         });
         sorted = datas.sort(sortByKey);
 
-        sorted.forEach(function (data) {
+        sorted.forEach(function(data) {
             existingKeys[data.key] = undefined;
         });
+
         // TODO projectConfig.project will be removed if the trade call moved to this controller
-        translationView.printBundleTemplate(sorted, lang, availableLanguages, cb || function () {});
-    })
+        translationView.printBundleTemplate(sorted, lang, availableLanguages, cb || function() {});
+
+        categories.forEach(function(category) {
+            updateCategoryWordCount(category, lang);
+        });
+    });
 }
 
 module.exports = {
-    renameCategory : function (oldName, newName) {
+    renameCategory: function(oldName, newName) {
         toast.showMessage('Renamed category ' + oldName + ' to ' + newName + '!');
         translationView.renameCategory(oldName, newName, availableLanguages);
     },
-    removeCategory : function (catName) {
+    removeCategory: function(catName) {
         toast.showMessage('Removed category ' + catName + '!');
         translationView.removeCategory(catName);
     },
@@ -1144,7 +1273,7 @@ module.exports = {
      * @param newKey
      * @param oldKey
      */
-    renameKey : function (oldKey, newKey) {
+    renameKey: function(oldKey, newKey) {
         if (oldKey) {
             toast.showMessage('Key renamed successful! From ' + oldKey + ' to ' + newKey);
             translationView.renameKey(oldKey, newKey, availableLanguages);
@@ -1152,11 +1281,11 @@ module.exports = {
             toast.showMessage('Key renamed failed!');
         }
     },
-    removeKey : function (key) {
+    removeKey: function(key) {
         toast.showMessage('Key removed successful!', key);
         translationView.removeKey(key);
     },
-    imageRemoved : function (categoryName) {
+    imageRemoved: function(categoryName) {
         toast.showMessage('Image removed for category: ' + categoryName);
         translationView.removeImage(categoryName);
     },
@@ -1164,21 +1293,20 @@ module.exports = {
      * Will be called with the complete JSON object from a specific project
      * @param projectData
      */
-    onLoadProject : function (projectData) {
-        var anchor = url.hasAnchor() ? url.getAnchor().replace('#','') : false;
-
+    onLoadProject: function(projectData) {
+        var anchor = url.hasAnchor() ? url.getAnchor().replace('#', '') : false;
         console.log('translationViewController.onLoadProject');
-        renderProject(projectData, function (viewId) {
+        renderProject(projectData, function(viewId) {
             if (anchor) {
                 if (viewId === anchor) {
                     var dom = document.getElementById(anchor);
                     // do the element exists?
                     if (dom) {
                         uiEvents.callUievent('anchorFocus', url.getAnchor());
-                        setTimeout(function () {
+                        setTimeout(function() {
                             var bodyRect = document.body.getBoundingClientRect(),
                                 elemRect = dom.getBoundingClientRect(),
-                                offset   = elemRect.top - bodyRect.top;
+                                offset = elemRect.top - bodyRect.top;
                             window.scrollTo(0, offset);
                         }, 1000);
                     }
@@ -1187,11 +1315,11 @@ module.exports = {
         });
         // add the descriptions
         canny.translationViewDescription.addDescriptions(projectData.keyDescriptions);
-        Object.keys(projectData.images).forEach(function (key) {
+        Object.keys(projectData.images).forEach(function(key) {
             canny.translationViewImageUpload.appendImage(projectData.projectId, key, projectData.images[key]);
         })
     },
-    onNewProjectCreated : function(projectData) {
+    onNewProjectCreated: function(projectData) {
         console.log('translationViewController.onNewProjectCreated');
         renderProject(projectData);
     }
@@ -1850,10 +1978,12 @@ var trade = (function () {
          * Removes a key for all languages.
          * @param projectId
          * @param keyName
+         * @param cb
          */
-        removeKey : function (projectId, keyName) {
+        removeKey : function (projectId, keyName, cb) {
             server.removeKey(projectId, keyName, function (err, keyName) {
                 if (!err) {
+                    cb(keyName);
                     callController('removeKey', [keyName]);
                 }
             });
@@ -1966,6 +2096,7 @@ var uiEvent = (function () {
             updateKey: [],
             anchorFocus: [],
             enableEditorMode: [],
+            toggleWordCount: [],
             showFileUpload: [],
             showJMBFUploader: [],
             showJSONImport: [],
@@ -2127,7 +2258,9 @@ var util = require('../util/url'),
 
             if (mainViewTopMostKeyNode) {
                 highlightedItem = rootNode.querySelector('[data=' + mainViewTopMostKeyNode.id + ']');
-                highlightedItem.classList.add('c-key-highlight');
+                if (highlightedItem) {
+                    highlightedItem.classList.add('c-key-highlight');
+                }
             }
         }
     })();
@@ -2796,6 +2929,7 @@ var projectMainNavigation = (function () {
         selectLanguageQueue = [],
         onShowJSONQueue = [],
         onEnableEditorModeQueue = [],
+        onToggleWordCountQueue = [],
         onShowJMBFQueue = [],
         onShowJMBFUploaderQueue = [],
         onShowJSONImportQueue = [],
@@ -2881,6 +3015,13 @@ var projectMainNavigation = (function () {
             enableEditorMode : function(node) {
                 node.addEventListener('click', function() {
                     onEnableEditorModeQueue.forEach(function (fc) {
+                        fc();
+                    });
+                });
+            },
+            toggleWordCount : function(node) {
+                node.addEventListener('click', function() {
+                    onToggleWordCountQueue.forEach(function (fc) {
                         fc();
                     });
                 });
@@ -3002,6 +3143,9 @@ var projectMainNavigation = (function () {
         },
         onEnableEditorMode : function (fc) {
             onEnableEditorModeQueue.push(fc);
+        },
+        onToggleWordCount : function (fc) {
+            onToggleWordCountQueue.push(fc);
         },
         activateLang : function (lang) {
             var node = mainNode.querySelector('li.' + lang);
@@ -3346,6 +3490,24 @@ function validateNewKey(string) {
 function getLanguageTextId(key, lang) {
     return [key, lang, conf.inputTransPrefix].join('_');
 }
+
+function getWordCountText(count) {
+    return 'Words: ' + count;
+}
+
+function getWordCountHeadline(category) {
+    return 'Overall words in ' + category;
+}
+
+function createWordCountForLanguage(lang) {
+    var countWrapper = domOpts.createElement('div', null, 'data js_' + lang),
+        flagClass = flag.getFlagClasses(lang).pop(),
+        wordCountLabel = domOpts.createElement('span', null, 'wordCountLabel '.concat(flagClass));
+    wordCountLabel.innerHTML = getWordCountText(0);
+    countWrapper.appendChild(wordCountLabel);
+    return countWrapper;
+}
+
 /**
  * handle the translation overview
  * TODO refactor base.connection
@@ -3416,7 +3578,7 @@ var translationView = (function() {
                 tableBody: 'tableBody'
             }
         },
-    // QUESTION: are these real queues?
+        // QUESTION: are these real queues?
         onQueues = {
             addNewKey: [],
             createNewProject: [],
@@ -3492,7 +3654,7 @@ var translationView = (function() {
         onCloneKey = function() {
             console.log('translationView:onCloneKey not implemented')
         },
-    // methods needs to be implemented on controller side
+        // methods needs to be implemented on controller side
         con = {
             // send resource method - implementation on controller side
             saveKey: function(key, lang, value) {
@@ -3612,6 +3774,9 @@ var translationView = (function() {
                     rootNode.classList.remove('c-enableEditorMode');
                 }
             },
+            toggleWordCount: function(enable) {
+                rootNode.classList.toggle('c-wordCountEnabled', enable);
+            },
             sendSuccess: ui.sendSuccess,
             add: function(node, attr) {
                 if (attr === 'main') {
@@ -3623,12 +3788,12 @@ var translationView = (function() {
             getViewKeyObject: function(obj) {
                 var newKey,
                     contextName = null,
-                    delemitter = '_';
+                    delimiter = '_';
                 if (/\./.test(obj.key)) {
-                    delemitter = '.';
+                    delimiter = '.';
                 }
 
-                newKey = obj.key.split(delemitter);
+                newKey = obj.key.split(delimiter);
 
                 if (newKey.length > 1) {
                     // use slice if we need the complete key in the view
@@ -3638,8 +3803,9 @@ var translationView = (function() {
                     id: obj.key,  // deprecated
                     key: obj.key,
                     contextName: contextName,
-                    keyName: newKey.join(delemitter),
-                    value: obj.value
+                    keyName: newKey.join(delimiter),
+                    value: obj.value,
+                    words: obj.words
                 };
             },
             isBundleEqual: function(bundle1, bundle2) {
@@ -3687,7 +3853,7 @@ var translationView = (function() {
                      * @param keyObj
                      * @returns {HTMLElement}
                      */
-                    prepareCategoryNode = function(node, keyObj) {
+                    prepareCategoryNode = function(node, keyObj, languages) {
                         var categoryNode = document.getElementById(keyObj.contextName);
                         if (!categoryNode) {
                             categoryNode = document.querySelector('#templates .categoryNode').cloneNode(true);
@@ -3778,6 +3944,15 @@ var translationView = (function() {
                                     }
                                 });
                             }
+
+                            // add overall word count for each language of a category
+                            var overallWordsWrapper = categoryNode.querySelector('.overallWordCountWrapper'),
+                                overallHeadline = overallWordsWrapper.querySelector('.overallWordsHeadline'),
+                                countersWrapper = overallWordsWrapper.querySelector('.translationContainer');
+                            overallHeadline.innerHTML = getWordCountHeadline(categoryName);
+                            languages.forEach(function(lang) {
+                                countersWrapper.appendChild(createWordCountForLanguage(lang));
+                            });
                         }
                         return categoryNode;
                     };
@@ -3789,12 +3964,22 @@ var translationView = (function() {
                 bundles.forEach(function(data) {
                     keyObj = fc.getViewKeyObject(data);
                     // TODO which who calc the cate...
-                    projectNode = prepareCategoryNode(rootNode, keyObj);
+                    projectNode = prepareCategoryNode(rootNode, keyObj, availableProjectLanguages);
                     insertCategory(projectNode, shownCategories);
                     fc.addRowWithLanguages(projectNode, keyObj, actualLanguage, availableProjectLanguages);
                     cb(projectNode.getAttribute('id'));
                     cb(keyObj.key);
                 });
+            },
+            /**
+             * Update the word count for a given category
+             * @param data
+             */
+            updateCategoryWordCount: function(data) {
+                var label = document.querySelector('#' + data.id + ' .overallWordCountWrapper .js_' + data.language + ' .wordCountLabel');
+                if (label) {
+                    label.innerHTML = getWordCountText(data.words);
+                }
             },
             /**
              * creates a key field
@@ -3866,32 +4051,36 @@ var translationView = (function() {
              * @param key
              * @param lang
              */
-            addLanguageField: function(node, key, value, lang) {
+            addLanguageField: function(node, key, value, lang, wordCount) {
 
                 var textNode = document.getElementById(getLanguageTextId(key, lang)),
-                    dataNode;
+                    dataNode,
+                    countNode;
 
                 if (!textNode) {
                     textNode = domOpts.createElement('textarea', getLanguageTextId(key, lang), 'textField');
-
                     dataNode = domOpts.createElement('div', null, 'data tpl js_' + lang);
+                    countNode = domOpts.createElement('span', null, 'wordCountLabel');
+                    countNode.innerHTML = getWordCountText(0);
 
                     textNode.addEventListener('keypress', textAreaKeyPressListener);
-
                     textNode.setAttribute('type', 'text');
 
                     new SaveOnLeave(textNode, key, lang, value);
 
                     dataNode.appendChild(textNode);
                     dataNode.appendChild(flag.getFlag(lang));
+                    dataNode.appendChild(countNode);
 
                     node.appendChild(dataNode);
+                } else {
+                    countNode = textNode.parentElement.querySelector('.wordCountLabel');
                 }
 
                 if (value || value === '') {
                     textNode.value = value ? unicode.encode(value) : '';
+                    countNode.innerHTML = getWordCountText(wordCount);
                 }
-
             },
             /**
              * creates a row
@@ -3923,7 +4112,7 @@ var translationView = (function() {
 
                     // add the translation area field container
                     row.appendChild(translationContainer);
-                    node.appendChild(row);
+                    node.querySelector('.keysWrapper').appendChild(row);
 
                 }
 
@@ -3936,18 +4125,31 @@ var translationView = (function() {
                 fc.addKeyField(row, data);
 
                 allProjectLanguages.forEach(function(lang) {
-                    fc.addLanguageField(row.querySelector('.translationContainer'), data.key, actualLanguage === lang ? data.value : null, lang);
+                    fc.addLanguageField(row.querySelector('.translationContainer'), data.key, actualLanguage === lang ? data.value : null, lang, actualLanguage === lang ? data.words : 0);
                 });
             },
             addLanguage: function(keys, lang) {
-                var row;
+                var row,
+                    categories = [],
+                    currentCategory;
                 keys.forEach(function(key) {
                     row = document.getElementById(key + conf.rowPrefix);
                     if (row) {
-                        fc.addLanguageField(row.querySelector('.translationContainer'), key, null, lang);
+                        fc.addLanguageField(row.querySelector('.translationContainer'), key, null, lang, 0);
+
+                        currentCategory = key.split('_')[0];
+                        if (categories.indexOf(currentCategory) === -1) {
+                            categories.push(currentCategory);
+                        }
+
                     } else {
                         console.log('translationView:addLanguage found key which is not available in view:', key);
                     }
+                });
+
+                categories.forEach(function(category) {
+                    var overallWordCount = document.querySelector('#' + category + ' .overallWordCountWrapper .translationContainer');
+                    overallWordCount.appendChild(createWordCountForLanguage(lang));
                 });
             },
             clearView: function() {
@@ -4237,7 +4439,6 @@ var unicode = (function(){
             if(!string){return '';}
             var newstring = string.replace(reg,
                 function (match, submatch) {
-                    console.log(match,submatch);
                     return String.fromCharCode(parseInt(submatch, 16));
                 });
             return newstring;
@@ -4341,6 +4542,7 @@ module.exports = {
 },{}],42:[function(require,module,exports){
 'use strict'
 
+exports.byteLength = byteLength
 exports.toByteArray = toByteArray
 exports.fromByteArray = fromByteArray
 
@@ -4348,23 +4550,17 @@ var lookup = []
 var revLookup = []
 var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
 
-function init () {
-  var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-  for (var i = 0, len = code.length; i < len; ++i) {
-    lookup[i] = code[i]
-    revLookup[code.charCodeAt(i)] = i
-  }
-
-  revLookup['-'.charCodeAt(0)] = 62
-  revLookup['_'.charCodeAt(0)] = 63
+var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+for (var i = 0, len = code.length; i < len; ++i) {
+  lookup[i] = code[i]
+  revLookup[code.charCodeAt(i)] = i
 }
 
-init()
+revLookup['-'.charCodeAt(0)] = 62
+revLookup['_'.charCodeAt(0)] = 63
 
-function toByteArray (b64) {
-  var i, j, l, tmp, placeHolders, arr
+function placeHoldersCount (b64) {
   var len = b64.length
-
   if (len % 4 > 0) {
     throw new Error('Invalid string. Length must be a multiple of 4')
   }
@@ -4374,9 +4570,19 @@ function toByteArray (b64) {
   // represent one byte
   // if there is only one, then the three characters before it represent 2 bytes
   // this is just a cheap hack to not do indexOf twice
-  placeHolders = b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
+  return b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
+}
 
+function byteLength (b64) {
   // base64 is 4/3 + up to two characters of the original data
+  return b64.length * 3 / 4 - placeHoldersCount(b64)
+}
+
+function toByteArray (b64) {
+  var i, j, l, tmp, placeHolders, arr
+  var len = b64.length
+  placeHolders = placeHoldersCount(b64)
+
   arr = new Arr(len * 3 / 4 - placeHolders)
 
   // if there are placeholders, only get up to the last complete 4 chars
