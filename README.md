@@ -20,6 +20,7 @@ It supports actually the following features:
 * create and delete projects and folders (limited to empty folders)
 * create, rename and delete categories 
 * create, rename, delete and clone keys
+* count words for keys and categories
 * category/key overview menu
 * links to keys or categories
 * live synchronization to server

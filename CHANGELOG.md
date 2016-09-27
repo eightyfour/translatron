@@ -70,3 +70,9 @@
 ## 0.7.4
 
 - fixed session deletion on manual logout
+
+## 0.8.0
+
+- added word-count feature
+    - display word count for single keys (and language)
+    - display word count for categories (and language)
