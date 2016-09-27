@@ -26,6 +26,10 @@
   },
   "main": "translatron.js",
   "watch": {
+    "start": {
+      "patterns": ["./"],
+      "extensions": "md"
+    },
     "buildjs-dev": {
       "patterns": ["lib"],
       "extensions": "js"
