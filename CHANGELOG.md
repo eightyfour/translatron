@@ -76,3 +76,9 @@
 - added word-count feature
     - display word count for single keys (and language)
     - display word count for categories (and language)
+    
+# 0.8.1
+
+- fixed alphabetical sorting of translation keys
+- remove obsolete data on deletion of categories
+    - category related keys in value-object will be deleted 

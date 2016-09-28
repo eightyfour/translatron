@@ -3975,10 +3975,6 @@ var translationView = (function() {
                         return categoryNode;
                     };
 
-                bundles.sort(function(a, b) {
-                    return a.key.toLowerCase() > b.key.toLowerCase();
-                });
-
                 bundles.forEach(function(data) {
                     keyObj = fc.getViewKeyObject(data);
                     // TODO which who calc the cate...
