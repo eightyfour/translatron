@@ -16,9 +16,10 @@
   "images": {},
   "keys": {
     "de": {
-      "first_key_1": "test Schluessel Nummer Eins",
-      "first_key_2": "anderer schlüssel",
-      "first_key_3": "drei",
+      "numbers_1_text": "Der erste Text",
+      "1_first_key_1": "test Schlüssel Nummer Eins",
+      "1_first_key_2": "anderer schlüssel",
+      "1_first_key_3": "drei",
       "fourth_nr_1": "eins",
       "fourth_nr_2": "zwei ",
       "fourth_nr_3": "drei",
@@ -231,7 +232,9 @@
       "payment_application_error_46": "Aktuell ist leider keine Einzahlung m\\u00f6glich. Bitte versuchen Sie es zu einem sp\\u00e4teren Zeitpunkt noch einmal.",
       "payment_application_error_47": "Ihre Kundendaten sind bei uns bereits vorhanden (Doppel-Anmeldung). Bitte wenden Sie sich an unseren Kundenservice.",
       "payment_application_error_48": "Bitte beachten Sie\\: Zur Zeit gibt es Probleme bei der Einzahlung mit Kreditkarten. Die Zahlung konnte leider nicht durchgef\\u00fchrt werden. Bitte w\\u00e4hlen Sie eine andere Bezahlmethode aus. Wenn Sie hierzu Fragen haben, wenden Sie sich bitte an unseren Kundenservice. Vielen Dank\\!",
-      "payment_deprecated_popup_firstgate": "Wichtig: Click&Buy wird zum 01.03.2016 seinen Service einstellen. W\\u00e4hlen Sie daher ab M\\u00e4rz bitte eine andere Einzahlungsoption! Wir beraten Sie gerne!\\u00a0"
+      "payment_deprecated_popup_firstgate": "Wichtig: Click&Buy wird zum 01.03.2016 seinen Service einstellen. W\\u00e4hlen Sie daher ab M\\u00e4rz bitte eine andere Einzahlungsoption! Wir beraten Sie gerne!\\u00a0",
+      "directDebit_options_normal": "normal",
+      "numbers_3_third": "Der dritte Text"
     },
     "en": {
       "first_key_1": "test key number one 1",
@@ -669,7 +672,8 @@
       "payment_application_error_46": "Unfortunately it is not possible to deposit funds at this time. Please contact our customer service team if you have any questions.",
       "payment_application_error_47": "It seems that your customer details are already registered with us (multiple registration). Please contact customer service.",
       "payment_application_error_48": "Please note\\: We are currently experiencing some problems with payment by credit card. Unfortunately, the payment could not be completed. Please select another payment method. If you have any questions, please contact our customer service. Thank you\\!",
-      "payment_deprecated_popup_firstgate": "Important: ClickandBuy will no longer be offering its services from 03.01.2016. Please choose an alternative payment method from this point onwards. We are happy to advise!"
+      "payment_deprecated_popup_firstgate": "Important: ClickandBuy will no longer be offering its services from 03.01.2016. Please choose an alternative payment method from this point onwards. We are happy to advise!",
+      "numbers_1_text": "The first text"
     }
   },
   "availableLanguages": [
