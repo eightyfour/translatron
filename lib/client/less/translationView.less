@@ -151,12 +151,11 @@
     padding: 0 0 0.1em 1.5em;
     margin: 0 0.5em 0.5em 0;
     &.displayData {
-      &::after {
+      .keyName {
         position: absolute;
         top: 0;
         left: 1.65em;
         border-bottom: 1px solid #303030;
-        content: attr(data);
       }
     }
     &.icon{
@@ -247,11 +246,10 @@
         left: 4px;
         top: 5px;
       }
-      &::after{
+      .keyName {
         position: absolute;
         left: 24px;
         top: 3px;
-        content: attr(data);
       }
     }
 
