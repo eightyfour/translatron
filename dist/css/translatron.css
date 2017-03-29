@@ -798,12 +798,11 @@ footer.footer .version-print {
   padding: 0 0 0.1em 1.5em;
   margin: 0 0.5em 0.5em 0;
 }
-.translationView h2.displayData::after {
+.translationView h2.displayData .keyName {
   position: absolute;
   top: 0;
   left: 1.65em;
   border-bottom: 1px solid #303030;
-  content: attr(data);
 }
 .translationView h2.icon {
   position: relative;
@@ -886,11 +885,10 @@ footer.footer .version-print {
   left: 4px;
   top: 5px;
 }
-.translationView .row .data.key::after {
+.translationView .row .data.key .keyName {
   position: absolute;
   left: 24px;
   top: 3px;
-  content: attr(data);
 }
 .translationView .row .textEditor-main-wrap {
   margin: 0;
