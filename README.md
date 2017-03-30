@@ -14,9 +14,13 @@ It supports actually the following features:
 * group projects in folders
 * add comments in a description field for keys, categories or projects
 * upload images (screen shots) for categories
-* export projects as JSON
+* [import JSON data into existing projects](https://github.com/gameduell/translatron#notes-on-importing-data-from-json-files)
+* [export projects as JSON](https://github.com/gameduell/translatron#json-export-options)
 * export projects as message bundle format for each locale
-* create, rename and delete keys 
+* create and delete projects and folders (limited to empty folders)
+* create, rename and delete categories 
+* create, rename, delete and clone keys
+* count words for keys and categories
 * category/key overview menu
 * links to keys or categories
 * live synchronization to server
@@ -35,7 +39,7 @@ var translatron = require('translatron'),
 translatron({
     port : 3000, // configure port
     fileStorage : {
-        projectFiles : __dirname + '/translations',  // file storage for project fiels
+        projectFiles : __dirname + '/translations',  // file storage for project fields
         images : __dirname + '/images'  // file storage for uploaded images
     },
     auth : { // configure the LDAP auth
@@ -48,7 +52,11 @@ translatron({
             ca: [
                 fs.readFileSync('exampleCertificate.crt')
             ]
-        }
+        },
+        
+        secret: '...', // used for en- and decrypting server-side sessions
+        sessionTimeout: 'timeout in milliseconds', // used for setting session expiration (being applied to cookie-property maxAge)
+        adminGroupId: '...' // enable admin-features (e.g. deleting projects) for user if he/she belongs to this group
     }
 });
 ```
@@ -180,3 +188,69 @@ _trade_ supports the following events:
     the new current directory (replaces **getDirectory** event)
 * **onNewDirectoryCreated**: a new directory has been created. Payload is _projectId_ and _parentProjectId_
 
+### Notes on importing data from JSON files
+
+Translatron enables you import translations via uploading JSON files from your local hard disk.
+
+- Open the import dialog/overlay by clicking the beaker-button positioned on the left sidebar's very bottom. 
+- Drag a JSON file from your favourite window manager onto the drag area of the overlay.
+    - Optionally click on the drag area to open a file dialogue to browse through your computer's folders/files and chose an appropriate JSON.
+       
+To make sure Translatron can process and merge the data with keys of the existing project it has to be structured as follows:
+
+```
+{
+    "en": {
+        "nameOfCategory_keyName": "Content"
+    }
+    "de": {
+        "nameOfCategory_keyName": "Inhalt"
+    }
+}
+```
+
+whereby the json's top level contains objects named by country-code, like "da", "de", "en", "es", "fr", "nl", "sv" and so on (check/update project-configuration for field availableLanguages).
+Furthermore each country's content is defined by key/value pairs where the keys contain information about
+   
+- a category they belong to (visualized by translatron's project-view) and   
+- the actual key id, separated by an underscore.
+
+As of version 0.4.0 you should also be able to import and export JSONs with a slightly different stucture, e.g. 
+
+```
+{
+    "en": {
+        "nameOfCategory": {
+            "keyName": "Content"
+        }
+    }
+    "de": {
+        "nameOfCategory": {
+            "keyName": "Inhalt"
+        }
+    }
+}
+```
+
+So categories are rather stored as objects which hold their associated keys within their bodies 
+than keys expressing their related category through a prefix (see first example above).
+   
+### JSON export options
+
+For better readability and easier organization of translation files Translatron's JSON export provides two filter options.
+These options are available through appending query parameters to to the project's json url endpoint.
+  
+##### Filter by language
+```
+    https://translation.office.gameduell.de/projectID.json?lang=de|en|es|fr|sv...
+```
+The **lang** query-parameter returns translations for a given language (represented by country code) as long as
+the project has stored any data for the requested language. In case it does not you will get back an empty object.
+
+##### Split data by category
+```
+    https://translation.office.gameduell.de/projectID.json?category=true
+```
+By setting **category** to true the JSON representation will show categories as objects.
+Associated keys will be stored as children of those. 
+  

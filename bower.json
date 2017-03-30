@@ -1,8 +1,8 @@
 {
-  "name": "resourceMessagesLiveEditor",
+  "name": "translatron",
   "dependencies": {
       "jquery": "~2.1.4",
       "jasmine-jquery": "~2.1.0",
-      "octicons": "*"
+      "octicons": "3.3.0"
   }
 }

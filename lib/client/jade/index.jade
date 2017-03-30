@@ -12,7 +12,9 @@ html
         include breadcrumb
         div(style='display: none', canny-mod='displayManager', canny-displaymanager="{'view':'resourceBundle'}")
           span.projectName.octicon.octicon-file-code {{msg.projectName}}
-        div.auth-logout-btn.octicon.octicon-sign-out(canny-mod='auth', canny-var="logoutButton", title="logout")
+        div.user-options-container
+          span.auth-userName {{msg.userName}}
+          span.auth-logout-btn.octicon.octicon-sign-out(canny-mod='auth', canny-var="logoutButton", title="logout")
 
 
     #resourceEditor
@@ -36,6 +38,9 @@ html
     div(style='display: none', canny-mod='displayManager', canny-var="{'overlay':'translationViewProjectCategoryKey'}")
       include createNewCategory
 
+    div(style='display: none', canny-mod='displayManager', canny-var="{'overlay':'translationViewCloneKey'}")
+      include cloneKey
+
     div(style='display: none', canny-mod='displayManager', canny-var="{'overlay':'createNewProjectView'}")
       include createNewProject
 
@@ -44,6 +49,12 @@ html
 
     div(style='display: none', canny-mod='displayManager', canny-var="{'overlay':'uploadView'}")
       include upload
+
+    div(style='display: none', canny-mod='displayManager', canny-var="{'overlay':'JMBFUploaderView'}")
+      include JMBFUploader
+
+    div(style='display: none', canny-mod='displayManager', canny-var="{'overlay':'JSONImportView'}")
+      include JsonImportOverlay
 
     footer.footer
       .version-print Version: #{version}

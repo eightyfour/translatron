@@ -2,61 +2,69 @@
   "name": "translatron",
   "auth": "eightyfour",
   "email": "eightyfour@thinkuseful.de",
-  "version": "0.2.7",
+  "version": "0.9.0",
   "readmeFilename": "README.md",
   "engines": {
-    "node": ">= v4.2.3"
+    "node": ">= v4.2.3 && <= 5.9.1"
   },
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.14.2",
+    "body-parser": "1.14.2",
     "connect-busboy": "0.0.2",
-    "cookie-parser": "^1.4.1",
-    "dnode": "x",
-    "express": "x",
-    "express-session": "^1.13.0",
-    "jade": "^1.11.0",
-    "passport": "^0.3.2",
-    "passport-ldapauth": "^0.5.0",
-    "shoe": "x"
+    "cookie-parser": "1.4.3",
+    "dnode": "1.2.2",
+    "express": "4.14.0",
+    "express-session": "1.14.1",
+    "jade": "1.11.0",
+    "passport": "0.3.2",
+    "passport-ldapauth": "0.5.0",
+    "shoe": "0.0.15"
   },
   "config": {
     "port": "3000",
     "enableAuth": true
   },
-  "main" : "translatron.js",
+  "main": "translatron.js",
+  "watch": {
+    "start": {
+      "patterns": ["./"],
+      "extensions": "md"
+    },
+    "buildjs-dev": {
+      "patterns": ["lib"],
+      "extensions": "js"
+    },
+    "less": {
+      "patterns": ["lib"],
+      "extensions": "less"
+    }
+  },
   "scripts": {
-    "buildjs" : "browserify lib/client/js/main.js -o dist/js/translatron.js && browserify lib/client/js/login.js -o dist/js/translatron-login.js",
-    "buildjs-dev" : "browserify --debug lib/client/js/main.js -o dist/js/translatron.js && browserify --debug lib/client/js/login.js -o dist/js/translatron-login.js",
-    "less" : "lessc lib/client/less/main.less dist/css/translatron.css",
+    "buildjs": "browserify lib/client/js/main.js -o dist/js/translatron.js && browserify lib/client/js/login.js -o dist/js/translatron-login.js",
+    "buildjs-dev": "browserify --debug lib/client/js/main.js -o dist/js/translatron.js && browserify --debug lib/client/js/login.js -o dist/js/translatron-login.js",
+    "less": "lessc lib/client/less/main.less dist/css/translatron.css",
     "test": "jasmine && karma start karma.conf.js",
-    "prestart": "npm run buildjs && npm run less",
+    "prestart": "npm run buildjs-dev && npm run less",
     "start": "node app.js",
-    "devsetup" : "bower install"
+    "devsetup": "bower install",
+    "watch": "npm-watch"
   },
   "devDependencies": {
-    "canny": "0.1.x",
+    "bower": "1.7.9",
+    "browserify": "^13.1.0",
+    "canny": "0.1.10",
+    "canny-cookieManager-lib": "1.1.1",
     "dom-opts": "git://github.com/eightyfour/dom-opts.git",
-    "browserify": "^9.0.7",
-    "less": "~2.4.0",
-    "bower": "^1.7.2",
-    "gulp": "^3.9.0",
-    "gulp-autoprefixer": "^3.1.0",
-    "gulp-browserify": "^0.5.1",
-    "gulp-less": "^3.0.5",
-    "gulp-livereload": "^3.8.1",
-    "gulp-plumber": "^1.0.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-util": "^3.0.7",
-    "gulp-watchify": "^0.5.0",
-    "jasmine": "^2.3.2",
-    "jasmine-core": "^2.3.4",
-    "karma": "^0.13.9",
-    "karma-coverage": "^0.5.0",
-    "karma-jasmine": "^0.3.6",
-    "karma-phantomjs-launcher": "^0.2.1",
-    "phantomjs": "^1.9.18",
-    "watchify": "^3.6.1"
+    "jasmine": "2.4.1",
+    "jasmine-core": "2.4.1",
+    "karma": "0.13.22",
+    "karma-chrome-launcher": "1.0.1",
+    "karma-coverage": "0.5.5",
+    "karma-jasmine": "0.3.8",
+    "karma-phantomjs-launcher": "1.0.2",
+    "less": "2.7.1",
+    "npm-watch": "^0.1.6",
+    "phantomjs": "1.9.20",
+    "watchify": "3.7.0"
   }
 }

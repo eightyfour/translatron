@@ -1,7 +1,7 @@
 .icon-btn-effect{
   cursor: pointer;
   &:hover{
-    color: #7b7b7b;
+    color: #2b9bbf;
   }
   &:active{
     color: darkslategray;
@@ -32,25 +32,73 @@
     min-height: 300px;
     padding: 1em;
   }
-  ul {
+
+  table {
+
+    * {
+      box-sizing: border-box;
+    }
+
     padding-top: .5em;
-    li {
-      .icon-btn-effect();
-      margin: 0.3em 1em .6em 0;
-      display: block;
-      &:before{
-        padding-right:0.3em;
+    width: 100%;
+
+    tr {
+      display: flex;
+
+      &:nth-child(odd) {
+        background: #F0F7FA;
+        &:hover {
+          background: #E4EEF2;
+        }
       }
+
+      &:hover {
+        background: #DFE8EB;
+      }
+
+      td {
+        display: inline-block;
+        flex-grow: 1;
+        padding: 0.5em 0;
+        .icon-btn-effect();
+
+        &.octicon-trashcan {
+          flex-grow: 0;
+        }
+
+        &:before {
+          padding-right:0.3em;
+        }
+      }
+    }
+  }
+
+  .deleteButton {
+    display: none;
+  }
+
+  &.editMode-enabled {
+    .deleteButton {
+      display: inline-block;
+    }
+  }
+
+  .button {
+    &.active {
+      box-shadow: 0 2px 2px 0 #777 inset;
+      background: #999;
+      color: #e0e0e0;
+      text-shadow: 0 1px 1px #666,0 1px 1px #ddd,0 1px 1px #333;
     }
   }
 
   &-buttons {
     text-align: center;
-    margin-top: 2em;
+    margin: 0 0 1em;
 
     // TODO introduce common mixing for buttons
     button {
-      margin-right: 2em;
+      margin: 0 1em 1em;
       padding: 0.5em;
     }
   }

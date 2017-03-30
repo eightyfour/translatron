@@ -12,6 +12,10 @@
           a(canny-mod='projectMainNavigation', canny-var='enableEditorMode')
             span Enable edit buttons
             span.icon.octicon.octicon-pencil
+        li
+          a(canny-mod='projectMainNavigation', canny-var='toggleWordCount')
+            span Toggle word count
+            span.icon.octicon.octicon-graph
     label Developer menu
     .menuNavigation.developer
       ul.navigationMenu.developer
@@ -23,6 +27,14 @@
           a(canny-mod='projectMainNavigation', canny-var='showJSONBundle')
             span Show as JSON
             span.icon.octicon.octicon-eye
+        li
+          a(canny-mod='projectMainNavigation', canny-var='showJMBFUploader')
+            span upload message bundle
+            span.icon.octicon.octicon-hubot
+        li
+          a(canny-mod='projectMainNavigation', canny-var='showJSONImport')
+            span upload json bundle
+            span.icon.octicon.octicon-beaker
     label Info and help
     .menuNavigation.infoHelp
       ul.navigationMenu.infoHelp

@@ -12,11 +12,22 @@
   },
   "keys": {
     "de": {
-      "first_key_1": "Schluessel Eins"
+      "secondy_key_1": "some other",
+      "secondy_key_1_b": "Schlüssel eins",
+      "first_key_1": "some other text",
+      "first_key_1_a": "Schlüssel Eins a",
+      "1_key_one": "und deutsch",
+      "1_key_two": "und deutsch"
     },
     "en": {
-      "first_key_1": "key one",
-      "first_key2": "fancy long entry where the rendered result will span multiple lines and maybe even pages - oh, maybe it will even be larger then Earth's radius! And then it'll conquer the whole universe!"
+      "secondy_key_1": "fancy long entry where the rendered result will span multiple lines and maybe even pages - oh, maybe it will even be larger then Earth's radius! And then it'll conquer the whole universe!",
+      "secondy_key_1_b": "key one sd sd ",
+      "first_key_1": "fancy long entry where the rendered result will span multiple lines and maybe even pages - oh, maybe it will even be larger then Earth's radius! And then it'll conquer the whole universe!",
+      "first_key_1_a": "key one sd sd ",
+      "1_key_one": "Hello one",
+      "1_key_two": "Hello two",
+      "third_something_new": "",
+      "third_something_new_hu": ""
     }
   },
   "availableLanguages": [

@@ -1,5 +1,6 @@
 /*global console */
 /*jslint node: true */
+
 function run(configuration) {
     var config = configuration || {};
 
@@ -24,12 +25,11 @@ function run(configuration) {
         bodyParser = require('body-parser'),
         changesNotifier = require('./lib/server/changesNotifier.js')(),
         busboy = require('connect-busboy'),
-        operations = require('./lib/server/operations.js')(dao, changesNotifier);
+        operations = require('./lib/server/operations.js')(dao, changesNotifier, config.auth);
 
     var app = express();
 
     enableAuth = config.hasOwnProperty('auth');
-
 
     // use bodyParser middleware for handling request bodies (express does *not* provide that feature out-of-the-box).
     // since we only have one case of that (POST to /login where username, password are in the body) and that one is url-encoded,
@@ -58,9 +58,11 @@ function run(configuration) {
     app.use('/bower_components',
         express.static(__dirname + '/bower_components'));
 
-    app.use(require('./lib/server/upload')(uploadFolder, function (folder, key, fName) {
+    app.use(require('./lib/server/middleware-importer/upload')(uploadFolder, function (folder, key, fName) {
         operations.addImage(folder, key, fName);
     }));
+    app.use(require('./lib/server/middleware-importer/uploadJMBF')(operations.saveBundle));
+    app.use(require('./lib/server/middleware-importer/importJSON')(operations.importJSON));
 
     // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
     // of the returned function pointer (with optional passing of locals) will do the actual compilation.
@@ -71,6 +73,8 @@ function run(configuration) {
         The main router handles all URLs for viewing/editing projects/directories and the export routes
      */
     var mainRouter = express.Router();
+    mainRouter.use(require('./lib/server/middleware/touchSession'));
+    mainRouter.use(require('./lib/server/middleware/usersOnline'));
     // TODO add middleware to mainRouter which will check if a project or directory with that id exists
     mainRouter.use(require('./lib/server/middleware-exporter/jpmbfExporter')(dao));
     mainRouter.use(require('./lib/server/middleware-exporter/jsonExporter')(dao));
@@ -96,9 +100,8 @@ function run(configuration) {
 
     var server = app.listen(serverPort);
 
-    var websocketServer = shoe(function (stream) {
+    var websocketServer = shoe(function(stream) {
         "use strict";
-
 
         var d = dnode(operations);
 
@@ -106,7 +109,7 @@ function run(configuration) {
         // if we didn't have this error handler, errors would propagate up the stack and effectively close down the
         // application
         d.on('error', (err) => {
-           console.error(err.message, err.stack);
+            console.error(err.message, err.stack);
         });
         d.on('end', () => {
             operations.detachClientCallbacks();
