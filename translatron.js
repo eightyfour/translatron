@@ -83,7 +83,7 @@ function run(configuration) {
     });
 
     var toLoginIfUnauthenticated = function(req, res, next) {
-        if (enableAuth && !req.user) {
+        if (!/\.json/.test(req.path) && !/\.properties/.test(req.path) && enableAuth && !req.user) {
             // TODO sending the login page only makes sense for browser requests. if anybody is e.g. using curl to
             // retrieve message bundles, we should only return a 401 but no content
             res.send(jade.compileFile(__dirname + '/lib/client/jade/login.jade')());
