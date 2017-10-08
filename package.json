@@ -2,7 +2,7 @@
   "name": "translatron",
   "auth": "eightyfour",
   "email": "eightyfour@thinkuseful.de",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "readmeFilename": "README.md",
   "engines": {
     "node": ">= v4.2.3 && <= 5.9.1"
@@ -15,9 +15,9 @@
     "dnode": "1.2.2",
     "express": "4.14.0",
     "express-session": "1.14.1",
-    "jade": "1.11.0",
     "passport": "0.3.2",
     "passport-ldapauth": "0.5.0",
+    "pug": "^2.0.0-rc.4",
     "shoe": "0.0.15"
   },
   "config": {
@@ -27,15 +27,21 @@
   "main": "translatron.js",
   "watch": {
     "start": {
-      "patterns": ["./"],
+      "patterns": [
+        "./"
+      ],
       "extensions": "md"
     },
     "buildjs-dev": {
-      "patterns": ["lib"],
+      "patterns": [
+        "lib"
+      ],
       "extensions": "js"
     },
     "less": {
-      "patterns": ["lib"],
+      "patterns": [
+        "lib"
+      ],
       "extensions": "less"
     }
   },
