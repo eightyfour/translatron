@@ -20,7 +20,7 @@ function run(configuration) {
         fileManager = require('./lib/server/legacy/fileManager.js')(projectFolder),
         serverPort = config.port || (packageJSON.config.port || 3000),
         enableAuth = packageJSON.config.enableAuth,
-        jade = require('jade'),
+        pug = require('pug'),
         cookieParser = require('cookie-parser'),
         bodyParser = require('body-parser'),
         changesNotifier = require('./lib/server/changesNotifier.js')(),
@@ -64,10 +64,10 @@ function run(configuration) {
     app.use(require('./lib/server/middleware-importer/uploadJMBF')(operations.saveBundle));
     app.use(require('./lib/server/middleware-importer/importJSON')(operations.importJSON));
 
-    // jade.compileFile is not like a full compilation - it is more like a parsing of the jade code. only the execution
+    // pug.compileFile is not like a full compilation - it is more like a parsing of the pug code. only the execution
     // of the returned function pointer (with optional passing of locals) will do the actual compilation.
-    var indexPage = jade.compileFile(__dirname + '/lib/client/jade/index.jade')(),
-        projectOverviewPage = jade.compileFile(__dirname + '/lib/client/jade/projectOverview.jade');
+    var indexPage = pug.compileFile(__dirname + '/lib/client/pug/index.pug')(),
+        projectOverviewPage = pug.compileFile(__dirname + '/lib/client/pug/projectOverview.pug');
 
     /*
         The main router handles all URLs for viewing/editing projects/directories and the export routes
@@ -79,14 +79,14 @@ function run(configuration) {
     mainRouter.use(require('./lib/server/middleware-exporter/jpmbfExporter')(dao));
     mainRouter.use(require('./lib/server/middleware-exporter/jsonExporter')(dao));
     mainRouter.get('*', (req, res) => {
-        res.send(jade.compileFile(__dirname + '/lib/client/jade/index.jade')({version: packageJSON.version}));
+        res.send(pug.compileFile(__dirname + '/lib/client/pug/index.pug')({version: packageJSON.version}));
     });
 
     var toLoginIfUnauthenticated = function(req, res, next) {
         if (!/\.json/.test(req.path) && !/\.properties/.test(req.path) && enableAuth && !req.user) {
             // TODO sending the login page only makes sense for browser requests. if anybody is e.g. using curl to
             // retrieve message bundles, we should only return a 401 but no content
-            res.send(jade.compileFile(__dirname + '/lib/client/jade/login.jade')());
+            res.send(pug.compileFile(__dirname + '/lib/client/pug/login.pug')());
         } else {
             next();
         }
