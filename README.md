@@ -27,6 +27,12 @@ It supports actually the following features:
 * LDAP authentication (optional)
 * ...more coming soon
 
+### feature proposals
+Provide a HTML editor where the user can write formatted text. This text can be translated in mark down
+syntax. With this mark down text we can create a key value structure which can be used for
+the translation. See https://yabwe.github.io/medium-editor/demo.html
+
+
 # run in production
 If you want use this module in production we offer you to save the project files in a different folder as the translatron installation.
  
