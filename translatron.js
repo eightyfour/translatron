@@ -4,7 +4,7 @@
 function run(configuration) {
     var config = configuration || {};
 
-    var projectFolder = (config.hasOwnProperty('fileStorage') ? config.fileStorage.projectFiles || __dirname + '/static' : __dirname + '/static'),
+    var projectFolder = (config.hasOwnProperty('fileStorage') ? config.fileStorage.projectFiles || __dirname + '/static/translations' : __dirname + '/static/translations'),
         uploadFolder = (config.hasOwnProperty('fileStorage') ? config.fileStorage.images || __dirname + '/dist/upload' : __dirname + '/dist/upload'),
         mkdir = require('./lib/server/mkdir-p');
 
@@ -63,12 +63,7 @@ function run(configuration) {
     }));
     app.use(require('./lib/server/middleware-importer/uploadJMBF')(operations.saveBundle));
     app.use(require('./lib/server/middleware-importer/importJSON')(operations.importJSON));
-
-    // pug.compileFile is not like a full compilation - it is more like a parsing of the pug code. only the execution
-    // of the returned function pointer (with optional passing of locals) will do the actual compilation.
-    var indexPage = pug.compileFile(__dirname + '/lib/client/pug/index.pug')(),
-        projectOverviewPage = pug.compileFile(__dirname + '/lib/client/pug/projectOverview.pug');
-
+    
     /*
         The main router handles all URLs for viewing/editing projects/directories and the export routes
      */
