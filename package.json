@@ -9,16 +9,16 @@
   },
   "license": "MIT",
   "dependencies": {
-    "body-parser": "1.14.2",
-    "connect-busboy": "0.0.2",
-    "cookie-parser": "1.4.3",
-    "dnode": "1.2.2",
-    "express": "4.14.0",
-    "express-session": "1.14.1",
-    "passport": "0.3.2",
-    "passport-ldapauth": "0.5.0",
+    "body-parser": "^1.18.2",
+    "connect-busboy": "^0.0.2",
+    "cookie-parser": "^1.4.3",
+    "dnode": "^1.2.2",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "passport": "^0.4.0",
+    "passport-ldapauth": "^2.0.0",
     "pug": "^2.0.0-rc.4",
-    "shoe": "0.0.15"
+    "shoe": "^0.0.15"
   },
   "config": {
     "port": "3000",
@@ -56,21 +56,24 @@
     "watch": "npm-watch"
   },
   "devDependencies": {
-    "bower": "1.7.9",
-    "browserify": "^13.1.0",
-    "canny": "0.1.10",
-    "canny-cookieManager-lib": "1.1.1",
+    "bower": "^1.8.2",
+    "browserify": "^15.2.0",
+    "canny": "^0.2.1",
+    "canny-cookieManager-lib": "^1.1.1",
     "dom-opts": "git://github.com/eightyfour/dom-opts.git",
-    "jasmine": "2.4.1",
-    "jasmine-core": "2.4.1",
-    "karma": "0.13.22",
-    "karma-chrome-launcher": "1.0.1",
-    "karma-coverage": "0.5.5",
-    "karma-jasmine": "0.3.8",
-    "karma-phantomjs-launcher": "1.0.2",
-    "less": "2.7.1",
-    "npm-watch": "^0.1.6",
-    "phantomjs": "1.9.20",
-    "watchify": "3.7.0"
+    "jasmine": "^2.4.1",
+    "jasmine-core": "^2.4.1",
+    "karma": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.1.1",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "less": "^2.7.3",
+    "npm-watch": "^0.3.0",
+    "phantomjs-prebuilt": "^2.1.16",
+    "watchify": "^3.10.0"
+  },
+  "repository": {
+    "url": "https://github.com/gameduell/translatron.git"
   }
 }
