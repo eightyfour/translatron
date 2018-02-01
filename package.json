@@ -2,13 +2,16 @@
   "name": "translatron",
   "auth": "eightyfour",
   "email": "eightyfour@thinkuseful.de",
-  "version": "0.9.4",
+  "version": "0.10.0",
   "readmeFilename": "README.md",
   "engines": {
     "node": ">= v4.2.3 && <= 5.9.1"
   },
   "license": "MIT",
   "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^8.0.0",
     "body-parser": "^1.18.2",
     "connect-busboy": "^0.0.2",
     "cookie-parser": "^1.4.3",
@@ -18,7 +21,8 @@
     "passport": "^0.4.0",
     "passport-ldapauth": "^2.0.0",
     "pug": "^2.0.0-rc.4",
-    "shoe": "^0.0.15"
+    "shoe": "^0.0.15",
+    "stringify": "^5.2.0"
   },
   "config": {
     "port": "3000",
@@ -36,7 +40,10 @@
       "patterns": [
         "lib"
       ],
-      "extensions": "js"
+      "extensions": [
+        "js",
+        "html"
+      ]
     },
     "less": {
       "patterns": [
@@ -46,8 +53,8 @@
     }
   },
   "scripts": {
-    "buildjs": "browserify lib/client/js/main.js -o dist/js/translatron.js && browserify lib/client/js/login.js -o dist/js/translatron-login.js",
-    "buildjs-dev": "browserify --debug lib/client/js/main.js -o dist/js/translatron.js && browserify --debug lib/client/js/login.js -o dist/js/translatron-login.js",
+    "buildjs": "browserify -t [ babelify --presets [ env ] ] -t [ stringify --extensions [.html] ] lib/client/js/main.js -o dist/js/translatron.js && browserify -t [ babelify --presets [ env ] ] -t [ stringify --extensions [.html] ] lib/client/js/login.js -o dist/js/translatron-login.js",
+    "buildjs-dev": "browserify --debug -t [ babelify --presets [ env ] ] -t [ stringify --extensions [.html] ] lib/client/js/main.js -o dist/js/translatron.js && browserify -t [ babelify --presets [ env ] ] -t [ stringify --extensions [.html] ] --debug lib/client/js/login.js -o dist/js/translatron-login.js",
     "less": "lessc lib/client/less/main.less dist/css/translatron.css",
     "test": "jasmine && karma start karma.conf.js",
     "prestart": "npm run buildjs-dev && npm run less",

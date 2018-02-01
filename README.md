@@ -260,3 +260,7 @@ the project has stored any data for the requested language. In case it does not 
 By setting **category** to true the JSON representation will show categories as objects.
 Associated keys will be stored as children of those. 
   
+## RELEASES
+
+**0.10.0**
+ * includes error handling if the websocket connetion is lost
