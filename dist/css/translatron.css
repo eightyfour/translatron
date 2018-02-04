@@ -572,14 +572,8 @@ footer.footer .version-print {
 .translationView.c-wordCountEnabled .wordCountLabel {
   display: flex;
 }
-.translationView.c-wordCountEnabled .row {
-  padding-bottom: 1em;
-}
-.translationView.c-wordCountEnabled .row .flag-icon {
-  bottom: 2.7em;
-}
 .translationView .data {
-  display: table-cell;
+  display: flex;
 }
 .translationView.c-hide_de .js_de {
   display: none;
@@ -708,7 +702,7 @@ footer.footer .version-print {
   box-sizing: border-box;
 }
 .translationView .sendSuccess {
-  background-color: #95c2ff;
+  background-color: #95d8ff;
   transition: background-color 500ms;
   animation: fadeoutColor 2s 3s forwards;
 }
@@ -752,6 +746,10 @@ footer.footer .version-print {
   background-repeat: no-repeat;
   background-position: 99% center;
   background-size: 1.5em 1.5em;
+  box-sizing: border-box;
+  border-radius: 2px;
+  padding: .5em;
+  width: 100%;
 }
 .translationView .addNewKeyrow {
   position: relative;
@@ -767,12 +765,6 @@ footer.footer .version-print {
 }
 .translationView .wordCountLabel {
   display: none;
-  box-sizing: border-box;
-  border-radius: 2px;
-  padding: .5em;
-  width: 100%;
-  color: #777;
-  background-color: rgba(87, 98, 189, 0.1);
 }
 .translationView.hideWordCount .row {
   padding: 0;
@@ -830,8 +822,8 @@ footer.footer .version-print {
   flex-flow: row wrap;
   justify-content: space-between;
   align-content: flex-start;
-  margin: 1em;
-  padding: 0;
+  margin: 0.5em 1em;
+  padding: .5em;
   clear: both;
 }
 .translationView .row.c-removed {
@@ -848,28 +840,37 @@ footer.footer .version-print {
   cursor: pointer;
 }
 .translationView .row .translationContainer {
-  display: table;
+  display: flex;
   width: 100%;
   box-sizing: border-box;
   min-height: 80px;
   flex: none;
+  position: relative;
 }
 .translationView .row .translationContainer .data {
   position: relative;
-  padding: 0 .5em;
+  flex: auto;
+  margin: 0 .5em;
+  flex-direction: column;
+}
+.translationView .row .translationContainer .textInformation {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 .translationView .row > div {
   vertical-align: middle;
   position: relative;
   margin: auto;
-  flex: 100 0 0px;
+  flex: 100 0 0;
 }
 .translationView .row > div .flag-icon {
   position: absolute;
   width: 3.3em;
   height: 2.1em;
-  bottom: .9em;
-  left: .6em;
+  bottom: 1.5em;
+  left: 0.5em;
   background-size: cover;
   background-position: 100%;
   opacity: 1;
@@ -911,7 +912,7 @@ footer.footer .version-print {
   border-bottom: 1px solid #3f525a;
   padding: 0.5em;
   width: 100%;
-  color: #5e7a87;
+  color: #addef5;
 }
 @keyframes fadeoutColor {
   to {
