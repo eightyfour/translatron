@@ -71,6 +71,14 @@
     p {
       margin: 0.8em 0;
     }
+    .errorMessage{
+      color: #f64545;
+      text-shadow: 0 0 0 #fff;
+      &::before{
+        content:' : ';
+        color: #fff;
+      }
+    }
 
     button.reload,
     button.close,

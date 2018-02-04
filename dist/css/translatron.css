@@ -1493,6 +1493,14 @@ body.login form button {
 .connectionLost section p {
   margin: 0.8em 0;
 }
+.connectionLost section .errorMessage {
+  color: #f64545;
+  text-shadow: 0 0 0 #fff;
+}
+.connectionLost section .errorMessage::before {
+  content: ' : ';
+  color: #fff;
+}
 .connectionLost section button.reload,
 .connectionLost section button.close,
 .connectionLost section button.reconnect {

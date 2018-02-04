@@ -2,7 +2,7 @@
   <section>
     <i class="octicon octicon-plug"></i>
     <h2>{{item.title}}</h2>
-    <div class="errorCode"><p>Error code: <strong>{{item.errorCode}}</strong></p></div>
+    <div class="errorCode"><p>Error code: <strong>{{item.errorCode}}</strong><span class="errorMessage" wk-bind="item.errorMessage"></span></p></div>
     <div class="button-section">
       <button class="reconnect" wk-bind="item.reconnect" title="Try to reconnect your changes will be overwritten">reconnect</button>
       <button class="close" wk-bind="item.close" title="You can close this view to rescure you changes manually">close</button>
