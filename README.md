@@ -265,7 +265,7 @@ Associated keys will be stored as children of those.
 **0.10.0**
  * includes error handling if the websocket connetion is lost
 
-**0.10.1**
+**0.11.0**
  * show always the counter
  * add character counter (only letters - spaces and developer placeholder lile {{item.placeholder}} are ignored)
  * includes ui improvements
