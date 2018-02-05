@@ -2,8 +2,11 @@
   h2 Create a new directory
   // <label class="octicon octicon-puzzle">Which name has the category</label>
   .inputWrap.octicon.octicon-file-directory
-    input.inputField.category(canny-mod='createNewProject', canny-var='newDirectoryNameInput', placeholder='enter the directory name')
-    button.button(canny-mod='createNewProject', canny-var='createNewDirectorySubmit') Create directory
+    input.green.inputField.category(canny-mod='createNewProject', canny-var='newDirectoryNameInput', placeholder='enter the directory name')
+    .inputWrap-row
+      button.green.button(canny-mod='createNewProject', canny-var='createNewDirectorySubmit') Create directory
+      button.red.button(canny-mod='createNewProject', canny-var='cancel', data-view='createNewDirectoryView') close
+
   p
     | A new directory can hold other subdirectories or projects.
 

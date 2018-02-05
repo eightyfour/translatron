@@ -515,6 +515,7 @@ footer.footer .version-print {
   -moz-justify-content: center;
   -ms-justify-content: center;
   justify-content: center;
+  background-color: #0a0a0acc;
 }
 .initialView .sun {
   height: 0;
@@ -1090,51 +1091,105 @@ footer.footer .version-print {
   width: 100%;
   max-width: 22em;
   padding: 1em 2em;
-  background-color: #F7F7F7;
   border-radius: 4px;
-  box-shadow: 0 0em 1em 100em rgba(0, 0, 0, 0.5), 0 0 4px 2px #d3d3d3 inset;
   position: relative;
+  color: #fff;
 }
-.overlayWindow.overlayDark {
-  margin-left: 3em;
-  border-radius: 1.5em 1.5em;
-  padding: 3em 3em 7em;
-  width: 70%;
-  min-width: 320px;
-  max-width: 1280px;
-  background-color: #2d2d2d;
-  font-size: 100%;
-  height: 80%;
+.overlayWindow * {
   box-sizing: border-box;
-}
-.overlayWindow.overlayDark > * {
-  box-sizing: border-box;
-}
-.overlayWindow.overlayDark .codeContainer-wrap {
-  margin: 0 0 1em 0;
-  border-radius: 5px;
-  color: #c7c7c7;
-  overflow: auto;
-  height: 100%;
-}
-.overlayWindow.overlayDark .codeContainer {
-  height: 100%;
-}
-.overlayWindow.overlayDark .button {
-  display: block;
-  margin: 0 auto 0;
-  width: 100%;
 }
 .overlayWindow .highlighted {
   color: #3F8FFB;
 }
 .overlayWindow .inputWrap {
-  width: 70%;
+  width: 100%;
   position: relative;
   padding-left: 7%;
   font-size: 1em;
   margin: auto;
-  display: table;
+  display: flex;
+  flex-direction: column;
+}
+.overlayWindow .inputWrap-row {
+  display: flex;
+}
+.overlayWindow .inputWrap-row button:last-child {
+  margin-left: 1em;
+  max-width: 5em;
+}
+.overlayWindow .inputWrap input {
+  font-size: 1em;
+  background-color: transparent;
+  border-radius: 5px;
+  background-clip: padding-box;
+  box-shadow: none;
+  box-sizing: border-box;
+  color: #fff;
+  display: block;
+  line-height: 1.4em;
+  width: 100%;
+  padding: 0.3em 1em;
+  -webkit-transition: border 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+  transition: border 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+}
+.overlayWindow .inputWrap input:focus {
+  outline: none;
+}
+.overlayWindow .inputWrap input.error {
+  border: 2px solid #ff5144;
+}
+.overlayWindow .inputWrap input.blue:focus {
+  border: 2px solid #27d1ec;
+}
+.overlayWindow .inputWrap input.green:focus {
+  border: 2px solid #22be34;
+}
+.overlayWindow .inputWrap input.yellow:focus {
+  border: 2px solid #fff721;
+}
+.overlayWindow .inputWrap button {
+  cursor: pointer;
+  display: inline-block;
+  min-height: 1em;
+  outline: 0;
+  border: none;
+  vertical-align: baseline;
+  color: #fff;
+  font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  padding: .5em;
+  text-transform: none;
+  text-shadow: none;
+  line-height: 1em;
+  font-style: normal;
+  text-align: center;
+  text-decoration: none;
+  border-radius: .28571429rem;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+  background: transparent;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5) inset;
+  font-weight: 400;
+}
+.overlayWindow .inputWrap button.green:hover {
+  box-shadow: 0 0 0 2px #22be34 inset;
+  color: #2ECC40;
+}
+.overlayWindow .inputWrap button.blue:hover {
+  box-shadow: 0 0 0 2px #27d1ec inset;
+  color: #28e4ff;
+}
+.overlayWindow .inputWrap button.red:hover {
+  box-shadow: 0 0 0 2px #ff5144 inset;
+  color: #FF695E;
+}
+.overlayWindow .inputWrap button.yellow:hover {
+  box-shadow: 0 0 0 2px #fff721 inset;
+  color: #f0e91e;
 }
 .overlayWindow .inputWrap:before {
   position: absolute;
@@ -1150,9 +1205,8 @@ footer.footer .version-print {
   text-align: left;
 }
 .overlayWindow p {
-  padding: 2em 0 0 0;
+  margin: 1em 0;
   font-style: italic;
-  color: #666;
 }
 .overlayWindow label {
   margin: 0 0 0.4em 0;
@@ -1161,10 +1215,9 @@ footer.footer .version-print {
 .overlayWindow input {
   margin: 0 0 1em auto;
 }
-.overlayWindow .button {
+.overlayWindow button {
   width: 100%;
   margin: 0.3em auto 0;
-  padding: .5em;
 }
 .icon-btn-effect {
   cursor: pointer;
