@@ -2,7 +2,7 @@
   "name": "translatron",
   "auth": "eightyfour",
   "email": "eightyfour@thinkuseful.de",
-  "version": "0.10.1",
+  "version": "0.11.0",
   "readmeFilename": "README.md",
   "engines": {
     "node": ">= v4.2.3 && <= 5.9.1"
@@ -15,6 +15,7 @@
     "body-parser": "^1.18.2",
     "connect-busboy": "^0.0.2",
     "cookie-parser": "^1.4.3",
+    "directory-tree": "^2.0.0",
     "dnode": "^1.2.2",
     "express": "^4.16.2",
     "express-session": "^1.15.6",

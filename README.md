@@ -264,3 +264,51 @@ Associated keys will be stored as children of those.
 
 **0.10.0**
  * includes error handling if the websocket connetion is lost
+
+**0.10.1**
+ * show always the counter
+ * add character counter (only letters - spaces and developer placeholder lile {{item.placeholder}} are ignored)
+ * includes ui improvements
+   * overlays have close button
+   * overlays gets new design
+ * bug fixes
+
+# TODO
+List of things which need to be implemented
+
+### restructure projects
+
+How it works:
+
+ * all projects are saved in one single id-folder [id]/projectName.json
+ * this file maps the projects to human readable file structure
+ * project id are unique and will stay as long as the project exists
+ * project moving will only change the path in the project.json the project ID will be the same
+
+Perspective:
+
+In future it will be possible to save the projects in a database. So we get rid of the file storage
+
+**1. load project.json**
+ * id (timestamp unique ID)
+   * name
+   * url
+   * file (theoretically this is the /[id]/[name].json)
+     * for backward compatible it used the old path
+
+**2. JSON upload**
+ * via id in URL
+ * should work for both types (id and URL)
+
+**Backward compatibility**
+ * parse folder tree
+ * create for each file a md5 (id) - should be always the same
+ * extends the project.json with this informaition
+
+**Images?**
+ * saved in same id folder
+ * url can be the id
+
+**UI**
+ * id is in URL (to share the unique link) - /[id]/[name].prj
+ * breadcrumb will be
