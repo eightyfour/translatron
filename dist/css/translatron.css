@@ -515,7 +515,8 @@ footer.footer .version-print {
   -moz-justify-content: center;
   -ms-justify-content: center;
   justify-content: center;
-  background-color: #0a0a0acc;
+  background-color: rgba(10, 10, 10, 0.89019608);
+  background-color: #0a0a0ae3;
 }
 .initialView .sun {
   height: 0;

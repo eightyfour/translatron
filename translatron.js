@@ -47,7 +47,8 @@ function run(configuration) {
 
     // activate the LDAP auth
     if (enableAuth) {
-        app.use(require('./lib/server/auth')(app, config.auth));
+        app.use(require('./lib/server/auth')(app, config.auth))
+        app.use(require('./lib/server/middleware/touchSession'))
     }
 
     app.use(function(req, res, next) {
@@ -73,7 +74,6 @@ function run(configuration) {
         The main router handles all URLs for viewing/editing projects/directories and the export routes
      */
     var mainRouter = express.Router();
-    mainRouter.use(require('./lib/server/middleware/touchSession'));
     mainRouter.use(require('./lib/server/middleware/usersOnline'));
     // TODO add middleware to mainRouter which will check if a project or directory with that id exists
     mainRouter.use(require('./lib/server/middleware-exporter/jpmbfExporter')(dao));
@@ -86,7 +86,7 @@ function run(configuration) {
         if (!/\.json/.test(req.path) && !/\.properties/.test(req.path) && enableAuth && !req.user) {
             // TODO sending the login page only makes sense for browser requests. if anybody is e.g. using curl to
             // retrieve message bundles, we should only return a 401 but no content
-            res.send(pug.compileFile(__dirname + '/lib/client/pug/login.pug')());
+            res.status(401).send(pug.compileFile(__dirname + '/lib/client/pug/login.pug')());
         } else {
             next();
         }

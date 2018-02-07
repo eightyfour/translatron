@@ -2,7 +2,7 @@
   "name": "translatron",
   "auth": "eightyfour",
   "email": "eightyfour@thinkuseful.de",
-  "version": "1.0.0-beta-1",
+  "version": "1.0.0-beta-2",
   "readmeFilename": "README.md",
   "engines": {
     "node": ">= v4.2.3 && <= 5.9.1"
@@ -31,12 +31,7 @@
   },
   "main": "translatron.js",
   "watch": {
-    "start": {
-      "patterns": [
-        "./"
-      ],
-      "extensions": "md"
-    },
+
     "buildjs-dev": {
       "patterns": [
         "lib"
