@@ -14,11 +14,10 @@ function run(configuration) {
     mkdir('/', projectFolder);
 
     var packageJSON = require('./package.json'),
-        projectHandler = require('./lib/server/projectHandler'),
         express = require('express'),
         shoe = require('shoe'),
         dnode = require('dnode'),
-        dao = require('./lib/server/dao.js')(projectFolder, uploadFolder),
+        dao = require('./lib/server/dao.js')({projectFolder, uploadFolder, projectJSON}),
         fileManager = require('./lib/server/legacy/fileManager.js')(projectFolder),
         serverPort = config.port || (packageJSON.config.port || 3000),
         enableAuth = packageJSON.config.enableAuth,
@@ -28,9 +27,6 @@ function run(configuration) {
         changesNotifier = require('./lib/server/changesNotifier.js')(),
         busboy = require('connect-busboy'),
         operations = require('./lib/server/operations.js')(dao, changesNotifier, config.auth);
-
-    projectHandler.init({projectJSON, projectFolder})
-        .catch(err => console.log(err))
 
     var app = express();
 

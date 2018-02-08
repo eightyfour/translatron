@@ -7,9 +7,12 @@ describe('dao', () => {
     var dao;
 
     describe('constructor', () => {
-
+    
+        const projectFolder = fixturesDirectory + 'valid_project_in_rootfolder';
+        const projectJSON = projectFolder + '/project.json'
+        
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')(fixturesDirectory + 'valid_project_in_rootfolder');
+            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
             done();
         });
 
@@ -21,12 +24,14 @@ describe('dao', () => {
 
     describe('loadProject', () => {
 
-        var sampleProjectId = '/project1';
+        const sampleProjectId = '/project1';
+        const projectFolder = fixturesDirectory + 'valid_project_in_rootfolder';
+        const projectJSON = projectFolder + '/project.json'
 
         describe('success cases', () => {
 
             beforeEach((done) => {
-                dao = require('../../lib/server/dao')(fixturesDirectory + 'valid_project_in_rootfolder');
+                dao = require('../../lib/server/dao')({projectFolder, projectJSON});
                 done();
             });
 
@@ -66,11 +71,17 @@ describe('dao', () => {
 
         describe('error cases', () => {
 
+            
             describe('nonexisting project', () => {
+                const projectFolder = fixturesDirectory + 'valid_project_in_rootfolder';
+                const projectJSON = projectFolder + '/project.json'
+                
                 beforeEach((done) => {
-                    dao = require('../../lib/server/dao')(fixturesDirectory + 'valid_project_in_rootfolder');
+                    dao = require('../../lib/server/dao')({projectFolder, projectJSON});
                     done();
                 });
+                
+                afterAll(done => fs.unlink(projectJSON, done))
 
                 it('should not choke on it', (done) => {
                     dao.loadProject('/noneExistingProject', (projectData) => {
@@ -81,11 +92,15 @@ describe('dao', () => {
             });
 
             describe('malformed project file', () => {
-
+                const projectFolder = fixturesDirectory + 'invalid_project_in_rootfolder';
+                const projectJSON = projectFolder + '/project.json'
+                
                 beforeEach((done) => {
-                    dao = require('../../lib/server/dao')(fixturesDirectory + 'invalid_project_in_rootfolder');
+                    dao = require('../../lib/server/dao')({projectFolder, projectJSON});
                     done();
                 });
+    
+                afterAll(done => fs.unlink(projectJSON, done))
 
                 it('should not choke on it', (done) => {
                     dao.loadProject('/invalid_project.prj', (cbValue) => {
@@ -99,19 +114,21 @@ describe('dao', () => {
     });
 
     describe('getDirectory', () => {
-        var storageFolder = fixturesDirectory + 'valid_projects_in_subfolder/';
+        const projectFolder = fixturesDirectory + 'valid_projects_in_subfolder';
+        const projectJSON = projectFolder + '/project.json'
 
         // create an empty folder
         beforeAll((done) => {
-            fs.mkdir(storageFolder + 'subFolder/emptySubFolder', done);
+            fs.mkdir(projectFolder + '/subFolder/emptySubFolder', done)
         });
 
         afterAll((done) => {
-            fs.rmdir(storageFolder + 'subFolder/emptySubFolder', done);
+            fs.rmdir(projectFolder + '/subFolder/emptySubFolder', done)
+            fs.unlink(projectJSON, err => err !== null ? console.log(err) : undefined)
         });
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')(storageFolder);
+            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
             done();
         });
 
@@ -190,6 +207,7 @@ describe('dao', () => {
 
         it('should have expected IDs', (done) => {
             dao.getDirectory('/', (obj) => {
+                console.log('daoSpec:obj.projects', obj.projects);
                 expect(obj.projects.length).toEqual(1);
                 expect(obj.projects[0].id).toEqual('/project1');
                 done();
@@ -224,17 +242,19 @@ describe('dao', () => {
     });
 
     describe('createNewProject', () => {
-        var storageFolder = fixturesDirectory + 'empty_rootfolder/',
-            directory = '/',
-            projectName = 'newProject';
+        const projectFolder = fixturesDirectory + 'empty_rootfolder/'
+        const directory = '/'
+        const projectName = 'newProject'
+        const projectJSON = projectFolder + '/project.json'
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')(storageFolder);
+            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
             done();
         });
 
         afterEach((done) => {
-            fs.unlink(storageFolder + projectName + '.json', (err) => {
+            fs.unlink(projectJSON, err => err !== null ? console.log(err) : undefined)
+            fs.unlink(projectFolder + projectName + '.json', (err) => {
                 expect(err).toBeFalsy();
                 done();
             });
@@ -259,7 +279,7 @@ describe('dao', () => {
 
         it('should save json file for new project', (done) => {
             dao.createNewProject(directory, projectName, {}, (err, projectData) => {
-                var expectedProjectPath = storageFolder + '/' + directory + '/' + projectName + '.json';
+                var expectedProjectPath = projectFolder + '/' + directory + '/' + projectName + '.json';
                 fs.stat(expectedProjectPath, (err, stats) => {
                     expect(err).toBeFalsy();
                     expect(stats.isFile()).toBeTruthy();
@@ -284,16 +304,18 @@ describe('dao', () => {
     });
 
     describe('createNewDirectory', () => {
-        var storageFolder = fixturesDirectory + 'valid_projects_in_subfolder/';
-        var subDirectoryName = 'newDirectory';
-
+        const projectFolder = fixturesDirectory + 'valid_projects_in_subfolder';
+        const projectJSON = projectFolder + '/project.json'
+        const subDirectoryName = 'newDirectory';
+        
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')(storageFolder);
+            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
             done();
         });
 
         afterEach((done) => {
-            fs.rmdir(storageFolder + '/' + subDirectoryName, done);
+            fs.rmdir(projectFolder + '/' + subDirectoryName, done)
+            fs.unlink(projectJSON, err => err !== null ? console.log(err) : undefined)
         });
 
         it('should fail if the parent directory does not exist', (done) => {
@@ -319,20 +341,21 @@ describe('dao', () => {
                 expect(directoryData).toBeDefined();
                 expect(directoryData.directoryId).toEqual('/' + subDirectoryName);
                 expect(directoryData.parentDirectoryId).toEqual('/');
-                expect(fs.existsSync(path.normalize(storageFolder + '/' + directoryData.directoryId))).toEqual(true);
+                expect(fs.existsSync(path.normalize(projectFolder + '/' + directoryData.directoryId))).toEqual(true);
                 done();
             });
         });
     });
 
     describe('saveKey', () => {
-        var storageFolder = fixturesDirectory + 'empty_rootfolder/';
-        var projectId = '/newProject';
-        var language = 'de';
-        var keyName = 'key_1';
+        const projectFolder = fixturesDirectory + 'empty_rootfolder/';
+        const projectId = '/newProject';
+        const language = 'de';
+        const keyName = 'key_1';
+        const projectJSON = projectFolder + '/project.json'
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')(storageFolder);
+            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
 
             dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
                 expect(err).toBeFalsy();
@@ -341,7 +364,8 @@ describe('dao', () => {
         });
 
         afterEach((done) => {
-            fs.unlink(storageFolder + projectId + '.json', (err) => {
+            fs.unlink(projectJSON, err => err !== null ? console.log(err) : undefined)
+            fs.unlink(projectFolder + projectId + '.json', (err) => {
                 expect(err).toBeFalsy();
                 done();
             });
@@ -410,16 +434,17 @@ describe('dao', () => {
     });
 
     describe('removeKey', () => {
-        var storageFolder = fixturesDirectory + 'empty_rootfolder/';
-        var projectId = '/newProject';
-        var languageDE = 'de';
-        var languageEN = 'en';
-        var keyName = 'key_1';
-        var keyValueDE = 'test text DE';
-        var keyValueEN = 'test text EN';
+        const projectFolder = fixturesDirectory + 'empty_rootfolder/'
+        const projectJSON = projectFolder + '/project.json'
+        const projectId = '/newProject'
+        const languageDE = 'de'
+        const languageEN = 'en'
+        const keyName = 'key_1'
+        const keyValueDE = 'test text DE'
+        const keyValueEN = 'test text EN'
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')(storageFolder);
+            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
 
             dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
                 expect(err).toBeFalsy();
@@ -432,10 +457,11 @@ describe('dao', () => {
         });
 
         afterEach((done) => {
-            fs.unlink(storageFolder + 'newProject.json', (err) => {
+            fs.unlink(projectJSON, err => err !== null ? console.log(err) : undefined)
+            fs.unlink(projectFolder + 'newProject.json', (err) => {
                 expect(err).toBeFalsy();
                 done();
-            });
+            })
         });
 
         it('should have removed all entries of the key', (done) => {
@@ -450,19 +476,20 @@ describe('dao', () => {
     });
 
     describe('renameKey', () => {
-        var storageFolder = fixturesDirectory + 'empty_rootfolder/';
-        var projectId = '/newProject';
-        var languageDE = 'de';
-        var languageEN = 'en';
-        var keyOldName = 'key_1';
-        var keyNewName = 'key_1_changed';
-        var keyValueDE = 'test text DE';
-        var keyValueEN = 'test text EN';
-
-        var keyRename = {oldKey: keyOldName, newKey: keyNewName};
+        const projectFolder = fixturesDirectory + 'empty_rootfolder/';
+        const projectJSON = projectFolder + '/project.json'
+        const projectId = '/newProject';
+        const languageDE = 'de';
+        const languageEN = 'en';
+        const keyOldName = 'key_1';
+        const keyNewName = 'key_1_changed';
+        const keyValueDE = 'test text DE';
+    
+        const keyValueEN = 'test text EN';
+        const keyRename = {oldKey: keyOldName, newKey: keyNewName};
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')(storageFolder);
+            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
             dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
                 expect(err).toBeFalsy();
                 dao.saveKey(projectId, languageDE, {key: keyOldName, value: keyValueDE}, () => {
@@ -474,10 +501,11 @@ describe('dao', () => {
         });
 
         afterEach((done) => {
-            fs.unlink(storageFolder + 'newProject.json', (err) => {
+            fs.unlink(projectJSON, err => err !== null ? console.log(err) : undefined)
+            fs.unlink(projectFolder + 'newProject.json', (err) => {
                 expect(err).toBeFalsy();
                 done();
-            });
+            })
         });
 
         it('should have removed entry with old key name', (done) => {
@@ -526,18 +554,21 @@ describe('dao', () => {
     });
 
     describe('saveDescription', () => {
-        var storageFolder = fixturesDirectory + 'empty_rootfolder';
-        var projectFolder = '/';
-        var projectName = 'testProject_saveDescription';
-        var projectId;
+        const projectFolder = fixturesDirectory + 'empty_rootfolder';
+        const projectJSON = projectFolder + '/project.json'
+        const folder = '/';
+        const projectName = 'testProject_saveDescription';
+    
+        let projectId;
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')(storageFolder);
+            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
             done();
         });
 
         afterEach((done) => {
-            fs.unlink(storageFolder + projectFolder + projectName + '.json', (err) => {
+            fs.unlink(projectJSON, err => err !== null ? console.log(err) : undefined)
+            fs.unlink(projectFolder + folder + projectName + '.json', (err) => {
                 expect(err).toBeFalsy();
                 done();
             });
@@ -546,7 +577,7 @@ describe('dao', () => {
         describe('with no existing description', () => {
 
             beforeEach((done) => {
-                dao.createNewProject(projectFolder, projectName, {}, (err, projectData) => {
+                dao.createNewProject(folder, projectName, {}, (err, projectData) => {
                     expect(err).toBeFalsy();
                     expect(projectData).toBeDefined();
                     projectId = projectData.projectId;
@@ -576,7 +607,7 @@ describe('dao', () => {
             };
 
             beforeEach((done) => {
-                dao.createNewProject(projectFolder, projectName, projectInitialValues, (err, projectData) => {
+                dao.createNewProject(folder, projectName, projectInitialValues, (err, projectData) => {
                     expect(err).toBeFalsy();
                     expect(projectData).toBeDefined();
                     projectId = projectData.projectId;
@@ -599,22 +630,26 @@ describe('dao', () => {
     });
 
     describe('importJSON', () => {
-        var storageFolder = fixturesDirectory + 'empty_rootfolder',
-            projectFolder = '/',
-            projectName = 'testProject_importJSON',
-            projectId;
+        const projectFolder = fixturesDirectory + 'empty_rootfolder'
+        const folder = '/'
+        const projectName = 'testProject_importJSON'
+        let projectId
+    
+        const projectJSON = projectFolder + '/project.json'
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')(storageFolder);
+            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
             done();
         });
 
         afterEach((done) => {
-            fs.unlink(storageFolder + projectFolder + projectName + '.json', (err) => {
+            fs.unlink(projectFolder + folder + projectName + '.json', (err) => {
                 expect(err).toBeFalsy();
                 done();
             });
         });
+        
+        afterAll((done) => fs.unlink(projectJSON, done))
 
         describe('', () => {
             var projectInitialValues = {
@@ -622,7 +657,7 @@ describe('dao', () => {
             };
 
             beforeEach((done) => {
-                dao.createNewProject(projectFolder, projectName, projectInitialValues, (err, projectData) => {
+                dao.createNewProject(folder, projectName, projectInitialValues, (err, projectData) => {
                     expect(err).toBeFalsy();
                     expect(projectData).toBeDefined();
                     projectId = projectData.projectId;
@@ -718,41 +753,44 @@ describe('dao', () => {
     });
 
     describe('removeCategory', () => {
-        var storageFolder = fixturesDirectory,
-            projectName = 'removeCategoryTest',
-            projectId = '/' + projectName,
-            keys = {
-                "en": {
-                    "category01_key01": "0101 text EN",
-                    "category01_key02": "0102 text EN",
-                    "category02_key01": "0201 text EN"
-                },
-                "de": {
-                    "category01_key01": "0101 text DE",
-                    "category01_key02": "0102 text DE",
-                    "category02_key01": "0201 text DE"
-                }
+        const projectFolder = fixturesDirectory
+        const projectJSON = projectFolder + '/project.json'
+        const projectName = 'removeCategoryTest'
+        const projectId = '/' + projectName
+        const keys = {
+            "en": {
+                "category01_key01": "0101 text EN",
+                "category01_key02": "0102 text EN",
+                "category02_key01": "0201 text EN"
             },
-            categoryToDelete = 'category01';
+            "de": {
+                "category01_key01": "0101 text DE",
+                "category01_key02": "0102 text DE",
+                "category02_key01": "0201 text DE"
+            }
+        }
+        const categoryToDelete = 'category01'
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')(storageFolder);
+            dao = require('../../lib/server/dao')({projectFolder, projectJSON})
 
             dao.createNewProject('/', projectName, {}, (err, projectData) => {
-                expect(err).toBeFalsy();
+                expect(err).toBeFalsy()
                 dao.importJSON(projectName, keys, (err, projectId, projectData) => {
-                    expect(projectData.keys).toEqual(keys);
-                    done();
+                    expect(projectData.keys).toEqual(keys)
+                    done()
                 });
             });
         });
 
         afterEach((done) => {
-            fs.unlink(storageFolder + projectName + '.json', (err) => {
-                expect(err).toBeFalsy();
-                done();
+            fs.unlink(projectFolder + projectName + '.json', (err) => {
+                expect(err).toBeFalsy()
+                done()
             });
         });
+    
+        afterAll((done) => fs.unlink(projectJSON, done))
 
         it('should have removed all contained keys', (done) => {
             dao.removeCategory(projectName, categoryToDelete, (err, deletedCatName) => {
@@ -772,24 +810,27 @@ describe('dao', () => {
     });
 
     describe('key descriptions should always be updated, ', () => {
-        var storageFolder = fixturesDirectory + 'key_descriptions',
-            tempFolder = 'temp',
-            projectName = 'project1',
-            projectId = `/${projectName}`;
+        const projectFolder = fixturesDirectory + 'key_descriptions'
+        const tempFolder = 'temp'
+        const projectName = 'project1'
+        const projectId = `/${projectName}`
+        const projectJSON = `${projectFolder}/${tempFolder}/project.json`
 
         beforeEach((done) => {
             // Create temp folder and clone project-template into it
-            exec(`mkdir ${storageFolder}/${tempFolder}`);
-            exec(`cp ${storageFolder}/${projectName}.json ${storageFolder}/${tempFolder}/${projectName}.json`);
-            dao = require('../../lib/server/dao')(`${storageFolder}/${tempFolder}`);
+            exec(`mkdir ${projectFolder}/${tempFolder}`);
+            exec(`cp ${projectFolder}/${projectName}.json ${projectFolder}/${tempFolder}/${projectName}.json`);
+            dao = require('../../lib/server/dao')({projectFolder : `${projectFolder}/${tempFolder}`, projectJSON});
             done();
         });
 
         afterEach((done) => {
             // Delete temp folder and project
-            exec(`rm -rf ${storageFolder}/${tempFolder}`);
+            exec(`rm -rf ${projectFolder}/${tempFolder}`);
             done();
         });
+        
+        afterAll((done) => fs.unlink(projectJSON, done))
 
         it('so when user deletes a key it´s description (if present) should be deleted too', (done) => {
             dao.loadProject(projectId, (data) => {
@@ -951,60 +992,67 @@ describe('dao', () => {
     });
 
     describe('deleteProject', () => {
-        var storageFolder = fixturesDirectory + 'project_deletion',
-            tempFolder = 'temp',
-            projectName = 'project1';
-
+        const projectFolder = fixturesDirectory + 'project_deletion'
+        const tempFolder = 'temp'
+        const projectName = 'project1'
+        const projectJSON = projectFolder + '/project.json'
+        
         beforeEach((done) => {
             // Create temp folder and clone project-template into it
-            exec(`mkdir ${storageFolder}/${tempFolder}`);
-            exec(`cp ${storageFolder}/${projectName}.json ${storageFolder}/${tempFolder}/${projectName}.json`);
-            dao = require('../../lib/server/dao')(`${storageFolder}`);
-            done();
+            exec(`mkdir ${projectFolder}/${tempFolder}`)
+            exec(`cp ${projectFolder}/${projectName}.json ${projectFolder}/${tempFolder}/${projectName}.json`)
+            dao = require('../../lib/server/dao')({projectFolder, projectJSON})
+            done()
         });
 
         afterEach((done) => {
             // Delete temp folder and project
-            exec(`rm -rf ${storageFolder}/${tempFolder}`);
-            done();
+            exec(`rm -rf ${projectFolder}/${tempFolder}`)
+            done()
         });
+        
+        afterAll((done) => fs.unlink(projectJSON, done))
 
         it('should delete an existent project from file server', (done) => {
             dao.deleteProject('/' + tempFolder, projectName, (err, prjName) => {
-                expect(err).toBeNull();
-                expect(prjName).toMatch(projectName);
-                done();
+                expect(err).toBeNull()
+                expect(prjName).toMatch(projectName)
+                done()
             });
         });
 
         it('should return an error message in case project does not exist on file server', (done) => {
             dao.deleteProject('/' + tempFolder, 'fantasyProject', (err, prjName) => {
-                expect(err).toBeDefined();
-                expect(err.message).toMatch('ENOENT: no such file or directory');
-                expect(prjName).toBeUndefined();
-                done();
+                expect(err).toBeDefined()
+                expect(err.message).toMatch('ENOENT: no such file or directory')
+                expect(prjName).toBeUndefined()
+                done()
             });
         });
 
     });
 
     describe('deleteFolder', () => {
-        var storageFolder = fixturesDirectory + 'folder_deletion',
-            tempFolder = 'temp';
-
+        const projectFolder = fixturesDirectory + 'folder_deletion'
+        const tempFolder = 'temp'
+        const projectJSON = projectFolder + '/project.json'
+    
+    
         beforeEach((done) => {
             // Create temp folder and clone project-template into it
-            exec(`rsync -a ${storageFolder}/** ${storageFolder}/${tempFolder}`);
-            exec(`mkdir ${storageFolder}/${tempFolder}/empty_folder`);
-            dao = require('../../lib/server/dao')(`${storageFolder}`);
+            exec(`rsync -a ${projectFolder}/** ${projectFolder}/${tempFolder}`);
+            exec(`mkdir ${projectFolder}/${tempFolder}/empty_folder`);
+            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
             done();
         });
 
         afterEach((done) => {
             // Delete temp folder and project
-            exec(`rm -rf ${storageFolder}/${tempFolder}`);
+            exec(`rm -rf ${projectFolder}/${tempFolder}`);
             done();
         });
+    
+        afterAll((done) => fs.unlink(projectJSON, done))
 
         it('should delete an existent empty folder from file server', (done) => {
             dao.deleteFolder('/' + tempFolder, 'empty_folder', (err, dirName) => {
