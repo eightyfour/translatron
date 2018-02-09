@@ -47,34 +47,34 @@ describe('dao', () => {
 
             it('project data is returned', (done) => {
                 dao.loadProject(sampleProjectId, (projectData) => {
+                    done()
                     expect(projectData).toBeDefined();
                     expect(projectData.projectId).toBeDefined();
                     expect(projectData.projectId).toEqual(sampleProjectId);
                     expect(projectData.project).toEqual('project1');
                     expect(projectData.defaultLanguage).toEqual('en');
-                    done();
                 });
             });
 
             it("sample keys are present", (done) => {
                 dao.loadProject(sampleProjectId, (projectData) => {
+                    done();
                     expect(Object.keys(projectData.keys.de).length).toEqual(2);
                     expect(projectData.keys.de.first_key_1).toEqual('test Schluessel Nummer Eins');
+    
                     expect(projectData.keys.de.first_key_2).toEqual('test Schluessel Nummer Zwei');
-
                     expect(Object.keys(projectData.keys.en).length).toEqual(3);
                     expect(projectData.keys.en.first_key_1).toEqual('test key number one');
                     expect(projectData.keys.en.first_key_2).toEqual('test key number two');
-                    expect(projectData.keys.en.first_key_3).toEqual('test key number three');
 
-                    done();
+                    expect(projectData.keys.en.first_key_3).toEqual('test key number three');
                 });
             });
 
             it('sample key descriptions are present', (done) => {
                 dao.loadProject(sampleProjectId, (projectData) => {
-                    expect(projectData.keyDescriptions).toBeDefined();
                     done();
+                    expect(projectData.keyDescriptions).toBeDefined();
                 });
             });
         });
@@ -280,6 +280,7 @@ describe('dao', () => {
 
         it('should create a new project with expected defaults', (done) => {
             dao.createNewProject(directory, projectName, {}, (err, projectData) => {
+                done()
                 expect(err).toBeFalsy();
                 expect(projectData).toBeTruthy();
                 expect(projectData).toBeDefined();
@@ -291,7 +292,6 @@ describe('dao', () => {
                 expect(projectData.keyDescriptions).toEqual({__description: ''});
                 expect(projectData.numberOfKeys).toEqual(0);
                 expect(projectData.keys).toEqual({});
-                done();
             });
         });
 
@@ -303,9 +303,9 @@ describe('dao', () => {
                     expect(stats.isFile()).toBeTruthy();
 
                     dao.loadProject(directory + projectName, (projectData) => {
+                        done()
                         expect(projectData).toBeDefined();
                         expect(projectData.projectId).toEqual('/newProject');
-                        done();
                     });
                 });
             });
@@ -314,9 +314,9 @@ describe('dao', () => {
         it('should include a given project description in the created config', (done) => {
             var description = "My special description";
             dao.createNewProject(directory, projectName, {description: description}, (err, projectData) => {
+                done();
                 expect(err).toBeFalsy();
                 expect(projectData.description).toEqual(description);
-                done();
             });
         });
     });
@@ -366,7 +366,7 @@ describe('dao', () => {
             });
         });
     });
-
+    return
     describe('saveKey', () => {
         const projectFolder = fixturesDirectory + 'empty_rootfolder/';
         const projectId = '/newProject';
@@ -390,7 +390,7 @@ describe('dao', () => {
             fs.unlink(projectJSON, err => err !== null ? console.log(err) : undefined)
             fs.unlink(projectFolder + projectId + '.json', (err) => {
                 expect(err).toBeFalsy();
-                done();
+                done()
             });
         });
 
@@ -401,11 +401,11 @@ describe('dao', () => {
                 dao.saveKey(projectId, language, change, (err, savedKey, savedValue) => {
                     expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
+                        done()
                         expect(projectData.keys[language]).toBeDefined();
                         expect(projectData.keys[language][keyName]).toBeDefined();
                         expect(projectData.keys[language][keyName]).toEqual(keyValue);
-                        done();
-                    });
+                    })
                 });
             });
 
@@ -413,10 +413,10 @@ describe('dao', () => {
                 var keyValue = 'test text DE';
                 var change = {key: keyName, value: keyValue};
                 dao.saveKey(projectId, language, change, (err, savedKeyName, savedKeyValue) => {
+                    done()
                     expect(err).toBeFalsy();
                     expect(savedKeyName).toEqual(keyName);
                     expect(savedKeyValue).toEqual(keyValue);
-                    done();
                 });
             });
         });
@@ -436,8 +436,8 @@ describe('dao', () => {
                 dao.saveKey(projectId, language, change, (err, savedKeyName, savedKeyValue) => {
                     expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
+                        done()
                         expect(projectData.keys[language][keyName]).toBeDefined();
-                        done();
                     });
                 });
             });
@@ -447,15 +447,15 @@ describe('dao', () => {
                 dao.saveKey(projectId, language, change, (err, savedKeyName, savedKeyValue) => {
                     expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
+                        done()
                         expect(projectData.keys[language][keyName]).toEqual(keyNewValue);
-                        done();
                     });
                 });
             });
 
         });
     });
-
+    
     describe('removeKey', () => {
         const projectFolder = fixturesDirectory + 'empty_rootfolder/'
         const projectJSON = projectFolder + '/project.json'
@@ -474,7 +474,7 @@ describe('dao', () => {
                         expect(err).toBeFalsy();
                         dao.saveKey(projectId, languageDE, {key: keyName, value: keyValueDE}, () => {
                             dao.saveKey(projectId, languageEN, {key: keyName, value: keyValueEN}, () => {
-                                done();
+                                done()
                             })
                         });
                     })
@@ -487,16 +487,16 @@ describe('dao', () => {
             fs.unlink(projectJSON, err => err !== null ? console.log(err) : undefined)
             fs.unlink(projectFolder + 'newProject.json', (err) => {
                 expect(err).toBeFalsy();
-                done();
+                done()
             })
         });
 
         it('should have removed all entries of the key', (done) => {
             dao.removeKey(projectId, keyName, (deletedKeyName) => {
                 dao.loadProject(projectId, (projectData) => {
+                    done()
                     expect(projectData.keys[languageDE][keyName]).toBeUndefined();
                     expect(projectData.keys[languageEN][keyName]).toBeUndefined();
-                    done();
                 });
             });
         });
@@ -543,9 +543,9 @@ describe('dao', () => {
             dao.renameKey(projectId, keyRename, (err, oldKeyName, newKeyName) => {
                 expect(err).toBeFalsy();
                 dao.loadProject(projectId, (projectData) => {
+                    done()
                     expect(projectData.keys[languageDE][keyOldName]).toBeUndefined();
                     expect(projectData.keys[languageEN][keyOldName]).toBeUndefined();
-                    done();
                 });
             });
         });
@@ -554,9 +554,9 @@ describe('dao', () => {
             dao.renameKey(projectId, keyRename, (err, oldKeyName, newKeyName) => {
                 expect(err).toBeFalsy();
                 dao.loadProject(projectId, (projectData) => {
+                    done()
                     expect(projectData.keys[languageDE][keyNewName]).toBeDefined();
                     expect(projectData.keys[languageEN][keyNewName]).toBeDefined();
-                    done();
                 });
             });
         });
@@ -565,19 +565,19 @@ describe('dao', () => {
             dao.renameKey(projectId, keyRename, (err, oldKeyName, newKeyName) => {
                 expect(err).toBeFalsy();
                 dao.loadProject(projectId, (projectData) => {
+                    done()
                     expect(projectData.keys[languageDE][keyNewName]).toEqual(keyValueDE);
                     expect(projectData.keys[languageEN][keyNewName]).toEqual(keyValueEN);
-                    done();
                 });
             });
         });
 
         it('should return old and new key name with callback', (done) => {
             dao.renameKey(projectId, keyRename, (err, oldKeyName, newKeyName) => {
+                done();
                 expect(err).toBeFalsy();
                 expect(oldKeyName).toEqual(keyOldName);
                 expect(newKeyName).toEqual(keyNewName);
-                done();
             });
         });
 
@@ -624,8 +624,8 @@ describe('dao', () => {
                 dao.saveProjectDescription(projectId, id, description, (err) => {
                     expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
+                        done()
                         expect(projectData.keyDescriptions[id]).toEqual(description);
-                        done();
                     });
                 });
             });
@@ -641,10 +641,10 @@ describe('dao', () => {
 
             beforeEach((done) => {
                 dao.createNewProject(folder, projectName, projectInitialValues, (err, projectData) => {
+                    done()
                     expect(err).toBeFalsy();
                     expect(projectData).toBeDefined();
                     projectId = projectData.projectId;
-                    done();
                 });
             });
 
@@ -654,8 +654,8 @@ describe('dao', () => {
                 dao.saveProjectDescription(projectId, id, description, (err) => {
                     expect(err).toBeFalsy();
                     dao.loadProject(projectId, (projectData) => {
+                        done()
                         expect(projectData.keyDescriptions[id]).toEqual(description);
-                        done();
                     });
                 });
             });
@@ -693,10 +693,10 @@ describe('dao', () => {
 
             beforeEach((done) => {
                 dao.createNewProject(folder, projectName, projectInitialValues, (err, projectData) => {
+                    done()
                     expect(err).toBeFalsy();
                     expect(projectData).toBeDefined();
                     projectId = projectData.projectId;
-                    done();
                 });
             });
 
@@ -714,6 +714,7 @@ describe('dao', () => {
                 };
 
                 dao.importJSON(projectId, importData, (err, prjId, prjData) => {
+                    done()
                     expect(err).toBeFalsy();
                     expect(prjData).toBeDefined();
                     expect(prjId).toMatch(projectId);
@@ -728,7 +729,7 @@ describe('dao', () => {
                             }
                         }
                     }
-                    done();
+                    
                 });
             });
 
@@ -746,8 +747,8 @@ describe('dao', () => {
                 };
 
                 dao.importJSON(projectId, importData, (err, prjId, prjData) => {
+                    done()
                     expect(prjData.keys).toEqual({});
-                    done();
                 });
             });
 
@@ -760,9 +761,9 @@ describe('dao', () => {
                 };
 
                 dao.importJSON(projectId, importData, (err, prjId, prjData) => {
+                    done()
                     expect(err).toBeDefined();
                     expect(err instanceof TypeError).toBeTruthy();
-                    done();
                 });
             });
 
@@ -777,11 +778,11 @@ describe('dao', () => {
                 };
 
                 dao.importJSON(projectId, importData, (err, prjId, prjData) => {
+                    done()
                     expect(err).toBeFalsy();
                     expect(prjData).toBeDefined();
                     expect(prjId).toMatch(projectId);
                     expect(prjData.keys.en.category_headline).toBe(importData.en.category.headline);
-                    done();
                 });
             });
         });
@@ -814,8 +815,8 @@ describe('dao', () => {
                     dao.createNewProject('/', projectName, {}, (err, projectData) => {
                         expect(err).toBeFalsy()
                         dao.importJSON(projectName, keys, (err, projectId, projectData) => {
-                            expect(projectData.keys).toEqual(keys)
                             done()
+                            expect(projectData.keys).toEqual(keys)
                         });
                     })
                 })
@@ -824,8 +825,8 @@ describe('dao', () => {
 
         afterEach((done) => {
             fs.unlink(projectFolder + projectName + '.json', (err) => {
-                expect(err).toBeFalsy()
                 done()
+                expect(err).toBeFalsy()
             });
         });
     
@@ -836,13 +837,13 @@ describe('dao', () => {
                 expect(err).toBeFalsy();
                 expect(deletedCatName).toMatch(categoryToDelete);
                 dao.loadProject(projectId, (projectData) => {
+                    done()
                     expect(projectData.keys['en']['category01_key01']).toBeUndefined();
                     expect(projectData.keys['de']['category01_key01']).toBeUndefined();
                     expect(projectData.keys['de']['category01_key02']).toBeUndefined();
                     expect(projectData.keys['de']['category01_key02']).toBeUndefined();
                     expect(projectData.keys['en']['category02_key01']).toEqual(keys['en']['category02_key01']);
                     expect(projectData.keys['de']['category02_key01']).toEqual(keys['de']['category02_key01']);
-                    done();
                 });
             });
         });
@@ -882,8 +883,8 @@ describe('dao', () => {
                     expect(keyName).toBe('first_key_1');
 
                     dao.loadProject(projectId, (prjData) => {
+                        done()
                         expect(prjData.keyDescriptions.hasOwnProperty(keyName)).toBe(false);
-                        done();
                     });
                 });
             });
@@ -898,9 +899,9 @@ describe('dao', () => {
                     expect(keyName).toBe('first_key_2');
 
                     dao.loadProject(projectId, (prjData) => {
+                        done()
                         // Verify that loading the project does not result in errors (i.e. prjData === false)
                         expect(prjData).toBeTruthy();
-                        done();
                     });
                 });
             });
@@ -927,13 +928,13 @@ describe('dao', () => {
                     expect(newName).toBe(testData.targetKey);
 
                     dao.loadProject(projectId, (prjData) => {
+                        done()
                         // Verify that old key was deleted from keyDescriptions
                         expect(prjData.keyDescriptions.hasOwnProperty(testData.sourceKey)).toBe(false);
                         // Verify that new key was added to keyDescriptions
                         expect(prjData.keyDescriptions.hasOwnProperty(testData.targetKey)).toBe(true);
                         // Verify that value from source key descriptions was transferred to newly created key description
                         expect(prjData.keyDescriptions[testData.targetKey]).toBe(descValue);
-                        done();
                     });
                 });
 
@@ -959,12 +960,12 @@ describe('dao', () => {
 
                     // Check whether data has been stored correctly
                     dao.loadProject(projectId, (prjData) => {
+                        done()
                         // Check whether key descriptions has been copied
                         expect(prjData.keyDescriptions.hasOwnProperty(`${testData.sourceCategory}_${testData.key}`)).toBe(true);
                         expect(prjData.keyDescriptions.hasOwnProperty(`${testData.targetCategory}_${testData.key}`)).toBe(true);
                         // Check whether values of source and target description are the same
                         expect(prjData.keyDescriptions[`${testData.targetCategory}_${testData.key}`]).toBe(prjData.keyDescriptions[`${testData.sourceCategory}_${testData.key}`]);
-                        done();
                     });
                 });
             });
@@ -978,11 +979,11 @@ describe('dao', () => {
                     expect(categoryName).toBe(categoryToDelete);
 
                     dao.loadProject(projectId, (prjData) => {
+                        done()
                         Object.keys(prjData.keyDescriptions).forEach(item => {
                             var prefix = item.split('_').shift();
                             expect(prefix).not.toEqual(categoryToDelete);
                         });
-                        done();
                     });
                 });
             });
@@ -1003,30 +1004,30 @@ describe('dao', () => {
                     if (prefix === testData.origCatName) {
                         origCatKeyCount++;
                     }
-                });
+                })
 
                 dao.renameCategory(projectId, testData.origCatName, testData.renamedCatName, (err, oldName, newName) => {
                     expect(err).toBeNull();
                     dao.loadProject(projectId, (prjData) => {
+                        done()
                         var renamedCatKeyCount = 0;
                         expect(prjData).toBeTruthy();
                         // Verify that description value has been taken over
                         expect(prjData.keyDescriptions[testData.renamedCatName]).toBe(testData.origCatDesc);
 
                         Object.keys(prjData.keyDescriptions).forEach(item => {
-                            var prefix = item.split('_').shift();
+                            var prefix = item.split('_').shift()
                             // Verify that original key descriptions were wiped out
-                            expect(prefix).not.toEqual(testData.origCatName);
+                            expect(prefix).not.toEqual(testData.origCatName)
 
                             // Count number of renamed category's descriptions
                             if (prefix === testData.renamedCatName) {
                                 renamedCatKeyCount++;
                             }
-                        });
+                        })
                         // Verify that no key description was lost during renaming
-                        expect(renamedCatKeyCount).toBe(origCatKeyCount);
-                        done();
-                    });
+                        expect(renamedCatKeyCount).toBe(origCatKeyCount)
+                    })
                 });
             });
         });

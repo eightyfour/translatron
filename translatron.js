@@ -29,6 +29,10 @@ function run(configuration) {
         operations = require('./lib/server/operations.js')(dao, changesNotifier, config.auth);
 
     var app = express();
+    
+    // initialize the dao object - it's required to do this asynchronous because of the projectHandler
+    dao.init()
+        .catch(err => console.log(err))
 
     enableAuth = config.hasOwnProperty('auth');
 
