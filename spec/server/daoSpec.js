@@ -1,7 +1,9 @@
-var fixturesDirectory = __dirname + '/fixtures/',
-    exec = require('child_process').execSync,
-    fs = require('fs'),
-    path = require('path');
+const fixturesDirectory = __dirname + '/fixtures/'
+const exec = require('child_process').execSync
+const fs = require('fs')
+const path = require('path')
+
+const daoInstance = require('../../lib/server/dao')
 
 describe('dao', () => {
     var dao;
@@ -12,16 +14,20 @@ describe('dao', () => {
         const projectJSON = projectFolder + '/project.json'
         
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
-            done();
+            dao = daoInstance({projectFolder, projectJSON});
+            dao.init()
+                .then(done)
+                .catch(e => console.log(e))
         });
-
+        
+        afterEach(done => fs.unlink(projectJSON, done))
+        
         it('should return a new dao instance', function(done) {
             expect(dao).toBeDefined();
             done();
         });
     });
-
+    
     describe('loadProject', () => {
 
         const sampleProjectId = '/project1';
@@ -31,9 +37,13 @@ describe('dao', () => {
         describe('success cases', () => {
 
             beforeEach((done) => {
-                dao = require('../../lib/server/dao')({projectFolder, projectJSON});
-                done();
+                dao = daoInstance({projectFolder, projectJSON});
+                dao.init()
+                    .then(done)
+                    .catch(e => console.log(e))
             });
+    
+            afterEach(done => fs.unlink(projectJSON, done))
 
             it('project data is returned', (done) => {
                 dao.loadProject(sampleProjectId, (projectData) => {
@@ -77,8 +87,10 @@ describe('dao', () => {
                 const projectJSON = projectFolder + '/project.json'
                 
                 beforeEach((done) => {
-                    dao = require('../../lib/server/dao')({projectFolder, projectJSON});
-                    done();
+                    dao = daoInstance({projectFolder, projectJSON});
+                    dao.init()
+                        .then(done)
+                        .catch(e => console.log(e))
                 });
                 
                 afterAll(done => fs.unlink(projectJSON, done))
@@ -96,8 +108,10 @@ describe('dao', () => {
                 const projectJSON = projectFolder + '/project.json'
                 
                 beforeEach((done) => {
-                    dao = require('../../lib/server/dao')({projectFolder, projectJSON});
-                    done();
+                    dao = daoInstance({projectFolder, projectJSON});
+                    dao.init()
+                        .then(done)
+                        .catch(e => console.log(e))
                 });
     
                 afterAll(done => fs.unlink(projectJSON, done))
@@ -112,7 +126,7 @@ describe('dao', () => {
             });
         });
     });
-
+    
     describe('getDirectory', () => {
         const projectFolder = fixturesDirectory + 'valid_projects_in_subfolder';
         const projectJSON = projectFolder + '/project.json'
@@ -128,8 +142,10 @@ describe('dao', () => {
         });
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
-            done();
+            dao = daoInstance({projectFolder, projectJSON});
+            dao.init()
+                .then(done)
+                .catch(e => console.log(e))
         });
 
         it("should return the sub projects from /", (done) => {
@@ -248,8 +264,10 @@ describe('dao', () => {
         const projectJSON = projectFolder + '/project.json'
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
-            done();
+            dao = daoInstance({projectFolder, projectJSON});
+            dao.init()
+                .then(done)
+                .catch(e => console.log(e))
         });
 
         afterEach((done) => {
@@ -309,8 +327,10 @@ describe('dao', () => {
         const subDirectoryName = 'newDirectory';
         
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
-            done();
+            dao = daoInstance({projectFolder, projectJSON});
+            dao.init()
+                .then(done)
+                .catch(e => console.log(e))
         });
 
         afterEach((done) => {
@@ -355,12 +375,15 @@ describe('dao', () => {
         const projectJSON = projectFolder + '/project.json'
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
-
-            dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
-                expect(err).toBeFalsy();
-                done();
-            });
+            dao = daoInstance({projectFolder, projectJSON});
+            dao.init()
+                .then(() => {
+                   dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
+                        expect(err).toBeFalsy()
+                        done()
+                    }) 
+                })
+                .catch(e => console.log(e))
         });
 
         afterEach((done) => {
@@ -444,16 +467,20 @@ describe('dao', () => {
         const keyValueEN = 'test text EN'
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
-
-            dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
-                expect(err).toBeFalsy();
-                dao.saveKey(projectId, languageDE, {key: keyName, value: keyValueDE}, () => {
-                    dao.saveKey(projectId, languageEN, {key: keyName, value: keyValueEN}, () => {
-                        done();
+            dao = daoInstance({projectFolder, projectJSON});
+            dao.init()
+                .then(() => {
+                    dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
+                        expect(err).toBeFalsy();
+                        dao.saveKey(projectId, languageDE, {key: keyName, value: keyValueDE}, () => {
+                            dao.saveKey(projectId, languageEN, {key: keyName, value: keyValueEN}, () => {
+                                done();
+                            })
+                        });
                     })
-                });
-            });
+                })
+                .catch(e => console.log(e))
+            
         });
 
         afterEach((done) => {
@@ -489,15 +516,19 @@ describe('dao', () => {
         const keyRename = {oldKey: keyOldName, newKey: keyNewName};
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
-            dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
-                expect(err).toBeFalsy();
-                dao.saveKey(projectId, languageDE, {key: keyOldName, value: keyValueDE}, () => {
-                    dao.saveKey(projectId, languageEN, {key: keyOldName, value: keyValueEN}, () => {
-                        done();
+            dao = daoInstance({projectFolder, projectJSON});
+            dao.init()
+                .then(() => {
+                    dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
+                        expect(err).toBeFalsy();
+                        dao.saveKey(projectId, languageDE, {key: keyOldName, value: keyValueDE}, () => {
+                            dao.saveKey(projectId, languageEN, {key: keyOldName, value: keyValueEN}, () => {
+                                done();
+                            })
+                        });
                     })
-                });
-            });
+                })
+                .catch(e => console.log(e))
         });
 
         afterEach((done) => {
@@ -562,8 +593,10 @@ describe('dao', () => {
         let projectId;
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
-            done();
+            dao = daoInstance({projectFolder, projectJSON})
+            dao.init()
+                .then(done)
+                .catch(e => console.log(e))
         });
 
         afterEach((done) => {
@@ -638,8 +671,10 @@ describe('dao', () => {
         const projectJSON = projectFolder + '/project.json'
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
-            done();
+            dao = daoInstance({projectFolder, projectJSON})
+            dao.init()
+                .then(done)
+                .catch(e => console.log(e))
         });
 
         afterEach((done) => {
@@ -772,15 +807,19 @@ describe('dao', () => {
         const categoryToDelete = 'category01'
 
         beforeEach((done) => {
-            dao = require('../../lib/server/dao')({projectFolder, projectJSON})
-
-            dao.createNewProject('/', projectName, {}, (err, projectData) => {
-                expect(err).toBeFalsy()
-                dao.importJSON(projectName, keys, (err, projectId, projectData) => {
-                    expect(projectData.keys).toEqual(keys)
-                    done()
-                });
-            });
+            dao = daoInstance({projectFolder, projectJSON})
+    
+            dao.init()
+                .then(() => {
+                    dao.createNewProject('/', projectName, {}, (err, projectData) => {
+                        expect(err).toBeFalsy()
+                        dao.importJSON(projectName, keys, (err, projectId, projectData) => {
+                            expect(projectData.keys).toEqual(keys)
+                            done()
+                        });
+                    })
+                })
+                .catch(e => console.log(e))
         });
 
         afterEach((done) => {
@@ -820,8 +859,10 @@ describe('dao', () => {
             // Create temp folder and clone project-template into it
             exec(`mkdir ${projectFolder}/${tempFolder}`);
             exec(`cp ${projectFolder}/${projectName}.json ${projectFolder}/${tempFolder}/${projectName}.json`);
-            dao = require('../../lib/server/dao')({projectFolder : `${projectFolder}/${tempFolder}`, projectJSON});
-            done();
+            dao = daoInstance({projectFolder : `${projectFolder}/${tempFolder}`, projectJSON});
+            dao.init()
+                .then(done)
+                .catch(e => console.log(e))
         });
 
         afterEach((done) => {
@@ -1001,8 +1042,10 @@ describe('dao', () => {
             // Create temp folder and clone project-template into it
             exec(`mkdir ${projectFolder}/${tempFolder}`)
             exec(`cp ${projectFolder}/${projectName}.json ${projectFolder}/${tempFolder}/${projectName}.json`)
-            dao = require('../../lib/server/dao')({projectFolder, projectJSON})
-            done()
+            dao = daoInstance({projectFolder, projectJSON})
+            dao.init()
+                .then(done)
+                .catch(e => console.log(e))
         });
 
         afterEach((done) => {
@@ -1042,8 +1085,10 @@ describe('dao', () => {
             // Create temp folder and clone project-template into it
             exec(`rsync -a ${projectFolder}/** ${projectFolder}/${tempFolder}`);
             exec(`mkdir ${projectFolder}/${tempFolder}/empty_folder`);
-            dao = require('../../lib/server/dao')({projectFolder, projectJSON});
-            done();
+            dao = daoInstance({projectFolder, projectJSON});
+            dao.init()
+                .then(done)
+                .catch(e => console.log(e))
         });
 
         afterEach((done) => {
