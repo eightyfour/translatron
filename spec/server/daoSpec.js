@@ -30,7 +30,7 @@ describe('dao', () => {
     
     describe('loadProject', () => {
 
-        const sampleProjectId = '/project1';
+        const sampleProjectId = 'project1';
         const projectFolder = fixturesDirectory + 'valid_project_in_rootfolder';
         const projectJSON = projectFolder + '/project.json'
 
@@ -46,12 +46,12 @@ describe('dao', () => {
             afterEach(done => fs.unlink(projectJSON, done))
 
             it('project data is returned', (done) => {
-                dao.loadProject(sampleProjectId, (projectData) => {
+                dao.loadProject(sampleProjectId, (projectData, projectInfo) => {
                     done()
                     expect(projectData).toBeDefined();
-                    expect(projectData.projectId).toBeDefined();
-                    expect(projectData.projectId).toEqual(sampleProjectId);
-                    expect(projectData.project).toEqual('project1');
+                    expect(projectInfo.id).toBeDefined();
+                    expect(projectInfo.id).toEqual(sampleProjectId);
+                    expect(projectInfo.name).toEqual('project1');
                     expect(projectData.defaultLanguage).toEqual('en');
                 });
             });
@@ -74,11 +74,12 @@ describe('dao', () => {
             it('sample key descriptions are present', (done) => {
                 dao.loadProject(sampleProjectId, (projectData) => {
                     done();
+                    console.log('daoSpec:', projectData)
                     expect(projectData.keyDescriptions).toBeDefined();
                 });
             });
         });
-
+        
         describe('error cases', () => {
 
             
@@ -126,7 +127,7 @@ describe('dao', () => {
             });
         });
     });
-    
+
     describe('getDirectory', () => {
         const projectFolder = fixturesDirectory + 'valid_projects_in_subfolder';
         const projectJSON = projectFolder + '/project.json'
@@ -149,18 +150,18 @@ describe('dao', () => {
         });
 
         it("should return the sub projects from /", (done) => {
-            dao.getDirectory("/", (obj) => {
+            dao.getDirectory("/", (err, obj) => {
                 expect(obj.projects.length).toEqual(1);
                 expect(obj.projects).toEqual([{
                     name: 'project1',
-                    id: '/project1'
+                    id: 'project1'
                 }]);
                 done();
             });
         });
 
         it("should return the sub directories from /", (done) => {
-            dao.getDirectory("/", (obj) => {
+            dao.getDirectory("/", (err, obj) => {
                 expect(obj.dirs.length).toEqual(1);
                 expect(obj.dirs).toEqual([{
                     name: 'subFolder',
@@ -171,11 +172,11 @@ describe('dao', () => {
         });
 
         it("should return the contents from sub folder", (done) => {
-            dao.getDirectory("/subFolder", (obj) => {
+            dao.getDirectory("/subFolder", (err, obj) => {
                 expect(obj.projects.length).toEqual(1);
                 expect(obj.projects).toEqual([{
                     name: 'project2',
-                    id: '/subFolder/project2'
+                    id: 'subFolder/project2'
                 }]);
                 expect(obj.parentDirectory).toEqual('/');
                 expect(obj.currentDirectory).toEqual('/subFolder');
@@ -198,7 +199,7 @@ describe('dao', () => {
         });
 
         it('should return itself as the parent directory if already at top level', (done) => {
-            dao.getDirectory("/", (obj) => {
+            dao.getDirectory("/", (err, obj) => {
                 expect(obj.parentDirectory).toEqual('/');
                 expect(obj.currentDirectory).toEqual('/');
                 done();
@@ -206,7 +207,7 @@ describe('dao', () => {
         });
 
         it('should return the correct parent directory if there is a parent', (done) => {
-            dao.getDirectory("/subFolder", (obj) => {
+            dao.getDirectory("/subFolder", (err, obj) => {
                 expect(obj.parentDirectory).toEqual('/');
                 expect(obj.currentDirectory).toEqual('/subFolder');
                 done();
@@ -214,7 +215,7 @@ describe('dao', () => {
         });
 
         it('should return the correct parent directory from a sub sub directory', (done) => {
-            dao.getDirectory("/subFolder/subSubFolder", (obj) => {
+            dao.getDirectory("/subFolder/subSubFolder", (err, obj) => {
                 expect(obj.parentDirectory).toEqual('/subFolder');
                 expect(obj.currentDirectory).toEqual('/subFolder/subSubFolder');
                 done();
@@ -222,16 +223,16 @@ describe('dao', () => {
         });
 
         it('should have expected IDs', (done) => {
-            dao.getDirectory('/', (obj) => {
+            dao.getDirectory('/', (err, obj) => {
                 console.log('daoSpec:obj.projects', obj.projects);
                 expect(obj.projects.length).toEqual(1);
-                expect(obj.projects[0].id).toEqual('/project1');
+                expect(obj.projects[0].id).toEqual('project1');
                 done();
             });
         });
 
         it('should return empty lists if a directory has no items', (done) => {
-            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
+            dao.getDirectory('/subFolder/emptySubFolder', (err, obj) => {
                 expect(obj.projects.length).toEqual(0);
                 expect(obj.dirs.length).toEqual(0);
                 done();
@@ -239,7 +240,7 @@ describe('dao', () => {
         });
 
         it('should have parent directories wit correct name', (done) => {
-            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
+            dao.getDirectory('/subFolder/emptySubFolder', (err, obj) => {
                 expect(obj.parentDirectories[0].name).toEqual('');
                 expect(obj.parentDirectories[1].name).toEqual('subFolder');
                 expect(obj.parentDirectories[2].name).toEqual('emptySubFolder');
@@ -248,7 +249,7 @@ describe('dao', () => {
         });
 
         it('should have parent directories wit correct id', (done) => {
-            dao.getDirectory('/subFolder/emptySubFolder', (obj) => {
+            dao.getDirectory('/subFolder/emptySubFolder', (err, obj) => {
                 expect(obj.parentDirectories[0].id).toEqual('/');
                 expect(obj.parentDirectories[1].id).toEqual('/subFolder');
                 expect(obj.parentDirectories[2].id).toEqual('/subFolder/emptySubFolder');
@@ -258,10 +259,11 @@ describe('dao', () => {
     });
 
     describe('createNewProject', () => {
-        const projectFolder = fixturesDirectory + 'empty_rootfolder/'
+        const projectFolder = fixturesDirectory + 'empty_rootfolder'
         const directory = '/'
         const projectName = 'newProject'
         const projectJSON = projectFolder + '/project.json'
+        const projectsToRemove = []
 
         beforeEach((done) => {
             dao = daoInstance({projectFolder, projectJSON});
@@ -270,22 +272,31 @@ describe('dao', () => {
                 .catch(e => console.log(e))
         });
 
-        afterEach((done) => {
-            fs.unlink(projectJSON, err => err !== null ? console.log(err) : undefined)
-            fs.unlink(projectFolder + projectName + '.json', (err) => {
-                expect(err).toBeFalsy();
-                done();
-            });
+        afterEach(done => {
+            fs.unlink(projectJSON, done)
+        })
+        
+        afterAll((done) => {
+            Promise.all(projectsToRemove.map((project) =>
+                new Promise(resolve => {
+                    fs.unlink(projectFolder + project.file, (err) => {
+                        expect(err).toBeFalsy()
+                        resolve()
+                    });
+                })
+            )).then(done).catch(err => console.log(err))
+            
         });
 
         it('should create a new project with expected defaults', (done) => {
-            dao.createNewProject(directory, projectName, {}, (err, projectData) => {
+            dao.createNewProject(directory, projectName, {}, (err, projectData, projectInfo) => {
+                projectsToRemove.push(projectInfo)
                 done()
                 expect(err).toBeFalsy();
                 expect(projectData).toBeTruthy();
                 expect(projectData).toBeDefined();
-                expect(projectData.projectId).toEqual('/' + projectName);
-                expect(projectData.project).toEqual(projectName);
+                expect(projectInfo.id).toEqual(projectInfo.id);
+                expect(projectInfo.name).toEqual(projectName);
                 expect(projectData.description).toEqual('');
                 expect(projectData.languages).toEqual({});
                 expect(projectData.availableLanguages.length).toEqual(8);
@@ -296,16 +307,17 @@ describe('dao', () => {
         });
 
         it('should save json file for new project', (done) => {
-            dao.createNewProject(directory, projectName, {}, (err, projectData) => {
-                var expectedProjectPath = projectFolder + '/' + directory + '/' + projectName + '.json';
-                fs.stat(expectedProjectPath, (err, stats) => {
+            dao.createNewProject(directory, projectName, {}, (err, projectData, projectInfo) => {
+         
+                projectsToRemove.push(projectInfo)
+                
+                fs.stat(projectFolder + projectInfo.file, (err, stats) => {
                     expect(err).toBeFalsy();
                     expect(stats.isFile()).toBeTruthy();
 
                     dao.loadProject(directory + projectName, (projectData) => {
                         done()
-                        expect(projectData).toBeDefined();
-                        expect(projectData.projectId).toEqual('/newProject');
+                        expect(projectData).toBeDefined()
                     });
                 });
             });
@@ -313,8 +325,9 @@ describe('dao', () => {
 
         it('should include a given project description in the created config', (done) => {
             var description = "My special description";
-            dao.createNewProject(directory, projectName, {description: description}, (err, projectData) => {
+            dao.createNewProject(directory, projectName, {description: description}, (err, projectData, projectInfo) => {
                 done();
+                projectsToRemove.push(projectInfo)
                 expect(err).toBeFalsy();
                 expect(projectData.description).toEqual(description);
             });
