@@ -154,6 +154,7 @@ describe('dao', () => {
                 expect(obj.projects.length).toEqual(1);
                 expect(obj.projects).toEqual([{
                     name: 'project1',
+                    url: '/',
                     id: 'project1'
                 }]);
                 done();
@@ -176,6 +177,7 @@ describe('dao', () => {
                 expect(obj.projects.length).toEqual(1);
                 expect(obj.projects).toEqual([{
                     name: 'project2',
+                    url: '/subFolder',
                     id: 'subFolder/project2'
                 }]);
                 expect(obj.parentDirectory).toEqual('/');
@@ -761,7 +763,7 @@ describe('dao', () => {
             })
         })
     })
-    return
+return
     describe('importJSON', () => {
         const projectFolder = fixturesDirectory + 'empty_rootfolder'
         const folder = '/'
@@ -887,7 +889,7 @@ describe('dao', () => {
             });
         });
     });
-
+    return
     describe('removeCategory', () => {
         const projectFolder = fixturesDirectory
         const projectJSON = projectFolder + '/project.json'
