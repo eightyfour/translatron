@@ -628,7 +628,7 @@ describe('dao', () => {
                     });
                 })
             )).then(done).catch(err => console.log(err))
-        });
+        })
 
         it('should have removed entry with old key name', (done) => {
             dao.renameKey(projectId, keyRename, (err, oldKeyName, newKeyName) => {
@@ -674,14 +674,14 @@ describe('dao', () => {
 
         // TODO add missing tests for renaming key in descriptions property
     });
-    return
-    describe('saveDescription', () => {
-        const projectFolder = fixturesDirectory + 'empty_rootfolder';
-        const projectJSON = projectFolder + '/project.json'
-        const folder = '/';
-        const projectName = 'testProject_saveDescription';
     
-        let projectId;
+    describe('saveDescription', () => {
+        const projectFolder = fixturesDirectory + 'empty_rootfolder'
+        const projectJSON = projectFolder + '/project.json'
+        const folder = '/'
+        const projectName = 'testProject_saveDescription'
+        const projectsToRemove = []
+        let projectId
 
         beforeEach((done) => {
             dao = daoInstance({projectFolder, projectJSON})
@@ -690,24 +690,31 @@ describe('dao', () => {
                 .catch(e => console.log(e))
         });
 
-        afterEach((done) => {
+        afterAll((done) => {
             fs.unlink(projectJSON, err => err !== null ? console.log(err) : undefined)
-            fs.unlink(projectFolder + folder + projectName + '.json', (err) => {
-                expect(err).toBeFalsy();
-                done();
-            });
-        });
+            
+            Promise.all(projectsToRemove.map((project) =>
+                new Promise(resolve => {
+                    fs.unlink(projectFolder + project.file, (err) => {
+                        expect(err).toBeFalsy()
+                        resolve()
+                    });
+                })
+            )).then(done).catch(err => console.log(err))
+        })
 
         describe('with no existing description', () => {
-
+            let projectId
+            
             beforeEach((done) => {
-                dao.createNewProject(folder, projectName, {}, (err, projectData) => {
+                dao.createNewProject(folder, projectName, {}, (err, projectData, projectInfo) => {
+                    projectsToRemove.push(projectInfo)
                     expect(err).toBeFalsy();
                     expect(projectData).toBeDefined();
-                    projectId = projectData.projectId;
+                    projectId = projectInfo.id;
                     done();
                 });
-            });
+            })
 
             it('should save description if project had none before', (done) => {
                 var id = '__description';
@@ -725,33 +732,35 @@ describe('dao', () => {
 
         describe('with existing description', () => {
 
-            var initialDescription = 'initialDescription';
-            var projectInitialValues = {
+            const initialDescription = 'initialDescription'
+            const projectInitialValues = {
                 description: initialDescription
-            };
+            }
+            let projectId
 
             beforeEach((done) => {
-                dao.createNewProject(folder, projectName, projectInitialValues, (err, projectData) => {
+                dao.createNewProject(folder, projectName, projectInitialValues, (err, projectData, projectInfo) => {
+                    projectsToRemove.push(projectInfo)
+                    projectId = projectInfo.id;
                     done()
                     expect(err).toBeFalsy();
                     expect(projectData).toBeDefined();
-                    projectId = projectData.projectId;
                 });
             });
 
             it('should save description if project had one before', (done) => {
-                var id = '__description';
-                var description = 'new_description';
+                const id = '__description'
+                const description = 'new_description'
                 dao.saveProjectDescription(projectId, id, description, (err) => {
-                    expect(err).toBeFalsy();
+                    expect(err).toBeFalsy()
                     dao.loadProject(projectId, (projectData) => {
                         done()
-                        expect(projectData.keyDescriptions[id]).toEqual(description);
-                    });
-                });
-            });
-        });
-    });
+                        expect(projectData.keyDescriptions[id]).toEqual(description)
+                    })
+                })
+            })
+        })
+    })
     return
     describe('importJSON', () => {
         const projectFolder = fixturesDirectory + 'empty_rootfolder'
