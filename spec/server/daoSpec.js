@@ -379,21 +379,79 @@ describe('dao', () => {
             });
         });
     });
-    return
+    
+    describe('moveProject', () => {
+        const projectFolder = fixturesDirectory + 'moveProject'
+        const projectJSON = projectFolder + '/project.json'
+        
+        const projectToMoveRoot = {
+            id : 'project1',
+            name : 'theProject',
+            url : '/'
+        }
+        const projectToMoveSub = {
+            id : 'subFolder/subSubFolder/subproject1',
+            name : 'theProject',
+            url : '/subFolder/subSubFolder'
+        }
+        
+        beforeAll((done) => {
+            dao = daoInstance({projectFolder, projectJSON});
+            dao.init()
+                .then(done)
+                .catch(e => console.log(e))
+        })
+        
+        afterAll((done) => {
+            fs.unlink(projectJSON, done)
+        })
+        
+        describe('it should move project1', () => {
+            let movedProject
+            beforeAll((done) => {
+                dao.moveProject({
+                    id: 'project1',
+                    name: 'theProject',
+                    url: '/sub/folder/underground'
+                }, (err, project) => {
+                    movedProject = project
+                    done()
+                })
+            })
+            
+            it('and have correct url', () => {
+                expect(movedProject.url).toEqual('/sub/folder/underground')
+            })
+            
+            it('and have correct name', () => {
+                expect(movedProject.name).toEqual('theProject')
+            })
+    
+            it('and loading project again should still work with correct data as response', (done) => {
+                dao.loadProject('project1', (data, {id, name, url}) => {
+                    expect(url).toEqual('/sub/folder/underground')
+                    expect(name).toEqual('theProject')
+                    done()
+                })
+            })
+        })
+    })
+    
     describe('saveKey', () => {
-        const projectFolder = fixturesDirectory + 'empty_rootfolder/';
-        const projectId = '/newProject';
-        const language = 'de';
-        const keyName = 'key_1';
+        const projectFolder = fixturesDirectory + 'empty_rootfolder/'
+        let projectId
+        const language = 'de'
+        const keyName = 'key_1'
         const projectJSON = projectFolder + '/project.json'
 
         beforeEach((done) => {
             dao = daoInstance({projectFolder, projectJSON});
             dao.init()
                 .then(() => {
-                   dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
-                        expect(err).toBeFalsy()
-                        done()
+                   dao.createNewProject('/', 'newProject', {}, (err, projectData, projectInfo) => {
+                       projectId = projectInfo.id
+                       expect(err).toBeFalsy()
+                       done()
                     }) 
                 })
                 .catch(e => console.log(e))
@@ -472,18 +530,22 @@ describe('dao', () => {
     describe('removeKey', () => {
         const projectFolder = fixturesDirectory + 'empty_rootfolder/'
         const projectJSON = projectFolder + '/project.json'
-        const projectId = '/newProject'
+        let projectId
         const languageDE = 'de'
         const languageEN = 'en'
         const keyName = 'key_1'
         const keyValueDE = 'test text DE'
         const keyValueEN = 'test text EN'
+        const projectsToRemove = []
 
         beforeEach((done) => {
             dao = daoInstance({projectFolder, projectJSON});
             dao.init()
                 .then(() => {
-                    dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
+                    dao.createNewProject('/', 'newProject', {}, (err, projectData, projectInfo) => {
+                        projectId = projectInfo.id
+                        projectsToRemove.push(projectInfo)
+                        
                         expect(err).toBeFalsy();
                         dao.saveKey(projectId, languageDE, {key: keyName, value: keyValueDE}, () => {
                             dao.saveKey(projectId, languageEN, {key: keyName, value: keyValueEN}, () => {
@@ -498,10 +560,16 @@ describe('dao', () => {
 
         afterEach((done) => {
             fs.unlink(projectJSON, err => err !== null ? console.log(err) : undefined)
-            fs.unlink(projectFolder + 'newProject.json', (err) => {
-                expect(err).toBeFalsy();
-                done()
-            })
+    
+            Promise.all(projectsToRemove.map((project) =>
+                new Promise(resolve => {
+                    fs.unlink(projectFolder + project.file, (err) => {
+                        expect(err).toBeFalsy()
+                        resolve()
+                    });
+                })
+            )).then(done).catch(err => console.log(err))
+            
         });
 
         it('should have removed all entries of the key', (done) => {
@@ -514,26 +582,30 @@ describe('dao', () => {
             });
         });
     });
-
-    describe('renameKey', () => {
-        const projectFolder = fixturesDirectory + 'empty_rootfolder/';
-        const projectJSON = projectFolder + '/project.json'
-        const projectId = '/newProject';
-        const languageDE = 'de';
-        const languageEN = 'en';
-        const keyOldName = 'key_1';
-        const keyNewName = 'key_1_changed';
-        const keyValueDE = 'test text DE';
     
-        const keyValueEN = 'test text EN';
-        const keyRename = {oldKey: keyOldName, newKey: keyNewName};
+    describe('renameKey', () => {
+        const projectFolder = fixturesDirectory + 'empty_rootfolder'
+        const projectJSON = projectFolder + '/project.json'
+        let projectId
+        const languageDE = 'de'
+        const languageEN = 'en'
+        const keyOldName = 'key_1'
+        const keyNewName = 'key_1_changed'
+        const keyValueDE = 'test text DE'
+    
+        const keyValueEN = 'test text EN'
+        const keyRename = {oldKey: keyOldName, newKey: keyNewName}
+        const projectsToRemove = []
 
         beforeEach((done) => {
             dao = daoInstance({projectFolder, projectJSON});
             dao.init()
                 .then(() => {
-                    dao.createNewProject('/', 'newProject', {}, (err, projectData) => {
-                        expect(err).toBeFalsy();
+                    dao.createNewProject('/', 'newProject', {}, (err, projectData, projectInfo) => {
+                        projectId = projectInfo.id
+                        projectsToRemove.push(projectInfo)
+                        
+                        expect(err).toBeFalsy()
                         dao.saveKey(projectId, languageDE, {key: keyOldName, value: keyValueDE}, () => {
                             dao.saveKey(projectId, languageEN, {key: keyOldName, value: keyValueEN}, () => {
                                 done();
@@ -543,13 +615,19 @@ describe('dao', () => {
                 })
                 .catch(e => console.log(e))
         });
-
         afterEach((done) => {
-            fs.unlink(projectJSON, err => err !== null ? console.log(err) : undefined)
-            fs.unlink(projectFolder + 'newProject.json', (err) => {
-                expect(err).toBeFalsy();
-                done();
-            })
+            fs.unlink(projectJSON, done)
+        })
+        
+        afterAll((done) => {
+            Promise.all(projectsToRemove.map((project) =>
+                new Promise(resolve => {
+                    fs.unlink(projectFolder + project.file, (err) => {
+                        expect(err).toBeFalsy()
+                        resolve()
+                    });
+                })
+            )).then(done).catch(err => console.log(err))
         });
 
         it('should have removed entry with old key name', (done) => {
@@ -596,7 +674,7 @@ describe('dao', () => {
 
         // TODO add missing tests for renaming key in descriptions property
     });
-
+    return
     describe('saveDescription', () => {
         const projectFolder = fixturesDirectory + 'empty_rootfolder';
         const projectJSON = projectFolder + '/project.json'
@@ -674,7 +752,7 @@ describe('dao', () => {
             });
         });
     });
-
+    return
     describe('importJSON', () => {
         const projectFolder = fixturesDirectory + 'empty_rootfolder'
         const folder = '/'
