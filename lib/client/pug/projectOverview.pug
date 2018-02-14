@@ -9,6 +9,7 @@
           td(on-click="item.deleteProjectListItem").deleteButton.octicon.octicon-trashcan
         tr(if-not="item.dir", data-listItem="{{item.name}}")
           td(on-click="item.openProjectListItem", title="Open '{{item.name}}' project").octicon.octicon-file-code {{item.name}}
+          td(on-click="item.moveProject").moveButton.octicon.octicon-file-symlink-file
           td(on-click="item.deleteProjectListItem").deleteButton.octicon.octicon-trashcan
 
   .projectOverview-buttons

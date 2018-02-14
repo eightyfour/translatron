@@ -62,7 +62,7 @@
         padding: 0.5em 0;
         .icon-btn-effect();
 
-        &.octicon-trashcan {
+        &.deleteButton, &.moveButton {
           flex-grow: 0;
         }
 
@@ -73,12 +73,12 @@
     }
   }
 
-  .deleteButton {
+  .deleteButton, .moveButton {
     display: none;
   }
 
   &.editMode-enabled {
-    .deleteButton {
+    .deleteButton, .moveButton {
       display: inline-block;
     }
   }
