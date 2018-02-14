@@ -6,11 +6,11 @@
       tbody(canny-mod="repeat" canny-var="{'for':'item','in':'canny.projectOverview.setRenderProjectsAndDirectoriesListFunction'}")
         tr(if="item.dir", data-listItem="{{item.name}}")
           td(on-click="item.openProjectListItem", title="Open directory", colspan="2").octicon.octicon-file-directory {{item.name}}
-          td(on-click="item.deleteProjectListItem").deleteButton.octicon.octicon-trashcan
+          td(on-click="item.deleteProjectListItem", title="Delete '{{item.name}}' folder").deleteButton.octicon.octicon-trashcan
         tr(if-not="item.dir", data-listItem="{{item.name}}")
           td(on-click="item.openProjectListItem", title="Open '{{item.name}}' project").octicon.octicon-file-code {{item.name}}
-          td(on-click="item.moveProject").moveButton.octicon.octicon-file-symlink-file
-          td(on-click="item.deleteProjectListItem").deleteButton.octicon.octicon-trashcan
+          td(on-click="item.moveProject", title="Change '{{item.name}}' project").moveButton.octicon.octicon-file-symlink-file
+          td(on-click="item.deleteProjectListItem", title="Delete '{{item.name}}' project").deleteButton.octicon.octicon-trashcan
 
   .projectOverview-buttons
       button.button.js-createFolderButton.octicon.octicon-file-directory Create folder
