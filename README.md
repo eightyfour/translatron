@@ -78,17 +78,17 @@ The view to manage and maintain the translation project and texts
 ##### translation view:
 Shows all translation in a column/row design
 
-**translation text**
+*translation text*
  * translation will be automatically saves if yo leave the text field (save success message appears)
  * it shows the number of words
  * it shows the number of **letters** (letters in parentheses {} are not counted in)
 
-**add key**
+*add key*
 
 At the end of each section you can add a new key
  * new key is added as last element in the category
 
-**image upload**
+*image upload*
 
 Each category can have one image which can be uploaded
  * click on cloud open upload form
@@ -101,16 +101,16 @@ Click in the pencil in the menu left activates the edit mode. A lot of pencils
 appearing in the view which can be clicked to edit adn configure individual elements.
 Following a overview what is possible:
 
-**general**
+*general*
  * the project description is editable (see bellow the project name - pencil right)
 
-**categories**
+*categories*
 
 can be:
  * renamed
  * add a individual description
 
-**keys**
+*keys*
 
 can be:
  * renamed
@@ -118,7 +118,7 @@ can be:
  * delete
  * add a individual description
 
-**images**
+*images*
 
 can be:
  * deleted
@@ -127,7 +127,7 @@ can be:
 Project configuration panel.
  * toggle open/close via the burger icon in header
 
-**Language section**
+*Language section*
 
  * shows language flags
  * State active (colored) - shows the language
@@ -135,19 +135,19 @@ Project configuration panel.
  * State add (gray with plus sign) - add the language
  * shows the number of translated texts
 
-**Project manager**
+*Project manager*
  * create category
    * opens create category view
  * enable editor buttons
  * toggle word count
 
-**developer menu**
+*developer menu*
  * export message bundle
  * export JSON
  * import message bundle
  * import JSON
 
-**Info and help** (same as footer)
+*Info and help* (same as footer)
  * about translation tool
  * github link
 
