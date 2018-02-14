@@ -40,12 +40,12 @@ Following a overview which features exists.
 ### header
 Available on all views. It contains the breadcrumb navigation and a user panel
 
-###### breadcrumb navigation
+##### breadcrumb navigation
  * contains a home to navigate to the root folder '/'
  * lists of parent folders
    * each of them is click able and should link to the folder
 
-###### user panel
+##### user panel
  * logout button
  * user name (if the name is available otherwise it shows "logout")
 
@@ -58,13 +58,13 @@ Available on all views. It contains the breadcrumb navigation and a user panel
 If you have no project selected you see the overview page. In here you see the current folder and
 projects. In this view you can do the following actions:
 
-###### folders
+##### folders
  * navigate through folders forward and backward
  * create a new folder
  * edit mode
    * delete a folder (admin)
 
-###### projects
+##### projects
  * navigate to project
  * create a new project
  * edit mode
@@ -75,7 +75,7 @@ projects. In this view you can do the following actions:
 ### project view
 The view to manage and maintain the translation project and texts
 
-###### translation view:
+##### translation view:
 Shows all translation in a column/row design
 
 **translation text**
@@ -96,7 +96,7 @@ Each category can have one image which can be uploaded
  * delete is possible in edit mode
  * click on image opens it in new tab
 
-###### edit mode
+##### edit mode
 Click in the pencil in the menu left activates the edit mode. A lot of pencils
 appearing in the view which can be clicked to edit adn configure individual elements.
 Following a overview what is possible:
@@ -123,7 +123,7 @@ can be:
 can be:
  * deleted
 
-###### menu left
+##### menu left
 Project configuration panel.
  * toggle open/close via the burger icon in header
 
@@ -151,7 +151,7 @@ Project configuration panel.
  * about translation tool
  * github link
 
-###### menu right
+##### menu right
 Project overview navigation
  * shows the actual category and collapse it
  * click on category and keys should scroll the element (and highlight them)
