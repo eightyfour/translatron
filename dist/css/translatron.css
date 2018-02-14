@@ -1288,16 +1288,19 @@ footer.footer .version-print {
 .projectOverview table tr td:active {
   color: darkslategray;
 }
-.projectOverview table tr td.octicon-trashcan {
+.projectOverview table tr td.deleteButton,
+.projectOverview table tr td.moveButton {
   flex-grow: 0;
 }
 .projectOverview table tr td:before {
   padding-right: 0.3em;
 }
-.projectOverview .deleteButton {
+.projectOverview .deleteButton,
+.projectOverview .moveButton {
   display: none;
 }
-.projectOverview.editMode-enabled .deleteButton {
+.projectOverview.editMode-enabled .deleteButton,
+.projectOverview.editMode-enabled .moveButton {
   display: inline-block;
 }
 .projectOverview .button.active {
