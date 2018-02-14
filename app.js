@@ -1,3 +1,3 @@
-var translatron = require('./translatron');
+var translatron = require('./translatron')
 // start the server with defaults
-translatron();
+translatron()
