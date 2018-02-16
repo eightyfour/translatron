@@ -8,7 +8,7 @@ provides you a file structure to manage your translations.
 
 ### features
 It supports actually the following features:
-* translate from a language to a language by key value
+* translate from one language into another language by key value
 * group keys in categories
 * group categories in projects
 * group projects in folders
@@ -32,6 +32,132 @@ Provide a HTML editor where the user can write formatted text. This text can be 
 syntax. With this mark down text we can create a key value structure which can be used for
 the translation. See https://yabwe.github.io/medium-editor/demo.html
 
+---------------
+
+## feature overview
+Following a overview which features exists.
+
+### header
+Available on all views. It contains the breadcrumb navigation and a user panel
+
+##### breadcrumb navigation
+ * contains a home to navigate to the root folder '/'
+ * lists of parent folders
+   * each of them is click able and should link to the folder
+
+##### user panel
+ * logout button
+ * user name (if the name is available otherwise it shows "logout")
+
+### footer
+ * about link
+ * github link
+ * shows the actual translation tool version
+
+### project navigation view
+If you have no project selected you see the overview page. In here you see the current folder and
+projects. In this view you can do the following actions:
+
+##### folders
+ * navigate through folders forward and backward
+ * create a new folder
+ * edit mode
+   * delete a folder (admin)
+
+##### projects
+ * navigate to project
+ * create a new project
+ * edit mode
+   * delete a project (admin)
+   * rename a project (admin)
+   * move a project to another folder (admin)
+
+### project view
+The view to manage and maintain the translation project and texts
+
+##### translation view:
+Shows all translation in a column/row design
+
+###### translation text
+ * translation will be automatically saves if yo leave the text field (save success message appears)
+ * it shows the number of words
+ * it shows the number of **letters** (letters in parentheses {} are not counted in)
+
+###### add key
+
+At the end of each section you can add a new key
+ * new key is added as last element in the category
+
+###### image upload
+
+Each category can have one image which can be uploaded
+ * click on cloud open upload form
+ * show the image (resize is possible to make it bigger)
+ * delete is possible in edit mode
+ * click on image opens it in new tab
+
+##### edit mode
+Click in the pencil in the menu left activates the edit mode. A lot of pencils
+appearing in the view which can be clicked to edit adn configure individual elements.
+Following a overview what is possible:
+
+###### general
+ * the project description is editable (see bellow the project name - pencil right)
+
+###### categories
+
+can be:
+ * renamed
+ * add a individual description
+
+###### keys
+
+can be:
+ * renamed
+ * cloned (copy it to new category)
+ * delete
+ * add a individual description
+
+###### images
+
+can be:
+ * deleted
+
+##### menu left
+Project configuration panel.
+ * toggle open/close via the burger icon in header
+
+###### Language section
+
+ * shows language flags
+ * State active (colored) - shows the language
+ * State inactive (gray) - hides the language
+ * State add (gray with plus sign) - add the language
+ * shows the number of translated texts
+
+###### Project manager
+ * create category
+   * opens create category view
+ * enable editor buttons
+ * toggle word count
+
+###### developer menu
+ * export message bundle
+ * export JSON
+ * import message bundle
+ * import JSON
+
+###### Info and help (same as footer)
+ * about translation tool
+ * github link
+
+##### menu right
+Project overview navigation
+ * shows the actual category and collapse it
+ * click on category and keys should scroll the element (and highlight them)
+
+
+---------------
 
 # run in production
 If you want use this module in production we offer you to save the project files in a different folder as the translatron installation.

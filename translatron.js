@@ -5,7 +5,7 @@ function run(configuration) {
     var config = configuration || {};
 
     var projectFolder = (config.hasOwnProperty('fileStorage') ? config.fileStorage.projectFiles || __dirname + '/static/translations' : __dirname + '/static/translations'),
-        projectJSON = (config.hasOwnProperty('fileStorage') ? config.fileStorage.projectJSON || __dirname + '/static/project.json' : __dirname + '/static/project.json'),
+        projectJSON = (config.hasOwnProperty('fileStorage') ? config.fileStorage.projectJSON || projectFolder + '/project.json' : projectFolder + '/project.json'),
         uploadFolder = (config.hasOwnProperty('fileStorage') ? config.fileStorage.images || __dirname + '/dist/upload' : __dirname + '/dist/upload'),
         mkdir = require('./lib/server/mkdir-p');
 
