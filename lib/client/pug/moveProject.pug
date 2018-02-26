@@ -1,0 +1,18 @@
+.moveProjectView.overlayWindow(canny-mod='moveProject')
+  h2 Change {{item.name}}
+  // <label class="octicon octicon-puzzle">Which name has the category</label>
+
+  .inputWrap
+    label rename the project
+    input.blue.inputField.category(wk-bind='item.inputName', value='{{item.name}}')
+
+    label change the project location
+    input.blue.inputField.category(wk-bind='item.inputUrl', value='{{item.url}}')
+
+    .inputWrap-row
+      button.blue.button(wk-bind='item.submit') change project
+      button.red.button(wk-bind='item.cancel') cancel
+
+  p Changing name and path will have no effect for direct project links. You project will still be available here:
+    a(href='{{item.projectLink}}' target='_blank') {{item.projectLink}}
+

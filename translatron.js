@@ -4,7 +4,8 @@
 function run(configuration) {
     var config = configuration || {};
 
-    var projectFolder = (config.hasOwnProperty('fileStorage') ? config.fileStorage.projectFiles || __dirname + '/static' : __dirname + '/static'),
+    var projectFolder = (config.hasOwnProperty('fileStorage') ? config.fileStorage.projectFiles || __dirname + '/static/translations' : __dirname + '/static/translations'),
+        projectJSON = (config.hasOwnProperty('fileStorage') ? config.fileStorage.projectJSON || projectFolder + '/project.json' : projectFolder + '/project.json'),
         uploadFolder = (config.hasOwnProperty('fileStorage') ? config.fileStorage.images || __dirname + '/dist/upload' : __dirname + '/dist/upload'),
         mkdir = require('./lib/server/mkdir-p');
 
@@ -16,7 +17,7 @@ function run(configuration) {
         express = require('express'),
         shoe = require('shoe'),
         dnode = require('dnode'),
-        dao = require('./lib/server/dao.js')(projectFolder, uploadFolder),
+        dao = require('./lib/server/dao.js')({projectFolder, uploadFolder, projectJSON}),
         fileManager = require('./lib/server/legacy/fileManager.js')(projectFolder),
         serverPort = config.port || (packageJSON.config.port || 3000),
         enableAuth = packageJSON.config.enableAuth,
@@ -28,6 +29,10 @@ function run(configuration) {
         operations = require('./lib/server/operations.js')(dao, changesNotifier, config.auth);
 
     var app = express();
+    
+    // initialize the dao object - it's required to do this asynchronous because of the projectHandler
+    dao.init()
+        .catch(err => console.log(err))
 
     enableAuth = config.hasOwnProperty('auth');
 
@@ -42,7 +47,8 @@ function run(configuration) {
 
     // activate the LDAP auth
     if (enableAuth) {
-        app.use(require('./lib/server/auth')(app, config.auth));
+        app.use(require('./lib/server/auth')(app, config.auth))
+        app.use(require('./lib/server/middleware/touchSession'))
     }
 
     app.use(function(req, res, next) {
@@ -63,17 +69,11 @@ function run(configuration) {
     }));
     app.use(require('./lib/server/middleware-importer/uploadJMBF')(operations.saveBundle));
     app.use(require('./lib/server/middleware-importer/importJSON')(operations.importJSON));
-
-    // pug.compileFile is not like a full compilation - it is more like a parsing of the pug code. only the execution
-    // of the returned function pointer (with optional passing of locals) will do the actual compilation.
-    var indexPage = pug.compileFile(__dirname + '/lib/client/pug/index.pug')(),
-        projectOverviewPage = pug.compileFile(__dirname + '/lib/client/pug/projectOverview.pug');
-
+    
     /*
         The main router handles all URLs for viewing/editing projects/directories and the export routes
      */
     var mainRouter = express.Router();
-    mainRouter.use(require('./lib/server/middleware/touchSession'));
     mainRouter.use(require('./lib/server/middleware/usersOnline'));
     // TODO add middleware to mainRouter which will check if a project or directory with that id exists
     mainRouter.use(require('./lib/server/middleware-exporter/jpmbfExporter')(dao));
@@ -86,7 +86,7 @@ function run(configuration) {
         if (!/\.json/.test(req.path) && !/\.properties/.test(req.path) && enableAuth && !req.user) {
             // TODO sending the login page only makes sense for browser requests. if anybody is e.g. using curl to
             // retrieve message bundles, we should only return a 401 but no content
-            res.send(pug.compileFile(__dirname + '/lib/client/pug/login.pug')());
+            res.status(401).send(pug.compileFile(__dirname + '/lib/client/pug/login.pug')());
         } else {
             next();
         }

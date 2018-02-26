@@ -1,9 +1,13 @@
 .translationView-projectCategory.overlayWindow(canny-mod='translationView whisker', canny-var='cloneKeyOverlay', canny-whisker="canny.translationView.registerWhisker")
-  h2 Duplicate translation key
+  h2 Copy
+  p
+    | key
     span.highlighted &nbsp;{{cloneKeyOverlayText.keyName}}&nbsp;
-    | from
+    | from category
     span.highlighted &nbsp;{{cloneKeyOverlayText.categoryName}}&nbsp;
-    | to
+    | to category:
   .inputWrap.octicon.octicon-file-symlink-file
-    input.inputField.category(canny-mod='translationView', canny-var='cloneKeyInputCategory', placeholder='Enter category name')
-    button.button(canny-mod='translationView', canny-var='cloneKeyButtonSubmit') Clone
+    input.blue.inputField.category(canny-mod='translationView', canny-var='cloneKeyInputCategory', placeholder='Category name')
+    .inputWrap-row
+      button.blue.button(canny-mod='translationView', canny-var='cloneKeyButtonSubmit') Clone
+      button.red.button(canny-mod='translationView', canny-var='cancel', data-view='translationViewCloneKey') close

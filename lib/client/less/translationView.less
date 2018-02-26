@@ -14,16 +14,10 @@
     .wordCountLabel {
       display: flex;
     }
-    .row {
-      padding-bottom: 1em;
-      .flag-icon {
-        bottom: 2.7em;
-      }
-    }
   }
 
   .data {
-    display: table-cell;
+    display: flex;
   }
   @import "languageHideShow";
   @import "imageUpload";
@@ -50,7 +44,7 @@
     box-sizing: border-box;
   }
   .sendSuccess {
-    background-color: #95c2ff;
+    background-color: #95d8ff;
     transition: background-color 500ms;
     animation: fadeoutColor 2s 3s forwards;
   }
@@ -92,6 +86,10 @@
           background-repeat: no-repeat;
           background-position: 99% center;
           background-size: 1.5em 1.5em;
+          box-sizing: border-box;
+          border-radius: 2px;
+          padding: .5em;
+          width: 100%;
         }
       }
     }
@@ -110,12 +108,6 @@
   }
   .wordCountLabel {
     display: none;
-    box-sizing: border-box;
-    border-radius: 2px;
-    padding: .5em;
-    width: 100%;
-    color: #777;
-    background-color: rgba(87, 98, 189, 0.1);
   }
   &.hideWordCount {
     .row {
@@ -189,8 +181,8 @@
     flex-flow: row wrap;
     justify-content: space-between;
     align-content: flex-start;
-    margin: 1em;
-    padding: 0;
+    margin: 0.5em 1em;
+    padding: .5em;
     clear: both;
 
     &.c-removed {
@@ -209,27 +201,37 @@
     }
 
     .translationContainer{
-      display: table;
+      display: flex;
       width: 100%;
       box-sizing: border-box;
       min-height: 80px;
       flex: none;
+      position: relative;
       .data {
         position: relative;
-        padding: 0 .5em;
+        flex: auto;
+        margin: 0 .5em;
+        flex-direction: column;
+      }
+      .textInformation{
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        &-wordCountLabel, &-charCountLabel{}
       }
     }
     > div {
       vertical-align: middle;
       position: relative;
       margin: auto;
-      flex: 100 0 0px;
+      flex: 100 0 0;
       .flag-icon {
         position: absolute;
         width: 3.3em;
         height: 2.1em;
-        bottom: .9em;
-        left: .6em;
+        bottom: 1.5em;
+        left: 0.5em;
         background-size: cover;
         background-position: 100%;
         opacity: 1;
@@ -274,7 +276,7 @@
       border-bottom: 1px solid #3f525a;
       padding: 0.5em;
       width: 100%;
-      color: #5e7a87;
+      color: #addef5;
     }
   }
 }
