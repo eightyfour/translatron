@@ -82,3 +82,6 @@
 - fixed alphabetical sorting of translation keys
 - remove obsolete data on deletion of categories
     - category related keys in value-object will be deleted 
+
+# 1.0.2
+- enhanced range of special characters to be escaped by unicode parser
