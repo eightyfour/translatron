@@ -85,3 +85,9 @@
 
 # 1.0.2
 - enhanced range of special characters to be escaped by unicode parser
+
+# 1.0.3
+- updated npm-watch dependency due to vulnerability issues
+
+# 1.0.4
+- updated regular expression in word counter to not match variables in translations
