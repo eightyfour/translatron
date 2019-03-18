@@ -91,3 +91,6 @@
 
 # 1.0.4
 - updated regular expression in word counter to not match variables in translations
+
+# 1.0.5
+- applied fixed order of language-columns in translation view
