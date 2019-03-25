@@ -13,7 +13,9 @@
     "new1_second_test_5": "The key lies - don't translate this :p",
     "first_key_1": "The first key description should describe what this key means or which limitation the key has."
   },
-  "images": {},
+  "images": {
+    "1": "sub1_codemonkey.jpg"
+  },
   "keys": {
     "de": {
       "numbers_1_text": "Der erste Text",

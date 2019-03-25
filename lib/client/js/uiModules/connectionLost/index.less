@@ -1,0 +1,144 @@
+.connectionLost {
+  position: fixed;
+  top:0;
+  left:0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0 ,0 ,0, .8);
+  z-index: 1000;
+  color: white;
+
+  .progressUi {
+    opacity: 0;
+    z-index: -1;
+    position: absolute;
+    top:0;
+    left:0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0 ,0 ,0, .8);
+    &::after{
+      content: ' ';
+      background-image: url('data:image/svg+xml;utf8,<svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 34 34" enable-background="new 0 0 34 34" xml:space="preserve"><radialGradient id="SVGID_1_" cx="28.5834" cy="23.0625" r="21.1462" gradientTransform="matrix(0.7862 0.618 -0.3572 0.4545 14.3496 -5.0826)" gradientUnits="userSpaceOnUse"><stop id="#fade-stop-0" offset="0.2567" style="stop-color:#9DA6AB;stop-opacity:0"/><stop id="#fade-stop-1" offset="1" style="stop-color:#9DA6AB"/></radialGradient><path fill="url(#SVGID_1_)" d="M28,21.7C26.2,26,21.9,29,17,29c-6.6,0-12-5.4-12-12c0-6.6,5.4-12,12-12c3,0,5.7,1.1,7.8,2.9l2.5-3.1C24.6,2.4,21,1,17,1C8.2,1,1,8.2,1,17s7.2,16,16,16c6.7,0,12.4-4.1,14.8-9.8L28,21.7z"/></svg>');
+      display: inline-block;
+      position: relative;
+      top: 0;
+      left: 0;
+      width: 2.5em;
+      height: 2.5em;
+      background-size: 2.5em 2.5em;
+      background-repeat: no-repeat;
+      -webkit-animation-name: circle-loader-rotate;
+      -webkit-animation-duration: 1s;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-timing-function: linear;
+      -moz-animation-name: circle-loader-rotate;
+      -moz-animation-duration: 1s;
+      -moz-animation-iteration-count: infinite;
+      -moz-animation-timing-function: linear;
+      -o-animation-name: circle-loader-rotate;
+      -o-animation-duration: 1s;
+      -o-animation-iteration-count: infinite;
+      -o-animation-timing-function: linear;
+    }
+  }
+  &.progress .progressUi{
+    z-index: 1001;
+    opacity:1;
+  }
+
+  i {
+    width: 100%;
+    font-size: 4em;
+    text-align: center;
+  }
+
+  section {
+    padding-bottom: 4em;
+    h2{
+      font-size: 2em;
+    }
+    p {
+      margin: 0.8em 0;
+    }
+    .errorMessage{
+      color: #f64545;
+      text-shadow: 0 0 0 #fff;
+      &::before{
+        content:' : ';
+        color: #fff;
+      }
+    }
+
+    button.reload,
+    button.close,
+    button.reconnect{
+      cursor: pointer;
+      display: inline-block;
+      min-height: 1em;
+      outline: 0;
+      border: none;
+      vertical-align: baseline;
+      color: #fff;
+      font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+      margin: 0 .25em 0 0;
+      padding: .78571429em 1.5em;
+      text-transform: none;
+      text-shadow: none;
+      line-height: 1em;
+      font-style: normal;
+      text-align: center;
+      text-decoration: none;
+      border-radius: .28571429rem;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-transition: opacity .1s ease,background-color .1s ease,color .1s ease,box-shadow .1s ease,background .1s ease;
+      transition: opacity .1s ease,background-color .1s ease,color .1s ease,box-shadow .1s ease,background .1s ease;
+      -webkit-tap-highlight-color: transparent;
+      background-color: transparent;
+      box-shadow: 0 0 0 2px rgba(255,255,255,.5) inset;
+      font-weight: 400;
+    }
+    .button-section{
+      display: flex;
+      justify-content: center;
+      margin: 2em 0;
+      button + button{
+        margin-left: .5em;
+      }
+    }
+    button.reconnect:hover{
+      box-shadow: 0 0 0 2px #22be34 inset;
+      color: #2ECC40;
+    }
+    button.reload:hover{
+      box-shadow: 0 0 0 2px #ff5144 inset;
+      color: #FF695E;
+    }
+    button.close:hover{
+      box-shadow: 0 0 0 2px #27d1ec inset;
+      color: #28e4ff;
+    }
+  }
+}
+
+@-webkit-keyframes circle-loader-rotate {
+  0% {
+    transform: translateX(0) translateY(0) rotateZ(0deg);
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotateZ(360deg);
+  }
+}

@@ -82,3 +82,15 @@
 - fixed alphabetical sorting of translation keys
 - remove obsolete data on deletion of categories
     - category related keys in value-object will be deleted 
+
+# 1.0.2
+- enhanced range of special characters to be escaped by unicode parser
+
+# 1.0.3
+- updated npm-watch dependency due to vulnerability issues
+
+# 1.0.4
+- updated regular expression in word counter to not match variables in translations
+
+# 1.0.5
+- applied fixed order of language-columns in translation view

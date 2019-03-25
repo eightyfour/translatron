@@ -6,9 +6,11 @@
     position: relative;
     margin: 1rem 0;
     height: 15em;
-    border: 5px dotted gray;
+    color: #fff;
+    border: 5px dotted currentColor;
     padding: 2em;
     width: 26.5em;
+    transition: all 300ms ease-out;
     &::before{
       position: absolute;
       top: 60%;
@@ -16,6 +18,7 @@
       font-size: 4em;
       margin: 0 50%;
       transform: translateX(-100%);
+      color: currentColor;
     }
     label {
       position: relative;
@@ -24,7 +27,7 @@
       padding: 1rem 1rem;
       height: 100%;
       display: block;
-      color: #666666;
+      color: currentColor;
       z-index: 2;
       line-height: 1.4;
     }
@@ -37,6 +40,16 @@
       height: 100%;
       opacity: 0;
       z-index: 2;
+    }
+
+    &:hover{
+      color: #32f8eb;
+    }
+    &.green:hover {
+      color: #5ae433;
+    }
+    &.yellow:hover{
+      color: #f6ec36;
     }
   }
 }

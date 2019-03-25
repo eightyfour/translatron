@@ -2,6 +2,7 @@ doctype html
 html
   head
     title Resource bundle manager
+    link(rel="SHORTCUT ICON",href="/dist/images/favicon.ico")
     link(rel='stylesheet', type='text/css', href='/dist/css/translatron.css')
     script(type='text/javascript', src='/dist/js/translatron.js')
     script(type='text/javascript', src='/dist/animatedSVG/js/snap.svg-min.js')
@@ -43,6 +44,9 @@ html
 
     div(style='display: none', canny-mod='displayManager', canny-var="{'overlay':'createNewProjectView'}")
       include createNewProject
+
+    div(style='display: none', canny-mod='displayManager', canny-var="{'overlay':'moveProject'}")
+      include moveProject
 
     div(style='display: none', canny-mod='displayManager', canny-var="{'overlay':'createNewDirectoryView'}")
       include createNewDirectory
