@@ -59,17 +59,10 @@
     "start-translatron-ui": "node app.js translatron-ui"
   },
   "devDependencies": {
-<<<<<<< HEAD
     "bower": "^1.8.8",
-    "browserify": "^13.1.0",
-    "canny": "0.1.10",
-    "canny-cookieManager-lib": "1.1.1",
-=======
-    "bower": "^1.8.2",
     "browserify": "^15.2.0",
     "canny": "^0.2.1",
     "canny-cookieManager-lib": "^1.1.1",
->>>>>>> 89b08fadb5976e2c67449bf0a1565caff3886827
     "dom-opts": "git://github.com/eightyfour/dom-opts.git",
     "jasmine": "^2.4.1",
     "jasmine-core": "^2.4.1",
