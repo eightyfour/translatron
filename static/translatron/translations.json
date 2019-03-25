@@ -1,0 +1,30 @@
+{
+  "description": "",
+  "numberOfKeys": 0,
+  "defaultLanguage": "en",
+  "availableLanguages": [
+    "en",
+    "de",
+    "fr",
+    "es",
+    "nl",
+    "da",
+    "sv",
+    "en_GB"
+  ],
+  "languages": {},
+  "keys": {
+    "en": {
+      "banana_key1": "hello"
+    },
+    "de": {
+      "banana_key1": "hallo"
+    }
+  },
+  "keyDescriptions": {
+    "__description": ""
+  },
+  "images": {},
+  "project": "translations",
+  "projectId": "/translatron/translations"
+}
