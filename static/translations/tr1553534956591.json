@@ -15,16 +15,19 @@
   "languages": {},
   "keys": {
     "en": {
-      "banana_key1": "hello"
+      "category_key1": "More",
+      "category2_key1": "bla",
+      "category2_key2": "foo"
     },
     "de": {
-      "banana_key1": "hallo"
+      "category_key1": "mehr",
+      "category2_key1": "bla",
+      "category2_key2": "bar"
     }
   },
   "keyDescriptions": {
     "__description": ""
   },
   "images": {},
-  "project": "translations",
-  "projectId": "/translatron/translations"
+  "project": "translations"
 }
